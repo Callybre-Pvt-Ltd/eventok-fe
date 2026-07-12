@@ -1,0 +1,17 @@
+export const common = {
+  appName: 'EventOK',
+  loading: 'Loading...',
+  error: 'Something went wrong',
+  retry: 'Try Again',
+  save: 'Save',
+  cancel: 'Cancel',
+  submit: 'Submit',
+  search: 'Search',
+  noResults: 'No results found',
+  viewAll: 'View All',
+  learnMore: 'Learn More',
+  back: 'Back',
+  next: 'Next',
+  logout: 'Logout',
+  empty: 'Nothing here yet',
+};
