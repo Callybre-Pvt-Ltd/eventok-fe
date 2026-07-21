@@ -270,6 +270,7 @@ export function toggleValue(list: string[], value: string) {
 export type DiscoveryVendor = {
   id: string;
   displayName: string;
+  description: string;
   initials: string;
   category: string;
   categorySlug: string;
@@ -285,6 +286,7 @@ export type DiscoveryVendor = {
   years: number;
   portfolioCount: number;
   image: string;
+  images: string[];
   tags: string[];
   eventTypes: string[];
   verified: boolean;
@@ -301,7 +303,8 @@ const p = photography;
 export const discoveryVendors: DiscoveryVendor[] = [
   {
     id: 'dv-1',
-    displayName: 'Atelier Celebrations',
+    displayName: 'Signature Destination Wedding',
+    description: 'Full destination wedding planning with décor, guest flow, and day-of direction.',
     initials: 'AC',
     category: 'Wedding',
     categorySlug: 'wedding',
@@ -317,6 +320,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 12,
     portfolioCount: 48,
     image: p.weddings[0],
+    images: [p.weddings[0], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Luxury', 'Destination', 'Royal'],
     eventTypes: ['destination', 'luxury', 'royal', 'outdoor'],
     verified: true,
@@ -334,7 +338,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-2',
-    displayName: 'Lens & Light Studio',
+    displayName: 'Cinematic Wedding Photography',
+    description: 'Cinematic photography capturing ceremonies, portraits, and candid moments.',
     initials: 'LL',
     category: 'Photography',
     categorySlug: 'photography',
@@ -350,6 +355,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 9,
     portfolioCount: 120,
     image: p.weddings[2],
+    images: [p.weddings[2], p.weddings[1], p.weddings[2], p.gallery[0], p.gallery[1]],
     tags: ['Luxury', 'Modern', 'Destination'],
     eventTypes: ['luxury', 'modern', 'destination', 'outdoor'],
     verified: true,
@@ -362,7 +368,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-3',
-    displayName: 'Summit Stage Co.',
+    displayName: 'Corporate Stage & AV',
+    description: 'Stage design, lighting, and AV production for conferences and launches.',
     initials: 'SS',
     category: 'Corporate',
     categorySlug: 'corporate',
@@ -378,6 +385,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 8,
     portfolioCount: 36,
     image: p.corporate[0],
+    images: [p.corporate[0], p.corporate[1], p.corporate[2], p.gallery[2], p.gallery[4]],
     tags: ['Modern', 'Indoor', 'Luxury'],
     eventTypes: ['indoor', 'modern', 'luxury'],
     verified: true,
@@ -390,7 +398,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-4',
-    displayName: 'Midnight Bloom',
+    displayName: 'Milestone Birthday Styling',
+    description: 'Styled birthday celebrations with theme décor and guest experiences.',
     initials: 'MB',
     category: 'Birthday',
     categorySlug: 'birthday',
@@ -406,6 +415,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 6,
     portfolioCount: 42,
     image: p.birthdays[0],
+    images: [p.birthdays[0], p.birthdays[1], p.birthdays[2], p.gallery[3], p.gallery[5]],
     tags: ['Beach', 'Outdoor', 'Modern'],
     eventTypes: ['beach', 'outdoor', 'modern'],
     verified: true,
@@ -418,7 +428,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-5',
-    displayName: 'Silk & Stone Decor',
+    displayName: 'Luxury Floral & Décor',
+    description: 'Floral installations and spatial styling for ceremonies and receptions.',
     initials: 'SD',
     category: 'Decoration',
     categorySlug: 'decoration',
@@ -434,6 +445,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 11,
     portfolioCount: 64,
     image: p.gallery[2],
+    images: [p.gallery[2], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Traditional', 'Luxury', 'Indoor'],
     eventTypes: ['traditional', 'luxury', 'indoor', 'garden'],
     verified: true,
@@ -446,7 +458,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-6',
-    displayName: 'Coastal Table',
+    displayName: 'Premium Event Catering',
+    description: 'Multi-cuisine catering with live counters for events of every scale.',
     initials: 'CT',
     category: 'Catering',
     categorySlug: 'catering',
@@ -462,6 +475,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 7,
     portfolioCount: 28,
     image: p.gallery[3],
+    images: [p.gallery[3], p.gallery[3], p.gallery[0], p.weddings[1], p.gallery[2]],
     tags: ['Luxury', 'Garden', 'Outdoor'],
     eventTypes: ['outdoor', 'garden', 'luxury', 'minimal'],
     verified: true,
@@ -474,7 +488,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-7',
-    displayName: 'Pulse Live Band',
+    displayName: 'Live Band Entertainment',
+    description: 'Live musicians curated to match your celebration energy and mood.',
     initials: 'PL',
     category: 'Entertainment',
     categorySlug: 'entertainment',
@@ -490,6 +505,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 5,
     portfolioCount: 22,
     image: p.gallery[5],
+    images: [p.gallery[5], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Modern', 'Indoor', 'Outdoor'],
     eventTypes: ['modern', 'indoor', 'outdoor'],
     verified: true,
@@ -502,7 +518,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-8',
-    displayName: 'Verdant Venues',
+    displayName: 'Garden Venue Styling',
+    description: 'Outdoor and garden venue styling for open-air gatherings.',
     initials: 'VV',
     category: 'Venue',
     categorySlug: 'venue',
@@ -518,6 +535,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 10,
     portfolioCount: 30,
     image: p.gallery[1],
+    images: [p.gallery[1], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Garden', 'Outdoor', 'Minimal'],
     eventTypes: ['garden', 'outdoor', 'minimal'],
     verified: true,
@@ -530,7 +548,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-9',
-    displayName: 'Glow & Grace Makeup',
+    displayName: 'Bridal Beauty Package',
+    description: 'Bridal and family beauty looks with on-site touch-ups.',
     initials: 'GG',
     category: 'Makeup',
     categorySlug: 'makeup',
@@ -546,6 +565,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 8,
     portfolioCount: 90,
     image: p.weddings[3],
+    images: [p.weddings[3], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Traditional', 'Luxury', 'Modern'],
     eventTypes: ['traditional', 'luxury', 'modern'],
     verified: true,
@@ -558,7 +578,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-10',
-    displayName: 'Henna House',
+    displayName: 'Mehendi Celebration Setup',
+    description: 'Traditional mehendi setups with seating, décor, and ambience.',
     initials: 'HH',
     category: 'Mehendi',
     categorySlug: 'mehendi',
@@ -574,6 +595,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 14,
     portfolioCount: 55,
     image: p.weddings[1],
+    images: [p.weddings[1], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Traditional', 'Royal', 'Indoor'],
     eventTypes: ['traditional', 'royal', 'indoor'],
     verified: true,
@@ -586,7 +608,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-11',
-    displayName: 'Lumen Lighting',
+    displayName: 'Event Lighting Design',
+    description: 'Architectural lighting that transforms venues after dark.',
     initials: 'LM',
     category: 'Lighting',
     categorySlug: 'lighting',
@@ -602,6 +625,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 6,
     portfolioCount: 34,
     image: p.gallery[0],
+    images: [p.gallery[0], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Modern', 'Luxury', 'Outdoor'],
     eventTypes: ['modern', 'luxury', 'outdoor', 'indoor'],
     verified: true,
@@ -614,7 +638,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-12',
-    displayName: 'Frame & Film Co.',
+    displayName: 'Documentary Film Coverage',
+    description: 'Story-driven film coverage for weddings and brand events.',
     initials: 'FF',
     category: 'Videography',
     categorySlug: 'videography',
@@ -630,6 +655,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 7,
     portfolioCount: 78,
     image: p.gallery[4],
+    images: [p.gallery[4], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Luxury', 'Modern', 'Destination'],
     eventTypes: ['luxury', 'modern', 'destination'],
     verified: true,
@@ -642,7 +668,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-13',
-    displayName: 'Petal & Paper',
+    displayName: 'Invitation & Stationery Suite',
+    description: 'Printed and digital invitation suites with cohesive design.',
     initials: 'PP',
     category: 'Florist',
     categorySlug: 'florist',
@@ -658,6 +685,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 5,
     portfolioCount: 40,
     image: p.birthdays[1],
+    images: [p.birthdays[1], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Garden', 'Minimal', 'Outdoor'],
     eventTypes: ['garden', 'minimal', 'outdoor'],
     verified: false,
@@ -670,7 +698,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-14',
-    displayName: 'Ink & Invite',
+    displayName: 'Custom Guest Experience Kit',
+    description: 'Welcome gifts and guest kits tailored to your event theme.',
     initials: 'II',
     category: 'Invitations',
     categorySlug: 'invitations',
@@ -686,6 +715,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 4,
     portfolioCount: 66,
     image: p.birthdays[2],
+    images: [p.birthdays[2], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Minimal', 'Modern', 'Luxury'],
     eventTypes: ['minimal', 'modern', 'luxury'],
     verified: true,
@@ -698,7 +728,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-15',
-    displayName: 'Sugar Atelier',
+    displayName: 'Celebration Cake Design',
+    description: 'Custom celebration cakes and dessert tables.',
     initials: 'SA',
     category: 'Cake',
     categorySlug: 'cake',
@@ -714,6 +745,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 9,
     portfolioCount: 100,
     image: p.birthdays[0],
+    images: [p.birthdays[0], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Luxury', 'Modern', 'Minimal'],
     eventTypes: ['luxury', 'modern', 'minimal'],
     verified: true,
@@ -726,7 +758,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-16',
-    displayName: 'Royal Carriage',
+    displayName: 'Guest Transport Concierge',
+    description: 'Coordinated guest transport for venues and airport transfers.',
     initials: 'RC',
     category: 'Transport',
     categorySlug: 'transport',
@@ -742,6 +775,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 15,
     portfolioCount: 18,
     image: p.hero.wedding,
+    images: [p.hero.wedding, p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Royal', 'Traditional', 'Destination'],
     eventTypes: ['royal', 'traditional', 'destination'],
     verified: true,
@@ -754,7 +788,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-17',
-    displayName: 'Stage Host Collective',
+    displayName: 'Host & Emcee Service',
+    description: 'Professional hosts who keep the programme flowing smoothly.',
     initials: 'SH',
     category: 'Anchor',
     categorySlug: 'anchor',
@@ -770,6 +805,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 6,
     portfolioCount: 24,
     image: p.corporate[1],
+    images: [p.corporate[1], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Modern', 'Indoor', 'Corporate'],
     eventTypes: ['modern', 'indoor'],
     verified: true,
@@ -782,7 +818,8 @@ export const discoveryVendors: DiscoveryVendor[] = [
   },
   {
     id: 'dv-18',
-    displayName: 'Soundwave DJs',
+    displayName: 'DJ & Sound Production',
+    description: 'DJ sets with premium sound systems for receptions and parties.',
     initials: 'SW',
     category: 'Music',
     categorySlug: 'music',
@@ -798,6 +835,7 @@ export const discoveryVendors: DiscoveryVendor[] = [
     years: 8,
     portfolioCount: 32,
     image: p.corporate[2],
+    images: [p.corporate[2], p.weddings[1], p.weddings[2], p.weddings[3], p.gallery[2]],
     tags: ['Beach', 'Outdoor', 'Modern'],
     eventTypes: ['beach', 'outdoor', 'modern'],
     verified: true,

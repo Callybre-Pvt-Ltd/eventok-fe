@@ -29,7 +29,7 @@ export function CtaSection() {
                 {t('landing.ctaButton')}
               </Button>
             </Link>
-            <Link to={ROUTES.VENDORS}>
+            <Link to={ROUTES.SERVICES}>
               <Button variant="outline" size="lg">
                 {t('landing.heroCta')}
               </Button>

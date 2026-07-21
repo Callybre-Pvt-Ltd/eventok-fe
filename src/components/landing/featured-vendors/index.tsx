@@ -57,7 +57,7 @@ export function FeaturedVendors() {
           </Grid>
         </MotionDiv>
         <ViewAllLink>
-          <Link to={ROUTES.VENDORS}>
+          <Link to={ROUTES.SERVICES}>
             <Button variant="outline">{t('common.viewAll')}</Button>
           </Link>
         </ViewAllLink>

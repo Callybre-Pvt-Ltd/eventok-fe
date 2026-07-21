@@ -41,7 +41,7 @@ export default function CustomerDashboardPage() {
       </StatsGrid>
       <StatLabel $palette={palette}>{t('customer.quickActions')}</StatLabel>
       <StatsGrid>
-        <Link to={ROUTES.VENDORS}>
+        <Link to={ROUTES.SERVICES}>
           <Button block>{t('customer.browseVendors')}</Button>
         </Link>
         <Link to={ROUTES.CUSTOMER_CHAT}>

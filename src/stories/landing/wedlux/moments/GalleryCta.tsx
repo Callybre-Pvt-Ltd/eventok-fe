@@ -52,7 +52,7 @@ export function GalleryCta({ label }: GalleryCtaProps) {
   return (
     <CtaWrap>
       <MagneticWrap ref={wrapRef} onMouseMove={onMove} onMouseLeave={onLeave}>
-        <MagneticLink to={ROUTES.VENDORS} onClick={onClick}>
+        <MagneticLink to={ROUTES.SERVICES} onClick={onClick}>
           <Ripple ref={rippleRef} aria-hidden />
           {label}
           <ArrowUpRight size={18} aria-hidden />

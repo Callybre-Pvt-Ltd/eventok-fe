@@ -46,7 +46,7 @@ export function CorporateEvents() {
                   </FeatureItem>
                 ))}
               </FeatureList>
-              <Link to={ROUTES.VENDORS}>
+              <Link to={ROUTES.SERVICES}>
                 <Button variant="primary" size="lg">
                   {t('landing.corporateCta')}
                 </Button>

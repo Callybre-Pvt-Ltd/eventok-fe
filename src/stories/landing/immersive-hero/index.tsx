@@ -47,7 +47,7 @@ export function ImmersiveHero() {
             {t('landing.heroSubtitle')}
           </Text>
           <HeroActions>
-            <Link to={ROUTES.VENDORS}>
+            <Link to={ROUTES.SERVICES}>
               <Button tone="celebration" size="lg">
                 {t('landing.heroCta')}
               </Button>

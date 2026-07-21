@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'react-i18next';
 import type { PublicVendor } from '@/types';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants/routes';
 import { useVendorPortfolioCard } from './helper';
 import {
   Card,
@@ -208,7 +209,7 @@ export function VendorPortfolioCard({
               {t('marketplace.requestQuote')}
             </Button>
           </ActionBtn>
-          <CardLink to={`/vendors/${vendor.id}`}>
+          <CardLink to={ROUTES.SERVICES}>
             <Button variant="outline" size="sm" fullWidth>
               {t('marketplace.viewPortfolio')}
             </Button>

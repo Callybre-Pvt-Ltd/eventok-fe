@@ -30,7 +30,7 @@ export function FeaturedVendorsRail() {
           eyebrow={t('landing.featuredTitle')}
           title={t('landing.featuredSubtitle')}
         />
-        <Link to={ROUTES.VENDORS}>
+        <Link to={ROUTES.SERVICES}>
           <Button tone="outline" size="md">
             {t('common.viewAll')}
           </Button>
@@ -41,7 +41,7 @@ export function FeaturedVendorsRail() {
           <VendorTile
             key={vendor.id}
             vendor={vendor}
-            to={`/vendors/${vendor.id}`}
+            to={ROUTES.SERVICES}
             featured
           />
         ))}

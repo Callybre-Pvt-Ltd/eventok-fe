@@ -102,7 +102,7 @@ export const useWedluxPortfolio = () => {
         label: t(`landing.wedluxStoryCard${n}StatLabel`),
       },
       ctaLabel: t('landing.wedluxStoryCardCta'),
-      ctaTo: ROUTES.VENDORS,
+      ctaTo: ROUTES.SERVICES,
       accent: source.accent,
     };
   });

@@ -1,6 +1,7 @@
 import { Heart, MapPin, ShieldCheck, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
+import { ROUTES } from '@/constants/routes';
 import type { PublicVendor } from '@/types';
 import { useTheme } from '@/theme';
 import { useVendorCard } from './helper';
@@ -34,7 +35,7 @@ export function VendorCard({ vendor }: VendorCardProps) {
   const initial = vendor.businessName.charAt(0).toUpperCase();
 
   return (
-    <CardLink to={`/vendors/${vendor.id}`}>
+    <CardLink to={ROUTES.SERVICES}>
       <Card
         $palette={palette}
         whileHover={{

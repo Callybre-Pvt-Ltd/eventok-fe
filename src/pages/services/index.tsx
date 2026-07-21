@@ -2,7 +2,6 @@ import { PublicHeader } from '@/components/global/public-header';
 import { PublicFooter } from '@/components/global/public-footer';
 import { discoveryVendors, filterVendors } from './filters';
 import { useServicesPage } from './helper';
-import { ConsultationModal } from './sections/consultation-modal';
 import { DiscoveryFilterBar } from './sections/filter-bar';
 import { DiscoveryFilterDrawer } from './sections/filter-drawer';
 import { DiscoveryHero } from './sections/hero';
@@ -42,7 +41,6 @@ export default function ServicesPage() {
           isFiltering={page.isFiltering}
           hasMore={page.hasMore}
           onLoadMore={page.loadMore}
-          onConsult={page.openConsult}
           loadMoreRef={page.loadMoreRef}
           onShowFeatured={() => {
             page.clearAll();
@@ -78,13 +76,6 @@ export default function ServicesPage() {
         value={page.filters.sort}
         onChange={sort => page.patch({ sort })}
         onClose={() => page.setSortOpen(false)}
-      />
-
-      <ConsultationModal
-        vendor={page.consultVendor}
-        sent={page.consultSent}
-        onClose={page.closeConsult}
-        onSubmit={page.submitConsult}
       />
 
       <PublicFooter />

@@ -1155,6 +1155,37 @@ export const GhostCta = styled(Link)`
   }
 `;
 
+export const GhostCtaButton = styled.button`
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(${brandRgb.chocolate}, 0.14);
+  background: transparent;
+  color: ${brandColors.chocolate};
+  font-family: ${fontFamily.body};
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.2;
+  cursor: pointer;
+
+  ${media.md} {
+    min-height: 40px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    padding: 0.45rem 0.65rem;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${brandColors.gold};
+    outline-offset: 2px;
+  }
+`;
+
 export const LoadMoreWrap = styled.div`
   display: flex;
   justify-content: center;
@@ -1621,7 +1652,7 @@ export const MobileBudget = styled.p`
 export const ModalOverlay = styled.div<{ $open: boolean }>`
   position: fixed;
   inset: 0;
-  z-index: 90;
+  z-index: 220;
   display: grid;
   place-items: end center;
   background: rgba(${brandRgb.chocolate}, 0.48);

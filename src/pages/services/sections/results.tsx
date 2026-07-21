@@ -1,12 +1,12 @@
-import { ArrowUpRight, MapPin, ShieldCheck, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import { formatBudget, type DiscoveryVendor } from '../filters';
+import type { DiscoveryVendor } from '../filters';
 import {
   CardBadge,
   CardBody,
   CardFeatured,
-  CardHeader,
   CardImage,
   CardMedia,
   CtaRow,
@@ -15,11 +15,8 @@ import {
   EmptyState,
   EmptyTips,
   EmptyTitle,
-  GhostCta,
   LoadMoreBtn,
   LoadMoreWrap,
-  Logo,
-  MobileBudget,
   NameBlock,
   PrimaryCta,
   ResultsGrid,
@@ -35,6 +32,46 @@ import {
   VendorMeta,
   VendorName,
 } from '../styled';
+import styled from 'styled-components';
+import { brandRgb } from '@/theme/brand';
+import { fontFamily } from '@/theme';
+
+const ServiceDescription = styled.p`
+  margin: 0;
+  font-family: ${fontFamily.body};
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: rgba(${brandRgb.chocolate}, 0.72);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+const OpenLink = styled(Link)`
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid rgba(${brandRgb.chocolate}, 0.14);
+  background: transparent;
+  font-family: ${fontFamily.body};
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.2;
+  color: rgba(${brandRgb.chocolate}, 1);
+
+  @media (min-width: 768px) {
+    min-height: 40px;
+    border-radius: 9999px;
+    padding: 0.45rem 0.65rem;
+  }
+`;
 
 interface ResultsProps {
   vendors: DiscoveryVendor[];
@@ -42,7 +79,6 @@ interface ResultsProps {
   isFiltering: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
-  onConsult: (vendor: DiscoveryVendor) => void;
   onShowFeatured: () => void;
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -53,7 +89,6 @@ export function DiscoveryResults({
   isFiltering,
   hasMore,
   onLoadMore,
-  onConsult,
   onShowFeatured,
   loadMoreRef,
 }: ResultsProps) {
@@ -96,90 +131,58 @@ export function DiscoveryResults({
       ) : (
         <>
           <ResultsGrid>
-            {vendors.map((vendor, index) => (
-              <VendorCard key={vendor.id} data-disc-card>
+            {vendors.map((service, index) => (
+              <VendorCard key={service.id} data-disc-card>
                 <CardMedia>
                   <CardImage
-                    src={vendor.image}
-                    alt={vendor.displayName}
+                    src={service.image}
+                    alt={service.displayName}
                     loading={index < 4 ? 'eager' : 'lazy'}
                   />
-                  {vendor.verified ? (
-                    <CardBadge>
-                      <ShieldCheck size={11} aria-hidden />
-                      {t('servicesPage.verified')}
-                    </CardBadge>
+                  {service.verified ? (
+                    <CardBadge>{t('servicesPage.verified')}</CardBadge>
                   ) : null}
-                  {vendor.featured ? (
+                  {service.featured ? (
                     <CardFeatured>{t('servicesPage.featured')}</CardFeatured>
                   ) : null}
                 </CardMedia>
                 <CardBody>
-                  <CardHeader>
-                    <Logo aria-hidden>{vendor.initials}</Logo>
-                    <NameBlock>
-                      <VendorName>{vendor.displayName}</VendorName>
-                      <VendorMeta>
-                        <span>{vendor.category}</span>
-                        <span>
-                          <MapPin
-                            size={12}
-                            style={{ display: 'inline', verticalAlign: '-2px' }}
-                            aria-hidden
-                          />{' '}
-                          {vendor.city}
-                        </span>
-                        <span>
-                          <Star
-                            size={12}
-                            fill="currentColor"
-                            style={{ display: 'inline', verticalAlign: '-2px' }}
-                            aria-hidden
-                          />{' '}
-                          {vendor.rating.toFixed(1)}
-                        </span>
-                      </VendorMeta>
-                    </NameBlock>
-                  </CardHeader>
+                  <NameBlock>
+                    <VendorName>{service.displayName}</VendorName>
+                    <VendorMeta>
+                      <span>{service.category}</span>
+                      <span>
+                        <Star
+                          size={12}
+                          fill="currentColor"
+                          style={{ display: 'inline', verticalAlign: '-2px' }}
+                          aria-hidden
+                        />{' '}
+                        {service.rating.toFixed(1)} ({service.projects}{' '}
+                        {t('servicesPage.reviews')})
+                      </span>
+                    </VendorMeta>
+                  </NameBlock>
 
-                  <MobileBudget>
-                    <span>{t('servicesPage.startingBudget')} </span>
-                    {formatBudget(vendor.budgetFrom)}
-                  </MobileBudget>
+                  <ServiceDescription>{service.description}</ServiceDescription>
 
                   <Stats>
                     <Stat>
-                      <strong>{vendor.projects}</strong>
-                      <span>{t('servicesPage.projects')}</span>
-                    </Stat>
-                    <Stat>
-                      <strong>{vendor.years}</strong>
-                      <span>{t('servicesPage.years')}</span>
-                    </Stat>
-                    <Stat>
-                      <strong>{vendor.portfolioCount}</strong>
+                      <strong>{service.images?.length ?? 1}</strong>
                       <span>{t('servicesPage.portfolioImages')}</span>
-                    </Stat>
-                    <Stat>
-                      <strong>{formatBudget(vendor.budgetFrom)}</strong>
-                      <span>{t('servicesPage.startingBudget')}</span>
                     </Stat>
                   </Stats>
 
                   <TagRow>
-                    {vendor.tags.slice(0, 3).map(tag => (
+                    {service.tags.slice(0, 3).map(tag => (
                       <Tag key={tag}>{tag}</Tag>
                     ))}
                   </TagRow>
 
                   <CtaRow>
-                    <GhostCta to={ROUTES.VENDORS}>
-                      {t('servicesPage.viewPortfolio')}
-                    </GhostCta>
-                    <PrimaryCta type="button" onClick={() => onConsult(vendor)}>
-                      {t('servicesPage.requestConsultation')}
-                      <ArrowUpRight size={14} aria-hidden />
-                    </PrimaryCta>
+                    <OpenLink to={`${ROUTES.SERVICES}/${service.id}`}>
+                      {t('servicesPage.openService')}
+                    </OpenLink>
                   </CtaRow>
                 </CardBody>
               </VendorCard>

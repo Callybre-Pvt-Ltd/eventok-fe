@@ -7,8 +7,7 @@ import { ScrollToTop } from '@/routes/ScrollToTop';
 import LandingPage from '@/pages/landing';
 import AboutPage from '@/pages/about';
 import ServicesPage from '@/pages/services';
-import VendorsPage from '@/pages/vendors';
-import VendorDetailPage from '@/pages/vendor-detail';
+import ServiceDetailPage from '@/pages/service-detail';
 import ContactPage from '@/pages/contact';
 import LoginPage from '@/pages/login';
 import RegisterPage from '@/pages/register';
@@ -50,12 +49,20 @@ export function AppRouter() {
         <Route path={ROUTES.HOME} element={<LandingPage />} />
         <Route path={ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
+        <Route path={ROUTES.SERVICE_DETAIL} element={<ServiceDetailPage />} />
         <Route
           path={ROUTES.CATEGORIES}
           element={<Navigate to={ROUTES.SERVICES} replace />}
         />
-        <Route path={ROUTES.VENDORS} element={<VendorsPage />} />
-        <Route path={ROUTES.VENDOR_DETAIL} element={<VendorDetailPage />} />
+        {/* Public site shows services only — never vendor profiles */}
+        <Route
+          path={ROUTES.VENDORS}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.VENDOR_DETAIL}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
         <Route
           path={ROUTES.TESTIMONIALS}
           element={

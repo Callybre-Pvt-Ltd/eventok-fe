@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { LoadingState } from '@/components/global/loading-state';
 import { ErrorState } from '@/components/global/error-state';
+import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme';
 import { fadeUp, MotionDiv, viewportOnce } from '@/utils/motion';
 import { useFeaturedWeddings } from './helper';
@@ -46,13 +47,15 @@ export function FeaturedWeddings() {
         >
           <ScrollTrack>
             {vendors.map(v => (
-              <Link key={v.id} to={`/vendors/${v.id}`}>
+              <Link key={v.id} to={ROUTES.SERVICES}>
                 <WeddingCard $palette={palette}>
                   <CardImage $url={v.portfolio[0]?.url} />
                   <CardBody>
-                    <CardTitle $palette={palette}>{v.businessName}</CardTitle>
+                    <CardTitle $palette={palette}>
+                      {v.tags[0] ?? v.categories[0] ?? 'Curated celebration'}
+                    </CardTitle>
                     <CardMeta $palette={palette}>
-                      {v.city} · ★ {v.rating}
+                      ★ {v.rating} · {v.reviewCount} reviews
                     </CardMeta>
                   </CardBody>
                 </WeddingCard>

@@ -36,10 +36,10 @@ const categoryLinks = [
 ] as const;
 
 const cityLinks = [
-  { path: ROUTES.VENDORS, label: 'Mumbai' },
-  { path: ROUTES.VENDORS, label: 'Delhi' },
-  { path: ROUTES.VENDORS, label: 'Bengaluru' },
-  { path: ROUTES.VENDORS, label: 'Udaipur' },
+  { path: ROUTES.SERVICES, label: 'Mumbai' },
+  { path: ROUTES.SERVICES, label: 'Delhi' },
+  { path: ROUTES.SERVICES, label: 'Bengaluru' },
+  { path: ROUTES.SERVICES, label: 'Udaipur' },
 ] as const;
 
 export function PublicFooter() {
