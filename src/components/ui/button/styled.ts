@@ -44,7 +44,7 @@ export const StyledButton = styled(motion.button)<{
       case 'primary':
         return `
           background: ${$palette.gradientPrimary};
-          color: ${brandColors.chocolate};
+          color: ${$palette.textOnPrimary};
           box-shadow: ${shadows.md};
           &:hover:not(:disabled) { box-shadow: ${shadows.glow}; }
         `;
@@ -80,8 +80,8 @@ export const ButtonContent = styled.span<{ $loading?: boolean }>`
 export const Spinner = styled.span<{ $palette: ThemePalette }>`
   width: 1rem;
   height: 1rem;
-  border: 2px solid rgba(${brandRgb.sage}, 0.3);
-  border-top-color: ${brandColors.sage};
+  border: 2px solid rgba(${brandRgb.white}, 0.35);
+  border-top-color: ${brandColors.white};
   border-radius: 50%;
   animation: ${spin} 0.7s linear infinite;
 `;

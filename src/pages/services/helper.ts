@@ -6,13 +6,14 @@ import {
   useState,
   type FormEvent,
 } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { gsap, useGSAP } from '@/hooks/gsap/setup';
+import { marketplaceService } from '@/services';
 import {
   applyQuickChip,
   clearFilterKey,
   defaultFilters,
-  discoveryVendors,
   filterVendors,
   getActiveFilterPills,
   PAGE_SIZE,
@@ -23,6 +24,14 @@ import {
 function prefersReducedMotion() {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
+
+const sortToApi = (sort: DiscoveryFilters['sort']) => {
+  if (sort === 'newest') return 'newest';
+  if (sort === 'budget') return 'price_asc';
+  if (sort === 'premium') return 'price_desc';
+  if (sort === 'alpha') return 'title';
+  return undefined;
+};
 
 export function useServicesPage() {
   const scope = useRef<HTMLElement>(null);
@@ -41,16 +50,72 @@ export function useServicesPage() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [isFiltering, setIsFiltering] = useState(true);
   const [consultVendor, setConsultVendor] = useState<DiscoveryVendor | null>(
     null,
   );
   const [consultSent, setConsultSent] = useState(false);
 
-  const filtered = useMemo(
-    () => filterVendors(discoveryVendors, filters),
-    [filters],
-  );
+  const categoriesQuery = useQuery({
+    queryKey: ['marketplace', 'categories'],
+    queryFn: async () => {
+      const res = await marketplaceService.listCategories();
+      if (res.error) throw new Error(res.error);
+      return res.data ?? [];
+    },
+  });
+
+  const categoryId = useMemo(() => {
+    if (!filters.categories.length) return undefined;
+    const cats = categoriesQuery.data ?? [];
+    const match = cats.find(
+      c =>
+        filters.categories.includes(c.slug) ||
+        filters.categories.includes(c.id) ||
+        filters.categories.includes(c.name.toLowerCase()),
+    );
+    return match?.id;
+  }, [filters.categories, categoriesQuery.data]);
+
+  const servicesQuery = useQuery({
+    queryKey: [
+      'marketplace',
+      'services',
+      filters.query,
+      categoryId,
+      filters.budgetMin,
+      filters.budgetMax,
+      filters.cities[0],
+      filters.sort,
+    ],
+    queryFn: async () => {
+      const res = await marketplaceService.listServices({
+        q: filters.query || undefined,
+        category_id: categoryId,
+        min_price:
+          filters.budgetMin > 25_000 ? filters.budgetMin : undefined,
+        max_price:
+          filters.budgetMax < 1_000_000 ? filters.budgetMax : undefined,
+        city: filters.cities[0],
+        sort: sortToApi(filters.sort),
+        page: 1,
+        page_size: 100,
+      });
+      if (res.error) throw new Error(res.error);
+      return res.data ?? { items: [], total: 0, pages: 0 };
+    },
+  });
+
+  const filtered = useMemo(() => {
+    const items = servicesQuery.data?.items ?? [];
+    return filterVendors(items, {
+      ...filters,
+      // category already applied via API when id matched
+      categories: categoryId ? [] : filters.categories,
+      budgetMin: 25_000,
+      budgetMax: 1_000_000,
+      query: '',
+    });
+  }, [servicesQuery.data?.items, filters, categoryId]);
 
   const visible = useMemo(
     () => filtered.slice(0, visibleCount),
@@ -60,12 +125,10 @@ export function useServicesPage() {
   const pills = useMemo(() => getActiveFilterPills(filters), [filters]);
   const hasMore = visibleCount < filtered.length;
   const activeFilterCount = pills.length;
+  const isFiltering = servicesQuery.isFetching;
 
   useEffect(() => {
-    setIsFiltering(true);
     setVisibleCount(PAGE_SIZE);
-    const id = window.setTimeout(() => setIsFiltering(false), 220);
-    return () => window.clearTimeout(id);
   }, [filters]);
 
   const patch = useCallback((partial: Partial<DiscoveryFilters>) => {
@@ -185,5 +248,9 @@ export function useServicesPage() {
     closeConsult,
     consultSent,
     submitConsult,
+    categories: categoriesQuery.data ?? [],
+    error: servicesQuery.error
+      ? (servicesQuery.error as Error).message
+      : null,
   };
 }

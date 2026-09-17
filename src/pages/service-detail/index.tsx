@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import {
   CalendarCheck,
   MapPin,
@@ -10,19 +11,12 @@ import {
 import { useTranslation } from 'react-i18next';
 import { PublicHeader } from '@/components/global/public-header';
 import { PublicFooter } from '@/components/global/public-footer';
+import { LoadingState } from '@/components/global/loading-state';
 import { ROUTES } from '@/constants/routes';
-import {
-  discoveryVendors,
-  formatBudget,
-  type DiscoveryVendor,
-} from '@/pages/services/filters';
+import { marketplaceService } from '@/services';
+import { formatBudget } from '@/pages/services/filters';
 import {
   BadgeRow,
-  BarFill,
-  BarList,
-  BarRow,
-  BarTrack,
-  BigRating,
   Breadcrumb,
   CategoryLink,
   DetailWrap,
@@ -38,10 +32,6 @@ import {
   InfoTiles,
   MainImage,
   MainImageWrap,
-  MrpLine,
-  OfferChip,
-  OfferItem,
-  OfferList,
   PageShell,
   Pill,
   PriceNote,
@@ -53,11 +43,8 @@ import {
   ProcessSteps,
   ProductCard,
   RatingBadge,
-  RatingBreakdown,
   RatingRow,
-  ReviewCard,
   ReviewCount,
-  ReviewList,
   SecondaryBuy,
   SectionBody,
   SectionCard,
@@ -80,64 +67,51 @@ import {
 } from './styled';
 import { BookServiceModal } from './book-modal';
 
-function getServiceById(id: string | undefined): DiscoveryVendor | null {
-  if (!id) return null;
-  return discoveryVendors.find(s => s.id === id) ?? null;
-}
-
 function formatFullPrice(value: number) {
   return `₹${value.toLocaleString('en-IN')}`;
 }
 
-function buildReviews(service: DiscoveryVendor) {
-  const names = [
-    'Ananya R.',
-    'Rohan M.',
-    'Priya S.',
-    'Kabir D.',
-    'Neha V.',
-    'Arjun P.',
-  ];
-  return names.slice(0, 4).map((name, index) => ({
-    id: `${service.id}-rev-${index}`,
-    name,
-    rating: Math.max(4, Math.round(service.rating) - (index % 2)),
-    date: `2026-0${3 + index}-1${index}`,
-    comment: [
-      `Booked ${service.displayName} for our ${service.category.toLowerCase()} and the execution felt premium end to end.`,
-      `Loved the coordination and attention to detail. The gallery matched what we actually got on the day.`,
-      `Smooth process through EventOK. Clear communication and a polished final experience.`,
-      `Great value for the booking. Guests kept asking who planned everything.`,
-    ][index],
-  }));
-}
-
-const RATING_BARS = [
-  { stars: 5, pct: 72 },
-  { stars: 4, pct: 18 },
-  { stars: 3, pct: 6 },
-  { stars: 2, pct: 2 },
-  { stars: 1, pct: 2 },
-];
-
 export default function ServiceDetailPage() {
   const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
-  const service = useMemo(() => getServiceById(id), [id]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [bookOpen, setBookOpen] = useState(false);
 
-  const similar = useMemo(() => {
-    if (!service) return [];
-    return discoveryVendors
-      .filter(
-        item =>
-          item.id !== service.id &&
-          (item.categorySlug === service.categorySlug ||
-            item.tags.some(tag => service.tags.includes(tag))),
-      )
-      .slice(0, 4);
-  }, [service]);
+  const serviceQuery = useQuery({
+    queryKey: ['marketplace', 'service', id],
+    queryFn: async () => {
+      const res = await marketplaceService.getService(id!);
+      if (res.error || !res.data) throw new Error(res.error ?? 'Not found');
+      return res.data;
+    },
+    enabled: Boolean(id),
+  });
+
+  const similarQuery = useQuery({
+    queryKey: ['marketplace', 'similar', serviceQuery.data?.categorySlug],
+    queryFn: async () => {
+      const res = await marketplaceService.listServices({
+        category_id: serviceQuery.data?.categorySlug,
+        page_size: 8,
+      });
+      if (res.error) throw new Error(res.error);
+      return (res.data?.items ?? []).filter(item => item.id !== id).slice(0, 4);
+    },
+    enabled: Boolean(serviceQuery.data?.categorySlug),
+  });
+
+  const service = serviceQuery.data ?? null;
+  const similar = similarQuery.data ?? [];
+
+  if (serviceQuery.isLoading) {
+    return (
+      <PageShell>
+        <PublicHeader />
+        <LoadingState />
+        <PublicFooter />
+      </PageShell>
+    );
+  }
 
   if (!service) {
     return (
@@ -151,14 +125,12 @@ export default function ServiceDetailPage() {
               <Link to={ROUTES.SERVICES}>{t('nav.services')}</Link>
             </Breadcrumb>
             <Title>{t('servicesPage.serviceNotFound')}</Title>
-            <SectionBody style={{ marginTop: '0.75rem' }}>
+            <SectionBody>
               {t('servicesPage.serviceNotFoundLead')}
             </SectionBody>
-            <div style={{ marginTop: '1rem' }}>
-              <SecondaryBuy to={ROUTES.SERVICES}>
-                {t('servicesPage.backToServices')}
-              </SecondaryBuy>
-            </div>
+            <SecondaryBuy to={ROUTES.SERVICES}>
+              {t('servicesPage.backToServices')}
+            </SecondaryBuy>
           </EmptyState>
         </DetailWrap>
         <PublicFooter />
@@ -168,18 +140,8 @@ export default function ServiceDetailPage() {
 
   const images = service.images?.length ? service.images : [service.image];
   const activeImage = images[activeIndex] ?? images[0];
-  const compareAt = Math.round(service.budgetFrom * 1.18);
-  const reviews = buildReviews(service);
-  const longDescription = [
-    service.description,
-    `This ${service.category.toLowerCase()} service is curated for ${service.city} and nearby destinations, with styling that fits ${service.tags
-      .slice(0, 2)
-      .join(' and ')
-      .toLowerCase()} celebrations.`,
-    'EventOK keeps vendor contacts private. Browse the service, book directly on the platform, and continue planning with EventOK support.',
-  ].join(' ');
-
   const openBook = () => setBookOpen(true);
+
   return (
     <PageShell>
       <PublicHeader />
@@ -188,10 +150,6 @@ export default function ServiceDetailPage() {
           <Link to={ROUTES.HOME}>{t('common.appName')}</Link>
           <span aria-hidden>/</span>
           <Link to={ROUTES.SERVICES}>{t('nav.services')}</Link>
-          <span aria-hidden>/</span>
-          <Link to={`${ROUTES.SERVICES}?type=${service.categorySlug}`}>
-            {service.category}
-          </Link>
           <span aria-hidden>/</span>
           <span data-current>{service.displayName}</span>
         </Breadcrumb>
@@ -215,138 +173,62 @@ export default function ServiceDetailPage() {
             <MainImageWrap>
               <MainImage src={activeImage} alt={service.displayName} />
               <BadgeRow>
-                {service.verified ? (
-                  <Pill>
-                    <ShieldCheck size={12} aria-hidden />
-                    {t('servicesPage.verified')}
-                  </Pill>
-                ) : null}
-                {service.featured ? (
-                  <Pill $tone="featured">{t('servicesPage.featured')}</Pill>
-                ) : null}
+                <Pill>
+                  <ShieldCheck size={12} aria-hidden />
+                  {t('servicesPage.verified')}
+                </Pill>
               </BadgeRow>
             </MainImageWrap>
           </GalleryPane>
 
           <InfoPane>
-            <CategoryLink to={`${ROUTES.SERVICES}?type=${service.categorySlug}`}>
-              {service.category}
-            </CategoryLink>
-
+            <CategoryLink to={ROUTES.SERVICES}>{service.category}</CategoryLink>
             <Title>{service.displayName}</Title>
 
             <RatingRow>
               <RatingBadge>
-                {service.rating.toFixed(1)}
+                {service.rating ? service.rating.toFixed(1) : '—'}
                 <Star size={11} fill="currentColor" aria-hidden />
               </RatingBadge>
-              <ReviewCount>
-                {service.projects.toLocaleString('en-IN')}{' '}
-                {t('servicesPage.reviews')} · {service.bookings}{' '}
-                {t('servicesPage.orders')}
-              </ReviewCount>
+              <ReviewCount>{t('servicesPage.bookNow')}</ReviewCount>
             </RatingRow>
 
             <PriceSection>
-              <MrpLine>
-                {t('servicesPage.mrp')}
-                <s>{formatFullPrice(compareAt)}</s>
-              </MrpLine>
               <PriceRow>
                 <PriceValue>{formatFullPrice(service.budgetFrom)}</PriceValue>
-                <OfferChip>{t('servicesPage.startingOffer')}</OfferChip>
               </PriceRow>
               <PriceNote>
                 {t('servicesPage.priceInclusiveNote', {
                   amount: formatBudget(service.budgetFrom),
                 })}
               </PriceNote>
-              <OfferList>
-                <OfferItem>
-                  <strong>{t('servicesPage.offerBank')}</strong>
-                  {t('servicesPage.offerBankDetail')}
-                </OfferItem>
-                <OfferItem>
-                  <strong>{t('servicesPage.offerBundle')}</strong>
-                  {t('servicesPage.offerBundleDetail')}
-                </OfferItem>
-                <OfferItem>
-                  <strong>{t('servicesPage.offerEarly')}</strong>
-                  {t('servicesPage.offerEarlyDetail')}
-                </OfferItem>
-              </OfferList>
             </PriceSection>
 
             <InfoTiles>
               <InfoTile>
                 <strong>{t('servicesPage.tileLocation')}</strong>
                 <span>
-                  <MapPin
-                    size={12}
-                    style={{ display: 'inline', verticalAlign: '-1px' }}
-                    aria-hidden
-                  />{' '}
-                  {service.city}, {service.state}
+                  <MapPin size={12} aria-hidden /> India
                 </span>
               </InfoTile>
               <InfoTile>
                 <strong>{t('servicesPage.tileAvailability')}</strong>
                 <span>
-                  <CalendarCheck
-                    size={12}
-                    style={{ display: 'inline', verticalAlign: '-1px' }}
-                    aria-hidden
-                  />{' '}
-                  {service.availableThisMonth
-                    ? t('servicesPage.availableThisMonth')
-                    : t('servicesPage.checkAvailability')}
-                </span>
-              </InfoTile>
-              <InfoTile>
-                <strong>{t('servicesPage.tileExperience')}</strong>
-                <span>
-                  {service.years}+ {t('servicesPage.years')}
+                  <CalendarCheck size={12} aria-hidden />{' '}
+                  {t('servicesPage.checkAvailability')}
                 </span>
               </InfoTile>
               <InfoTile>
                 <strong>{t('servicesPage.tileStyle')}</strong>
                 <span>
-                  <Sparkles
-                    size={12}
-                    style={{ display: 'inline', verticalAlign: '-1px' }}
-                    aria-hidden
-                  />{' '}
-                  {service.tags.slice(0, 2).join(' · ')}
+                  <Sparkles size={12} aria-hidden /> {service.category}
                 </span>
               </InfoTile>
             </InfoTiles>
 
-            <div>
-              <SectionTitle>{t('servicesPage.highlights')}</SectionTitle>
-              <Highlights>
-                {service.tags.map(tag => (
-                  <HighlightItem key={tag}>{tag} styling</HighlightItem>
-                ))}
-                <HighlightItem>
-                  {t('servicesPage.highlightPhotos', { count: images.length })}
-                </HighlightItem>
-                <HighlightItem>
-                  {t('servicesPage.highlightPrivateQuote')}
-                </HighlightItem>
-                <HighlightItem>
-                  {t('servicesPage.highlightCoverage', {
-                    city: service.city,
-                  })}
-                </HighlightItem>
-              </Highlights>
-            </div>
-
             <TagRow>
               {service.tags.map(tag => (
                 <Tag key={`chip-${tag}`}>{tag}</Tag>
-              ))}
-              {service.eventTypes.slice(0, 3).map(type => (
-                <Tag key={`type-${type}`}>{type}</Tag>
               ))}
             </TagRow>
 
@@ -364,16 +246,17 @@ export default function ServiceDetailPage() {
         <SplitSections>
           <SectionCard>
             <SectionTitle>{t('servicesPage.aboutService')}</SectionTitle>
-            <SectionBody>{longDescription}</SectionBody>
+            <SectionBody>
+              {service.description ||
+                'Book this service for your event date. EventOK keeps vendor contacts private.'}
+            </SectionBody>
           </SectionCard>
           <SectionCard>
             <SectionTitle>{t('servicesPage.whatsIncluded')}</SectionTitle>
             <Highlights>
               <HighlightItem>{t('servicesPage.includePlan')}</HighlightItem>
-              <HighlightItem>{t('servicesPage.includeDecor')}</HighlightItem>
               <HighlightItem>{t('servicesPage.includeCoord')}</HighlightItem>
               <HighlightItem>{t('servicesPage.includeSupport')}</HighlightItem>
-              <HighlightItem>{t('servicesPage.includeReport')}</HighlightItem>
             </Highlights>
           </SectionCard>
         </SplitSections>
@@ -414,100 +297,31 @@ export default function ServiceDetailPage() {
           </GalleryMasonry>
         </SectionCard>
 
-        <SplitSections>
-          <SectionCard>
-            <SectionTitle>{t('servicesPage.specifications')}</SectionTitle>
-            <SpecGrid>
-              <SpecLabel>{t('servicesPage.categoryLabel')}</SpecLabel>
-              <SpecValue>{service.category}</SpecValue>
-              <SpecLabel>{t('servicesPage.ratingLabel')}</SpecLabel>
-              <SpecValue>
-                {service.rating.toFixed(1)} / 5 · {service.projects}{' '}
-                {t('servicesPage.reviews')}
-              </SpecValue>
-              <SpecLabel>{t('servicesPage.servicePrice')}</SpecLabel>
-              <SpecValue>
-                {t('servicesPage.startingBudget')}{' '}
-                {formatFullPrice(service.budgetFrom)}
-              </SpecValue>
-              <SpecLabel>{t('servicesPage.tileLocation')}</SpecLabel>
-              <SpecValue>{service.locationLabel}</SpecValue>
-              <SpecLabel>{t('servicesPage.portfolioImages')}</SpecLabel>
-              <SpecValue>{images.length}</SpecValue>
-              <SpecLabel>{t('servicesPage.availabilityLabel')}</SpecLabel>
-              <SpecValue>
-                {service.availableThisMonth
-                  ? t('servicesPage.availableThisMonth')
-                  : t('servicesPage.checkAvailability')}
-              </SpecValue>
-              <SpecLabel>{t('servicesPage.tileExperience')}</SpecLabel>
-              <SpecValue>
-                {service.years}+ {t('servicesPage.years')}
-              </SpecValue>
-              <SpecLabel>{t('servicesPage.eventTypeLabel')}</SpecLabel>
-              <SpecValue>{service.eventTypes.join(', ')}</SpecValue>
-            </SpecGrid>
-          </SectionCard>
-          <SectionCard>
-            <SectionTitle>{t('servicesPage.faqTitle')}</SectionTitle>
-            <FaqList>
-              <FaqItem>
-                <summary>{t('servicesPage.faq1q')}</summary>
-                <p>{t('servicesPage.faq1a')}</p>
-              </FaqItem>
-              <FaqItem>
-                <summary>{t('servicesPage.faq2q')}</summary>
-                <p>{t('servicesPage.faq2a')}</p>
-              </FaqItem>
-              <FaqItem>
-                <summary>{t('servicesPage.faq3q')}</summary>
-                <p>{t('servicesPage.faq3a')}</p>
-              </FaqItem>
-              <FaqItem>
-                <summary>{t('servicesPage.faq4q')}</summary>
-                <p>{t('servicesPage.faq4a')}</p>
-              </FaqItem>
-            </FaqList>
-          </SectionCard>
-        </SplitSections>
+        <SectionCard>
+          <SectionTitle>{t('servicesPage.specifications')}</SectionTitle>
+          <SpecGrid>
+            <SpecLabel>{t('servicesPage.categoryLabel')}</SpecLabel>
+            <SpecValue>{service.category}</SpecValue>
+            <SpecLabel>{t('servicesPage.servicePrice')}</SpecLabel>
+            <SpecValue>
+              {t('servicesPage.startingBudget')}{' '}
+              {formatFullPrice(service.budgetFrom)}
+            </SpecValue>
+          </SpecGrid>
+        </SectionCard>
 
         <SectionCard>
-          <SectionTitle>{t('servicesPage.ratingsReviews')}</SectionTitle>
-          <RatingBreakdown>
-            <BigRating>
-              <strong>{service.rating.toFixed(1)}</strong>
-              <span>
-                {service.projects.toLocaleString('en-IN')}{' '}
-                {t('servicesPage.reviews')}
-              </span>
-            </BigRating>
-            <BarList>
-              {RATING_BARS.map(bar => (
-                <BarRow key={bar.stars}>
-                  <span>{bar.stars}★</span>
-                  <BarTrack>
-                    <BarFill $pct={bar.pct} />
-                  </BarTrack>
-                  <span>{bar.pct}%</span>
-                </BarRow>
-              ))}
-            </BarList>
-          </RatingBreakdown>
-          <ReviewList>
-            {reviews.map(review => (
-              <ReviewCard key={review.id}>
-                <header>
-                  <RatingBadge>
-                    {review.rating}
-                    <Star size={11} fill="currentColor" aria-hidden />
-                  </RatingBadge>
-                  <h3>{review.name}</h3>
-                  <time dateTime={review.date}>{review.date}</time>
-                </header>
-                <p>{review.comment}</p>
-              </ReviewCard>
-            ))}
-          </ReviewList>
+          <SectionTitle>{t('servicesPage.faqTitle')}</SectionTitle>
+          <FaqList>
+            <FaqItem>
+              <summary>{t('servicesPage.faq1q')}</summary>
+              <p>{t('servicesPage.faq1a')}</p>
+            </FaqItem>
+            <FaqItem>
+              <summary>{t('servicesPage.faq2q')}</summary>
+              <p>{t('servicesPage.faq2a')}</p>
+            </FaqItem>
+          </FaqList>
         </SectionCard>
 
         {similar.length > 0 ? (
@@ -515,17 +329,12 @@ export default function ServiceDetailPage() {
             <SectionTitle>{t('servicesPage.similarServices')}</SectionTitle>
             <SimilarGrid>
               {similar.map(item => (
-                <SimilarCard
-                  key={item.id}
-                  to={`${ROUTES.SERVICES}/${item.id}`}
-                >
+                <SimilarCard key={item.id} to={`${ROUTES.SERVICES}/${item.id}`}>
                   <img src={item.image} alt="" loading="lazy" />
                   <div>
                     <h3>{item.displayName}</h3>
                     <strong>{formatFullPrice(item.budgetFrom)}</strong>
-                    <span>
-                      ★ {item.rating.toFixed(1)} · {item.category}
-                    </span>
+                    <span>{item.category}</span>
                   </div>
                 </SimilarCard>
               ))}

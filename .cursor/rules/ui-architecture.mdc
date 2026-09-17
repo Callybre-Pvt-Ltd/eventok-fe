@@ -1,8 +1,6 @@
 ---
-description: Eventok UI architecture, component structure, styling, i18n, and Context7-first implementation
-alwaysApply: true
+# alwaysApply: true
 ---
-
 # Eventok UI Architecture Rules
 
 ## 0. Context7 First (Always — No Exceptions)

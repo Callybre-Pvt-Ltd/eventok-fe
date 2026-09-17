@@ -4,7 +4,8 @@ import { PortalLayout } from '@/components/global/portal-layout';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { ScrollToTop } from '@/routes/ScrollToTop';
 
-import LandingPage from '@/pages/landing';
+import HomePage from '@/pages/home';
+import WishlistPage from '@/pages/wishlist';
 import AboutPage from '@/pages/about';
 import ServicesPage from '@/pages/services';
 import ServiceDetailPage from '@/pages/service-detail';
@@ -46,7 +47,36 @@ export function AppRouter() {
       <ScrollToTop />
       <Routes>
         {/* Public routes */}
-        <Route path={ROUTES.HOME} element={<LandingPage />} />
+        <Route path={ROUTES.HOME} element={<HomePage />} />
+        <Route
+          path={ROUTES.SHOP}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.SHOP_CATEGORY}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.PRODUCT}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.PACKAGES}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.PACKAGE_BUILDER}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.CART}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route
+          path={ROUTES.CHECKOUT}
+          element={<Navigate to={ROUTES.SERVICES} replace />}
+        />
+        <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
         <Route path={ROUTES.ABOUT} element={<AboutPage />} />
         <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
         <Route path={ROUTES.SERVICE_DETAIL} element={<ServiceDetailPage />} />

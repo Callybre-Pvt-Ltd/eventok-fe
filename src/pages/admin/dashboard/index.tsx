@@ -31,6 +31,14 @@ export default function AdminDashboardPage() {
           <StatLabel $palette={palette}>{t('admin.totalCustomers')}</StatLabel>
           <StatValue $palette={palette}>{stats?.totalCustomers}</StatValue>
         </StatCard>
+        <StatCard $palette={palette}>
+          <StatLabel $palette={palette}>{t('admin.pendingApprovals')}</StatLabel>
+          <StatValue $palette={palette}>{stats?.pendingApprovals}</StatValue>
+        </StatCard>
+        <StatCard $palette={palette}>
+          <StatLabel $palette={palette}>Open enquiries</StatLabel>
+          <StatValue $palette={palette}>{stats?.openEnquiries ?? 0}</StatValue>
+        </StatCard>
       </StatsGrid>
     </>
   );

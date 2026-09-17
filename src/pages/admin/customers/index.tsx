@@ -1,4 +1,6 @@
 import { useTranslation } from 'react-i18next';
+import { LoadingState } from '@/components/global/loading-state';
+import { EmptyState } from '@/components/global/empty-state';
 import { useAdminCustomers } from './helper';
 import { ItemMeta, ItemTitle, List, ListItem, PageTitle } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
@@ -6,20 +8,25 @@ import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 export default function AdminCustomersPage() {
   const { t } = useTranslation();
   const { palette } = usePortalPalette();
-  const { customers } = useAdminCustomers();
+  const { customers, isLoading } = useAdminCustomers();
+  if (isLoading) return <LoadingState />;
   return (
     <>
       <PageTitle $palette={palette}>{t('admin.customers')}</PageTitle>
-      <List>
-        {customers.map(c => (
-          <ListItem $palette={palette} key={c.id}>
-            <ItemTitle $palette={palette}>{c.name}</ItemTitle>
-            <ItemMeta $palette={palette}>
-              {c.email} · {c.city}
-            </ItemMeta>
-          </ListItem>
-        ))}
-      </List>
+      {customers.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <List>
+          {customers.map(c => (
+            <ListItem $palette={palette} key={c.id}>
+              <ItemTitle $palette={palette}>{c.name}</ItemTitle>
+              <ItemMeta $palette={palette}>
+                {c.email} · {c.city || '—'}
+              </ItemMeta>
+            </ListItem>
+          ))}
+        </List>
+      )}
     </>
   );
 }

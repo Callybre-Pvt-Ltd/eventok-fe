@@ -10,3 +10,5 @@ export {
   analyticsService,
 } from './miscService';
 export { servicePackageService } from './servicePackageService';
+export { catalogService } from './catalogService';
+export { marketplaceService } from './marketplaceService';

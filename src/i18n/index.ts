@@ -10,6 +10,7 @@ import { nav } from './locales/en/nav';
 import { marketplace } from './locales/en/marketplace';
 import { categoriesPage } from './locales/en/categories';
 import { servicesPage } from './locales/en/services';
+import { storefront } from './locales/en/storefront';
 
 i18n.use(initReactI18next).init({
   resources: {
@@ -25,6 +26,7 @@ i18n.use(initReactI18next).init({
         marketplace,
         categoriesPage,
         servicesPage,
+        storefront,
       },
     },
   },

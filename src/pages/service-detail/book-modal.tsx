@@ -42,7 +42,7 @@ const ErrorText = styled.p`
   margin: 0 0 0.75rem;
   font-family: ${fontFamily.body};
   font-size: 0.8125rem;
-  color: #c62828;
+  color: ${brandColors.danger500};
 `;
 
 interface BookServiceModalProps {
@@ -92,10 +92,11 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
     const form = new FormData(event.currentTarget);
     const eventDate = String(form.get('date') ?? '');
     const guestCount = Number(form.get('guests') ?? 0);
+    const location = String(form.get('location') ?? '').trim();
     const notes = String(form.get('message') ?? '');
     const eventType = String(form.get('event') || service.category);
 
-    if (!eventDate || !guestCount) {
+    if (!eventDate || !guestCount || !location) {
       setError(t('servicesPage.bookFormError'));
       return;
     }
@@ -108,7 +109,7 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
       eventDate,
       eventType,
       guestCount,
-      city: session.user.city || service.city,
+      city: location,
       notes: notes
         ? `${notes}\n\nService: ${service.displayName}`
         : `Booking request for ${service.displayName}`,
@@ -196,11 +197,20 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
                   <input name="date" type="date" required />
                 </FormField>
                 <FormField>
+                  Location / venue
+                  <input
+                    name="location"
+                    required
+                    placeholder="City or venue"
+                    defaultValue={session?.user.city ?? ''}
+                  />
+                </FormField>
+                <FormField>
                   {t('servicesPage.consultGuests')}
                   <input
                     name="guests"
                     type="number"
-                    min={10}
+                    min={1}
                     placeholder="100"
                     required
                   />
@@ -218,9 +228,7 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
                   {t('common.close')}
                 </ModalGhostBtn>
                 <PrimaryCta type="submit" disabled={loading}>
-                  {loading
-                    ? t('common.loading')
-                    : t('servicesPage.bookSubmit')}
+                  {loading ? t('common.loading') : t('servicesPage.bookSubmit')}
                 </PrimaryCta>
               </ModalActions>
               <ModalNote>{t('servicesPage.bookNote')}</ModalNote>
