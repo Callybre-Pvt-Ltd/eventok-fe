@@ -356,10 +356,7 @@ const seeds: Seed[] = [
     eventType: 'home-decoration',
     price: 9999,
     originalPrice: 13999,
-    images: [
-      IMG('1546484475-7f7bd55792da'),
-      IMG('1566552881560-0be862a7c445'),
-    ],
+    images: [IMG('1546484475-7f7bd55792da'), IMG('1566552881560-0be862a7c445')],
     tags: ['Festival Decoration', 'At Home', 'Floral'],
     attributes: ['Festive', 'Traditional', 'Indoor Decoration'],
     isNew: true,

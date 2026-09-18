@@ -125,9 +125,7 @@ export default function ServiceDetailPage() {
               <Link to={ROUTES.SERVICES}>{t('nav.services')}</Link>
             </Breadcrumb>
             <Title>{t('servicesPage.serviceNotFound')}</Title>
-            <SectionBody>
-              {t('servicesPage.serviceNotFoundLead')}
-            </SectionBody>
+            <SectionBody>{t('servicesPage.serviceNotFoundLead')}</SectionBody>
             <SecondaryBuy to={ROUTES.SERVICES}>
               {t('servicesPage.backToServices')}
             </SecondaryBuy>
@@ -163,7 +161,9 @@ export default function ServiceDetailPage() {
                   type="button"
                   $active={index === activeIndex}
                   onClick={() => setActiveIndex(index)}
-                  aria-label={`${t('servicesPage.serviceGallery')} ${index + 1}`}
+                  aria-label={`${t('servicesPage.serviceGallery')} ${
+                    index + 1
+                  }`}
                 >
                   <img src={src} alt="" loading="lazy" />
                 </Thumb>

@@ -43,10 +43,10 @@ const mapPayment = (p: ApiPayment, customerId = ''): Payment => ({
     p.status === 'SUCCESS'
       ? 'completed'
       : p.status === 'REFUNDED'
-        ? 'refunded'
-        : p.status === 'FAILED' || p.status === 'CANCELLED'
-          ? 'failed'
-          : 'pending',
+      ? 'refunded'
+      : p.status === 'FAILED' || p.status === 'CANCELLED'
+      ? 'failed'
+      : 'pending',
   createdAt: p.created_at,
 });
 

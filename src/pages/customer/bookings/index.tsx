@@ -52,7 +52,8 @@ export default function CustomerBookingsPage() {
             <ListItem $palette={palette} key={b.id}>
               <ItemTitle $palette={palette}>{b.eventType}</ItemTitle>
               <ItemMeta $palette={palette}>
-                {b.eventDate} · {b.guestCount ? `${b.guestCount} guests · ` : ''}
+                {b.eventDate} ·{' '}
+                {b.guestCount ? `${b.guestCount} guests · ` : ''}
                 {b.status}
               </ItemMeta>
               {b.status === 'payment_pending' ? (

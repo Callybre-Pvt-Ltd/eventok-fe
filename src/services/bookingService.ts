@@ -57,12 +57,12 @@ const mapEnquiryToBooking = (enquiry: ApiEnquiry): Booking => ({
     enquiry.status === 'BOOKED'
       ? 'confirmed'
       : enquiry.status === 'CANCELLED'
-        ? 'cancelled'
-        : enquiry.status === 'ASSIGNED' || enquiry.status === 'QUOTED'
-          ? 'vendor_assigned'
-          : enquiry.status === 'UNDER_REVIEW'
-            ? 'admin_review'
-            : 'requested',
+      ? 'cancelled'
+      : enquiry.status === 'ASSIGNED' || enquiry.status === 'QUOTED'
+      ? 'vendor_assigned'
+      : enquiry.status === 'UNDER_REVIEW'
+      ? 'admin_review'
+      : 'requested',
   createdAt: enquiry.created_at,
 });
 
@@ -80,14 +80,14 @@ const mapApiBooking = (booking: ApiBooking): Booking => ({
     booking.status === 'PENDING_PAYMENT'
       ? 'payment_pending'
       : booking.status === 'CONFIRMED'
-        ? 'confirmed'
-        : booking.status === 'IN_PROGRESS'
-          ? 'in_progress'
-          : booking.status === 'COMPLETED'
-            ? 'completed'
-            : booking.status === 'CANCELLED'
-              ? 'cancelled'
-              : 'requested',
+      ? 'confirmed'
+      : booking.status === 'IN_PROGRESS'
+      ? 'in_progress'
+      : booking.status === 'COMPLETED'
+      ? 'completed'
+      : booking.status === 'CANCELLED'
+      ? 'cancelled'
+      : 'requested',
   createdAt: booking.created_at,
 });
 
@@ -118,10 +118,13 @@ export const bookingService = {
         } satisfies EnquiryPayload,
       });
 
-      const submitted = await apiRequest<ApiEnquiry>(`/enquiries/${enquiry.id}`, {
-        method: 'PATCH',
-        body: { status: 'SUBMITTED' },
-      });
+      const submitted = await apiRequest<ApiEnquiry>(
+        `/enquiries/${enquiry.id}`,
+        {
+          method: 'PATCH',
+          body: { status: 'SUBMITTED' },
+        },
+      );
 
       return mapEnquiryToBooking(submitted);
     });
@@ -193,12 +196,12 @@ export const bookingService = {
         status === 'confirmed'
           ? 'CONFIRMED'
           : status === 'in_progress'
-            ? 'IN_PROGRESS'
-            : status === 'completed'
-              ? 'COMPLETED'
-              : status === 'cancelled'
-                ? 'CANCELLED'
-                : null;
+          ? 'IN_PROGRESS'
+          : status === 'completed'
+          ? 'COMPLETED'
+          : status === 'cancelled'
+          ? 'CANCELLED'
+          : null;
       if (!backendStatus) {
         const enquiry = await apiRequest<ApiEnquiry>(`/enquiries/${bookingId}`);
         return mapEnquiryToBooking(enquiry);

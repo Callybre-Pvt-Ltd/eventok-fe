@@ -23,7 +23,8 @@ interface TokenPair {
 
 const toFeRole = (role: BackendRole): UserRole => {
   if (role === 'VENDOR') return 'vendor';
-  if (role === 'ADMIN' || role === 'FINANCE' || role === 'SUPPORT') return 'admin';
+  if (role === 'ADMIN' || role === 'FINANCE' || role === 'SUPPORT')
+    return 'admin';
   return 'customer';
 };
 
@@ -54,7 +55,11 @@ const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
 
 const SESSION_META_KEY = 'eventok_session_meta';
 
-const saveMeta = (meta: { city?: string; vendorStatus?: string; vendorId?: string }) => {
+const saveMeta = (meta: {
+  city?: string;
+  vendorStatus?: string;
+  vendorId?: string;
+}) => {
   localStorage.setItem(SESSION_META_KEY, JSON.stringify(meta));
 };
 
@@ -91,8 +96,8 @@ const fetchMe = async (): Promise<User> => {
         vendor.status === 'APPROVED'
           ? 'approved'
           : vendor.status === 'REJECTED'
-            ? 'rejected'
-            : 'pending';
+          ? 'rejected'
+          : 'pending';
       saveMeta({ city: meta.city, vendorStatus, vendorId });
     } catch {
       vendorStatus = vendorStatus ?? 'pending';
@@ -136,8 +141,7 @@ export const authService = {
         throw new ApiError('Cannot register as admin', 'FORBIDDEN', 403);
       }
       const phone =
-        payload.phone?.trim() ||
-        `+91${String(Date.now()).slice(-10)}`;
+        payload.phone?.trim() || `+91${String(Date.now()).slice(-10)}`;
       await apiRequest<BackendUser>('/auth/register', {
         method: 'POST',
         auth: false,
@@ -165,7 +169,10 @@ export const authService = {
         // non-fatal
       }
 
-      saveMeta({ city: payload.city, vendorStatus: payload.role === 'vendor' ? 'pending' : undefined });
+      saveMeta({
+        city: payload.city,
+        vendorStatus: payload.role === 'vendor' ? 'pending' : undefined,
+      });
 
       if (payload.role === 'vendor') {
         try {
@@ -182,8 +189,7 @@ export const authService = {
           );
           saveMeta({
             city: payload.city,
-            vendorStatus:
-              vendor.status === 'APPROVED' ? 'approved' : 'pending',
+            vendorStatus: vendor.status === 'APPROVED' ? 'approved' : 'pending',
             vendorId: vendor.id,
           });
         } catch {

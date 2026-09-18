@@ -127,11 +127,15 @@ export const vendorService = {
   async getVendorByUserId(
     _userId: string,
   ): Promise<ServiceResponse<VendorPrivate>> {
-    return wrap(async () => toPrivate(await apiRequest<ApiVendor>('/vendors/me')));
+    return wrap(async () =>
+      toPrivate(await apiRequest<ApiVendor>('/vendors/me')),
+    );
   },
 
   async getMe(): Promise<ServiceResponse<VendorPrivate>> {
-    return wrap(async () => toPrivate(await apiRequest<ApiVendor>('/vendors/me')));
+    return wrap(async () =>
+      toPrivate(await apiRequest<ApiVendor>('/vendors/me')),
+    );
   },
 
   async listMyServices(

@@ -9,7 +9,12 @@ interface NavGroup {
 }
 
 const GROUPS: NavGroup[] = [
-  { key: 'all', labelKey: 'storefront.navAllServices', to: ROUTES.SERVICES, children: [] },
+  {
+    key: 'all',
+    labelKey: 'storefront.navAllServices',
+    to: ROUTES.SERVICES,
+    children: [],
+  },
   {
     key: 'wedding',
     labelKey: 'storefront.navWedding',

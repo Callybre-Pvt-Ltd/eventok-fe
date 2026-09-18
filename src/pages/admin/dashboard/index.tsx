@@ -32,7 +32,9 @@ export default function AdminDashboardPage() {
           <StatValue $palette={palette}>{stats?.totalCustomers}</StatValue>
         </StatCard>
         <StatCard $palette={palette}>
-          <StatLabel $palette={palette}>{t('admin.pendingApprovals')}</StatLabel>
+          <StatLabel $palette={palette}>
+            {t('admin.pendingApprovals')}
+          </StatLabel>
           <StatValue $palette={palette}>{stats?.pendingApprovals}</StatValue>
         </StatCard>
         <StatCard $palette={palette}>

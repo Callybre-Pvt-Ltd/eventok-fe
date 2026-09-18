@@ -62,7 +62,9 @@ const buildUrl = (path: string, query?: Record<string, QueryValue>) => {
   const url = `${base}${path.startsWith('/') ? path : `/${path}`}`;
   if (!query) return url;
   const parts = Object.entries(query)
-    .filter(([, value]) => value !== undefined && value !== null && value !== '')
+    .filter(
+      ([, value]) => value !== undefined && value !== null && value !== '',
+    )
     .map(
       ([key, value]) =>
         `${encodeURIComponent(key)}=${encodeURIComponent(String(value))}`,
@@ -216,7 +218,11 @@ export const apiRequestPaginated = async <T>(
   // Backend wraps pagination: { success, data: { items, total, ... } } OR flat
   if (payload && typeof payload === 'object') {
     const root = payload as Record<string, unknown>;
-    if (root.data && typeof root.data === 'object' && 'items' in (root.data as object)) {
+    if (
+      root.data &&
+      typeof root.data === 'object' &&
+      'items' in (root.data as object)
+    ) {
       return root.data as PaginatedEnvelope<T>;
     }
     if ('items' in root) return payload as PaginatedEnvelope<T>;

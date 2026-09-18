@@ -91,8 +91,7 @@ export function useServicesPage() {
       const res = await marketplaceService.listServices({
         q: filters.query || undefined,
         category_id: categoryId,
-        min_price:
-          filters.budgetMin > 25_000 ? filters.budgetMin : undefined,
+        min_price: filters.budgetMin > 25_000 ? filters.budgetMin : undefined,
         max_price:
           filters.budgetMax < 1_000_000 ? filters.budgetMax : undefined,
         city: filters.cities[0],
@@ -249,8 +248,6 @@ export function useServicesPage() {
     consultSent,
     submitConsult,
     categories: categoriesQuery.data ?? [],
-    error: servicesQuery.error
-      ? (servicesQuery.error as Error).message
-      : null,
+    error: servicesQuery.error ? (servicesQuery.error as Error).message : null,
   };
 }
