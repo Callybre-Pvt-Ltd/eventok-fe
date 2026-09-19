@@ -29,6 +29,8 @@ export function PackagesShowcase() {
   const { t } = useTranslation();
   const { packages } = usePackagesShowcase();
 
+  if (!packages.length) return null;
+
   return (
     <Section>
       <SectionInner>

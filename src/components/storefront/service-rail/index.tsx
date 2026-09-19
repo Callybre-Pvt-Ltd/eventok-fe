@@ -60,17 +60,24 @@ export function ServiceRail() {
               $active={rail.tab === item.value}
               onClick={() => rail.setTab(item.value)}
             >
-              {t(item.labelKey)}
+              {item.label}
             </TabItem>
           ))}
         </TabRow>
 
         <Rail ref={rail.railRef}>
-          {rail.services.map(service => (
-            <CardSlot key={service.id}>
-              <ProductCard service={service} />
-            </CardSlot>
-          ))}
+          {rail.services.length === 0 ? (
+            <SectionSubtitle>
+              No vendor services yet. Categories stay available — vendors can
+              publish listings from their dashboard.
+            </SectionSubtitle>
+          ) : (
+            rail.services.map(service => (
+              <CardSlot key={service.id}>
+                <ProductCard service={service} />
+              </CardSlot>
+            ))
+          )}
         </Rail>
       </SectionInner>
     </Section>

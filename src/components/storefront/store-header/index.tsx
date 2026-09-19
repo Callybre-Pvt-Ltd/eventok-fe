@@ -1,4 +1,4 @@
-import { CalendarDays, Heart, MapPin, Mic, Search, User } from 'lucide-react';
+import { Heart, MapPin, Mic, Search, ShoppingBag, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
 import { AnnouncementBar } from '@/components/storefront/announcement-bar';
@@ -69,11 +69,9 @@ export function StoreHeader() {
             <Heart size={20} />
             {header.wishlistCount > 0 && <Badge>{header.wishlistCount}</Badge>}
           </IconLink>
-          <IconLink
-            to={ROUTES.CUSTOMER_BOOKINGS}
-            aria-label={t('customer.bookings')}
-          >
-            <CalendarDays size={20} />
+          <IconLink to={ROUTES.CART} aria-label={t('storefront.cart')}>
+            <ShoppingBag size={20} />
+            {header.cartCount > 0 && <Badge>{header.cartCount}</Badge>}
           </IconLink>
           <LoginButton to={ROUTES.LOGIN}>
             <User size={16} />

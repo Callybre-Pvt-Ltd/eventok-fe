@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import type { ThemePalette } from '@/theme';
 import { fontFamily, fontSizes, media, radii, shadows, spacing } from '@/theme';
+import { brandColors, brandRgb } from '@/theme/brand';
 
 export const Shell = styled.div<{ $palette: ThemePalette }>`
   min-height: 100vh;
@@ -10,12 +11,13 @@ export const Shell = styled.div<{ $palette: ThemePalette }>`
   align-items: center;
   justify-content: center;
   padding: ${spacing.xl};
+  background: ${brandColors.pink100};
 `;
 
 export const BgLayer = styled.div<{ $palette: ThemePalette }>`
   position: fixed;
   inset: 0;
-  background: ${({ $palette }) => $palette.gradientHero};
+  background: linear-gradient(180deg, ${brandColors.pink100} 0%, ${brandColors.white} 55%, ${brandColors.accent100} 100%);
   z-index: 0;
 `;
 
@@ -27,9 +29,9 @@ export const Blob = styled.div<{
   width: ${({ $secondary }) => ($secondary ? '280px' : '420px')};
   height: ${({ $secondary }) => ($secondary ? '280px' : '420px')};
   border-radius: 50%;
-  background: ${({ $palette, $secondary }) =>
-    $secondary ? $palette.accentPink : $palette.gradientPrimary};
-  opacity: ${({ $secondary }) => ($secondary ? 0.15 : 0.12)};
+  background: ${({ $secondary }) =>
+    $secondary ? brandColors.accent500 : brandColors.pink500};
+  opacity: ${({ $secondary }) => ($secondary ? 0.1 : 0.12)};
   filter: blur(80px);
   z-index: 0;
   top: ${({ $secondary }) => ($secondary ? '60%' : '10%')};
@@ -42,11 +44,15 @@ export const Grid = styled.div`
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(2rem, 5vw, 4rem);
-  max-width: 1100px;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 0;
+  max-width: 960px;
   width: 100%;
-  align-items: center;
+  align-items: stretch;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: ${shadows.lg};
+  background: ${brandColors.white};
 
   ${media.belowLg} {
     grid-template-columns: 1fr;
@@ -55,24 +61,29 @@ export const Grid = styled.div`
 `;
 
 export const BenefitsPanel = styled.div`
+  padding: clamp(1.75rem, 4vw, 2.75rem);
+  background: ${brandColors.pink50};
+  color: ${brandColors.chocolate};
+
   ${media.belowLg} {
     display: none;
   }
 
   h2 {
     font-family: ${fontFamily.display};
-    font-size: ${fontSizes.h2};
+    font-size: clamp(1.5rem, 3vw, 1.85rem);
     font-weight: 800;
-    letter-spacing: -0.03em;
+    letter-spacing: -0.02em;
     margin: 0 0 ${spacing.md};
+    color: ${brandColors.chocolate};
   }
 
   > p {
-    font-size: ${fontSizes.lg};
+    font-size: ${fontSizes.md};
     line-height: 1.65;
-    opacity: 0.8;
+    color: ${brandColors.gray600};
     margin: 0 0 ${spacing.xl};
-    max-width: 400px;
+    max-width: 360px;
   }
 
   ul {
@@ -87,55 +98,74 @@ export const BenefitsPanel = styled.div`
 
 export const BenefitItem = styled.li<{ $palette: ThemePalette }>`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: ${spacing.sm};
-  font-size: ${fontSizes.md};
+  font-size: ${fontSizes.sm};
   font-weight: 500;
-  color: ${({ $palette }) => $palette.text};
+  color: ${brandColors.chocolate};
 
   svg {
-    color: ${({ $palette }) => $palette.primary};
+    color: ${brandColors.pink500};
     flex-shrink: 0;
+    margin-top: 2px;
   }
 `;
 
 export const SocialProof = styled.p<{ $palette: ThemePalette }>`
+  margin: 0 0 ${spacing.md};
   font-size: ${fontSizes.sm};
   font-weight: 600;
-  color: ${({ $palette }) => $palette.primary};
-  margin: 0 0 ${spacing.md};
+  color: ${brandColors.pink600};
 `;
 
 export const Quote = styled.blockquote<{ $palette: ThemePalette }>`
   margin: 0;
-  font-size: ${fontSizes.lg};
+  font-family: ${fontFamily.emphasis};
   font-style: italic;
-  line-height: 1.6;
-  color: ${({ $palette }) => $palette.textSecondary};
-  max-width: 380px;
+  font-size: ${fontSizes.md};
+  color: ${brandColors.gray600};
+  line-height: 1.5;
 `;
 
-export const QuoteAuthor = styled.cite<{ $palette: ThemePalette }>`
-  display: block;
-  margin-top: ${spacing.sm};
+export const QuoteAuthor = styled.p<{ $palette: ThemePalette }>`
+  margin: ${spacing.sm} 0 0;
   font-size: ${fontSizes.sm};
-  font-style: normal;
   font-weight: 600;
-  color: ${({ $palette }) => $palette.textMuted};
+  color: ${brandColors.chocolate};
 `;
 
 export const CardWrap = styled.div`
-  display: flex;
-  justify-content: center;
+  padding: clamp(1.75rem, 4vw, 2.5rem);
+  background: ${brandColors.white};
 `;
 
 export const GlassCard = styled.div<{ $palette: ThemePalette }>`
-  width: 100%;
-  max-width: 420px;
-  padding: clamp(1.75rem, 4vw, 2.5rem);
-  border-radius: ${radii.xxl};
-  background: ${({ $palette }) => $palette.glass};
-  backdrop-filter: blur(24px) saturate(1.5);
-  border: 1px solid ${({ $palette }) => $palette.border};
-  box-shadow: ${shadows.xl};
+  background: transparent;
+  border: none;
+  border-radius: ${radii.xl};
+  padding: 0;
+  box-shadow: none;
+`;
+
+export const VendorCta = styled.div`
+  margin-top: 1.25rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  background: ${brandColors.info50};
+  border: 1px solid rgba(${brandRgb.ink}, 0.06);
+
+  h3 {
+    margin: 0 0 0.35rem;
+    font-family: ${fontFamily.body};
+    font-size: 0.9375rem;
+    font-weight: 700;
+    color: ${brandColors.chocolate};
+  }
+
+  p {
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: ${brandColors.gray600};
+  }
 `;

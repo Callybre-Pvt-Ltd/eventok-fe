@@ -242,6 +242,24 @@ export const authService = {
     }
   },
 
+  async updateMe(payload: {
+    full_name?: string;
+    phone?: string;
+  }): Promise<ServiceResponse<User>> {
+    return wrap(async () => {
+      const raw = await apiRequest<BackendUser>('/users/me', {
+        method: 'PATCH',
+        body: payload,
+      });
+      const meta = loadMeta();
+      return mapUser(raw, {
+        city: meta?.city,
+        vendorStatus: meta?.vendorStatus,
+        vendorId: meta?.vendorId,
+      });
+    });
+  },
+
   async listUsers(role?: BackendRole): Promise<ServiceResponse<User[]>> {
     return wrap(async () => {
       const page = await apiRequestPaginated<BackendUser>('/admin/users', {

@@ -2,11 +2,28 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { categoryService, vendorService } from '@/services';
+import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
+
+export type CreateServiceInput = {
+  category_id: string;
+  title: string;
+  description?: string;
+  starting_price: number;
+  city: string;
+  state: string;
+};
+
+function buildDescription(values: CreateServiceInput) {
+  const base = values.description?.trim() ?? '';
+  const area = `Service area: ${values.city}, ${values.state}, India`;
+  return base ? `${base}\n\n${area}` : area;
+}
 
 export function useVendorServices() {
   const { session } = useAuth();
   const queryClient = useQueryClient();
   const vendorId = session?.user.vendorId;
+  const isAdmin = session?.user.role === 'admin';
 
   const meQuery = useQuery({
     queryKey: ['vendor', 'me'],
@@ -31,28 +48,62 @@ export function useVendorServices() {
   });
 
   const categoriesQuery = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', 'decoration'],
     queryFn: async () => {
+      if (isAdmin) {
+        await categoryService.ensureDecorationCategories();
+      }
       const res = await categoryService.getAll();
       if (res.error) throw new Error(res.error);
-      return res.data ?? [];
+      const live = (res.data ?? []).filter(c => c.id);
+      if (live.length) return live;
+      // Still show static labels so the UI is usable; create will explain if IDs missing
+      return DECORATION_CATEGORIES.map(c => ({
+        id: '',
+        name: c.name,
+        slug: c.slug,
+        icon: c.icon,
+        description: c.blurb,
+      }));
     },
   });
 
   const createMutation = useMutation({
-    mutationFn: async (values: {
-      category_id: string;
-      title: string;
-      description?: string;
-      starting_price: number;
-    }) => {
-      const res = await vendorService.createService(resolvedVendorId!, values);
+    mutationFn: async (values: CreateServiceInput) => {
+      if (!values.category_id) {
+        throw new Error(
+          'Categories are not loaded from the server yet. Ask admin to open Categories once, or run seed-demo.',
+        );
+      }
+      const res = await vendorService.createService(resolvedVendorId!, {
+        category_id: values.category_id,
+        title: values.title,
+        description: buildDescription(values),
+        starting_price: values.starting_price,
+      });
       if (res.error || !res.data) throw new Error(res.error ?? 'Create failed');
-      return res.data;
+
+      await vendorService.updateVendor(resolvedVendorId!, {
+        city: values.city,
+        state: values.state,
+      });
+
+      const published = await vendorService.updateService(res.data.id, {
+        status: 'PUBLISHED',
+      });
+      if (published.error || !published.data) {
+        throw new Error(
+          published.error ??
+            'Service created but publish failed — use Publish on the card.',
+        );
+      }
+      return published.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
-      message.success('Service created');
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'me'] });
+      queryClient.invalidateQueries({ queryKey: ['storefront'] });
+      message.success('Service created and published — customers can book it');
     },
     onError: (err: Error) => message.error(err.message),
   });
@@ -67,7 +118,8 @@ export function useVendorServices() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
-      message.success('Service published');
+      queryClient.invalidateQueries({ queryKey: ['storefront'] });
+      message.success('Service published — customers can book it');
     },
     onError: (err: Error) => message.error(err.message),
   });
@@ -79,7 +131,7 @@ export function useVendorServices() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
-      message.success('Service deleted');
+      message.success('Service removed');
     },
     onError: (err: Error) => message.error(err.message),
   });
@@ -96,18 +148,27 @@ export function useVendorServices() {
       if (res.error) throw new Error(res.error);
       return res.data;
     },
-    onSuccess: () => message.success('Image uploaded'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'portfolio'] });
+      queryClient.invalidateQueries({ queryKey: ['storefront'] });
+      message.success('Image uploaded');
+    },
     onError: (err: Error) => message.error(err.message),
   });
+
+  const categoriesReady = (categoriesQuery.data ?? []).some(c => c.id);
 
   return {
     services: servicesQuery.data ?? [],
     categories: categoriesQuery.data ?? [],
+    categoriesReady,
     isLoading: servicesQuery.isLoading || meQuery.isLoading,
     createMutation,
     publishMutation,
     deleteMutation,
     uploadMutation,
     vendorId: resolvedVendorId,
+    vendorCity: meQuery.data?.city ?? session?.user.city ?? '',
   };
 }

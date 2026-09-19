@@ -15,7 +15,7 @@ import {
 export default function AdminPaymentsPage() {
   const { t } = useTranslation();
   const { palette } = usePortalPalette();
-  const { payments, isLoading } = useAdminPayments();
+  const { payments, isLoading, refundMutation } = useAdminPayments();
   if (isLoading) return <LoadingState />;
   return (
     <>
@@ -31,7 +31,13 @@ export default function AdminPaymentsPage() {
             </ItemMeta>
             {p.status === 'completed' && (
               <Actions>
-                <Button size="small">{t('admin.refund')}</Button>
+                <Button
+                  size="small"
+                  loading={refundMutation.isPending}
+                  onClick={() => refundMutation.mutate(p.id)}
+                >
+                  {t('admin.refund')}
+                </Button>
               </Actions>
             )}
           </ListItem>

@@ -5,13 +5,18 @@ import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { ScrollToTop } from '@/routes/ScrollToTop';
 
 import HomePage from '@/pages/home';
+import ShopPage from '@/pages/shop';
+import ProductPage from '@/pages/product';
+import PackagesPage from '@/pages/packages';
+import PackageBuilderPage from '@/pages/package-builder';
+import CartPage from '@/pages/cart';
+import CheckoutPage from '@/pages/checkout';
 import WishlistPage from '@/pages/wishlist';
 import AboutPage from '@/pages/about';
-import ServicesPage from '@/pages/services';
-import ServiceDetailPage from '@/pages/service-detail';
 import ContactPage from '@/pages/contact';
 import LoginPage from '@/pages/login';
 import RegisterPage from '@/pages/register';
+import VendorLoginPage from '@/pages/vendor-login';
 
 import CustomerDashboardPage from '@/pages/customer/dashboard';
 import CustomerBookingsPage from '@/pages/customer/bookings';
@@ -46,58 +51,45 @@ export function AppRouter() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        {/* Public routes */}
+        {/* Public storefront */}
         <Route path={ROUTES.HOME} element={<HomePage />} />
-        <Route
-          path={ROUTES.SHOP}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
-        <Route
-          path={ROUTES.SHOP_CATEGORY}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
-        <Route
-          path={ROUTES.PRODUCT}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
-        <Route
-          path={ROUTES.PACKAGES}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
-        <Route
-          path={ROUTES.PACKAGE_BUILDER}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
-        <Route
-          path={ROUTES.CART}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
-        <Route
-          path={ROUTES.CHECKOUT}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
-        />
+        <Route path={ROUTES.SHOP} element={<ShopPage />} />
+        <Route path={ROUTES.SHOP_CATEGORY} element={<ShopPage />} />
+        <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
+        <Route path={ROUTES.PACKAGES} element={<PackagesPage />} />
+        <Route path={ROUTES.PACKAGE_BUILDER} element={<PackageBuilderPage />} />
+        <Route path={ROUTES.CART} element={<CartPage />} />
+        <Route path={ROUTES.CHECKOUT} element={<CheckoutPage />} />
         <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
         <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-        <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
-        <Route path={ROUTES.SERVICE_DETAIL} element={<ServiceDetailPage />} />
+        <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+
+        {/* Legacy orange discovery → storefront */}
+        <Route
+          path={ROUTES.SERVICES}
+          element={<Navigate to={ROUTES.SHOP} replace />}
+        />
+        <Route
+          path={ROUTES.SERVICE_DETAIL}
+          element={<Navigate to={ROUTES.SHOP} replace />}
+        />
         <Route
           path={ROUTES.CATEGORIES}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
+          element={<Navigate to={ROUTES.SHOP} replace />}
         />
-        {/* Public site shows services only — never vendor profiles */}
         <Route
           path={ROUTES.VENDORS}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
+          element={<Navigate to={ROUTES.SHOP} replace />}
         />
         <Route
           path={ROUTES.VENDOR_DETAIL}
-          element={<Navigate to={ROUTES.SERVICES} replace />}
+          element={<Navigate to={ROUTES.SHOP} replace />}
         />
         <Route
           path={ROUTES.TESTIMONIALS}
           element={
             <Navigate
-              to={{ pathname: ROUTES.HOME, hash: '#testimonials' }}
+              to={{ pathname: ROUTES.HOME, hash: '#previous-work' }}
               replace
             />
           }
@@ -108,11 +100,11 @@ export function AppRouter() {
             <Navigate to={{ pathname: ROUTES.HOME, hash: '#faq' }} replace />
           }
         />
-        <Route path={ROUTES.CONTACT} element={<ContactPage />} />
 
-        {/* Auth routes */}
+        {/* Auth */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+        <Route path={ROUTES.VENDOR_LOGIN} element={<VendorLoginPage />} />
 
         {/* Customer portal */}
         <Route
@@ -191,7 +183,6 @@ export function AppRouter() {
           <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 
-        {/* Fallback */}
         <Route path="*" element={<Navigate to={ROUTES.HOME} replace />} />
       </Routes>
     </BrowserRouter>

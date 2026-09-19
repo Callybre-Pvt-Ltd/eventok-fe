@@ -3,7 +3,17 @@ import { Outlet } from 'react-router-dom';
 import type { UserRole } from '@/types';
 import { PortalSidebar } from '@/components/global/portal-sidebar';
 import { usePortalLayout } from './helper';
-import { Content, Layout, Main, MenuBtn, TopBar, TopBarTitle } from './styled';
+import {
+  Content,
+  Layout,
+  Main,
+  MenuBtn,
+  RolePill,
+  TopBar,
+  TopBarCopy,
+  TopBarEyebrow,
+  TopBarTitle,
+} from './styled';
 
 interface PortalLayoutProps {
   role: UserRole;
@@ -12,7 +22,8 @@ interface PortalLayoutProps {
 export function PortalLayout({ role }: PortalLayoutProps) {
   const {
     palette,
-    appName,
+    portalLabel,
+    portalEyebrow,
     navItems,
     collapsed,
     mobileOpen,
@@ -27,6 +38,7 @@ export function PortalLayout({ role }: PortalLayoutProps) {
       <PortalSidebar
         role={role}
         palette={palette}
+        portalEyebrow={portalEyebrow}
         navItems={navItems}
         collapsed={collapsed}
         mobileOpen={mobileOpen}
@@ -44,7 +56,11 @@ export function PortalLayout({ role }: PortalLayoutProps) {
           >
             {mobileOpen ? <X size={20} /> : <Menu size={20} />}
           </MenuBtn>
-          <TopBarTitle $palette={palette}>{appName}</TopBarTitle>
+          <TopBarCopy>
+            <TopBarEyebrow>{portalEyebrow}</TopBarEyebrow>
+            <TopBarTitle $palette={palette}>{portalLabel}</TopBarTitle>
+          </TopBarCopy>
+          <RolePill>{role === 'admin' ? 'Super admin' : role}</RolePill>
         </TopBar>
         <Content>
           <Outlet />

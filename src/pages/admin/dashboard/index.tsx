@@ -1,7 +1,16 @@
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
 import { useAdminDashboard } from './helper';
-import { PageTitle, StatCard, StatLabel, StatValue, StatsGrid } from './styled';
+import {
+  PageEyebrow,
+  PageHeader,
+  PageLead,
+  PageTitle,
+  StatCard,
+  StatLabel,
+  StatValue,
+  StatsGrid,
+} from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 
 export default function AdminDashboardPage() {
@@ -11,7 +20,15 @@ export default function AdminDashboardPage() {
   if (isLoading) return <LoadingState />;
   return (
     <>
-      <PageTitle $palette={palette}>{t('admin.dashboardTitle')}</PageTitle>
+      <PageHeader>
+        <div>
+          <PageEyebrow>Marketplace overview</PageEyebrow>
+          <PageTitle $palette={palette}>{t('admin.dashboardTitle')}</PageTitle>
+          <PageLead $palette={palette}>
+            Approvals, bookings, and revenue across EventOK partners.
+          </PageLead>
+        </div>
+      </PageHeader>
       <StatsGrid>
         <StatCard $palette={palette}>
           <StatLabel $palette={palette}>{t('admin.totalRevenue')}</StatLabel>

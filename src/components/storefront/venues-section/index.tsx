@@ -35,6 +35,8 @@ export function VenuesSection() {
   const { t } = useTranslation();
   const { venues } = useVenuesSection();
 
+  if (!venues.length) return null;
+
   return (
     <Section>
       <SectionInner>

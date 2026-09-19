@@ -100,8 +100,9 @@ export const Title = styled.h1`
 `;
 
 export const Accent = styled.em`
-  font-family: ${fontFamily.display};
+  font-family: ${fontFamily.emphasis};
   font-style: italic;
+  font-weight: 600;
   color: ${brandColors.pink400};
 `;
 

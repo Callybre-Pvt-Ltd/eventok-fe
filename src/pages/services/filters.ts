@@ -100,26 +100,12 @@ export const defaultFilters: DiscoveryFilters = {
   quick: [],
 };
 
-export const categoryOptions = [
-  { value: 'wedding', label: 'Wedding' },
-  { value: 'birthday', label: 'Birthday' },
-  { value: 'corporate', label: 'Corporate' },
-  { value: 'photography', label: 'Photography' },
-  { value: 'decoration', label: 'Decoration' },
-  { value: 'catering', label: 'Catering' },
-  { value: 'entertainment', label: 'Entertainment' },
-  { value: 'venue', label: 'Venue' },
-  { value: 'makeup', label: 'Makeup' },
-  { value: 'mehendi', label: 'Mehendi' },
-  { value: 'lighting', label: 'Lighting' },
-  { value: 'music', label: 'Music' },
-  { value: 'anchor', label: 'Anchor' },
-  { value: 'florist', label: 'Florist' },
-  { value: 'invitations', label: 'Invitations' },
-  { value: 'cake', label: 'Cake' },
-  { value: 'transport', label: 'Transport' },
-  { value: 'videography', label: 'Videography' },
-] as const;
+import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
+
+export const categoryOptions = DECORATION_CATEGORIES.map(c => ({
+  value: c.slug,
+  label: c.name,
+}));
 
 export function getResultsContext(filters: DiscoveryFilters) {
   const parts: string[] = [];

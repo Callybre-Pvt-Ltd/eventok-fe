@@ -38,7 +38,7 @@ export const BrandMark = styled.span`
   width: 2.25rem;
   height: 2.25rem;
   border-radius: ${radii.md};
-  background: ${brandColors.accent500};
+  background: ${brandColors.pink500};
   color: ${brandColors.white};
   font-family: ${fontFamily.display};
   font-weight: 800;

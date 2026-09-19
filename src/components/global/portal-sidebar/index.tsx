@@ -6,6 +6,7 @@ import type { UserRole } from '@/types';
 import type { ThemePalette } from '@/theme';
 import type { NavItem } from './helper';
 import {
+  BrandBlock,
   CollapseBtn,
   LogoutBtn,
   NavItem as NavItemLink,
@@ -13,6 +14,7 @@ import {
   NavList,
   Overlay,
   Sidebar,
+  SidebarEyebrow,
   SidebarFooter,
   SidebarHeader,
   SidebarLogo,
@@ -21,6 +23,7 @@ import {
 interface PortalSidebarProps {
   role: UserRole;
   palette: ThemePalette;
+  portalEyebrow: string;
   navItems: NavItem[];
   collapsed: boolean;
   mobileOpen: boolean;
@@ -31,6 +34,7 @@ interface PortalSidebarProps {
 
 export function PortalSidebar({
   palette,
+  portalEyebrow,
   navItems,
   collapsed,
   mobileOpen,
@@ -50,9 +54,14 @@ export function PortalSidebar({
         $mobileOpen={mobileOpen}
       >
         <SidebarHeader $palette={palette}>
-          <SidebarLogo $palette={palette} to={ROUTES.HOME}>
-            {t('common.appName')}
-          </SidebarLogo>
+          <BrandBlock>
+            <SidebarEyebrow $collapsed={collapsed}>
+              {portalEyebrow}
+            </SidebarEyebrow>
+            <SidebarLogo $palette={palette} to={ROUTES.HOME}>
+              Event<span>OK</span>
+            </SidebarLogo>
+          </BrandBlock>
           <CollapseBtn
             $palette={palette}
             onClick={toggleCollapse}

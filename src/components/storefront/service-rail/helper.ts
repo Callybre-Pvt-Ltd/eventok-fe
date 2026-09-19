@@ -1,29 +1,35 @@
 import { useMemo, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { catalogService } from '@/services';
-import type { CatalogEventType } from '@/types/catalog';
-
-const TABS: { value: CatalogEventType; labelKey: string }[] = [
-  { value: 'anniversary', labelKey: 'storefront.navAnniversary' },
-  { value: 'baby-shower', labelKey: 'storefront.navBabyShower' },
-  { value: 'birthday', labelKey: 'storefront.navBirthday' },
-  { value: 'wedding', labelKey: 'storefront.navWedding' },
-  { value: 'home-decoration', labelKey: 'storefront.navHomeDecoration' },
-];
 
 export function useServiceRail() {
   const railRef = useRef<HTMLDivElement>(null);
-  const [tab, setTab] = useState<CatalogEventType>('anniversary');
+  const [tab, setTab] = useState<string>('all');
+
+  const { data: categories } = useQuery({
+    queryKey: ['storefront', 'categories'],
+    queryFn: async () => (await catalogService.getCategories()).data ?? [],
+  });
 
   const { data } = useQuery({
     queryKey: ['storefront', 'services', 'all'],
     queryFn: async () => (await catalogService.list()).data ?? [],
   });
 
-  const services = useMemo(
-    () => (data ?? []).filter(service => service.eventType === tab),
-    [data, tab],
-  );
+  const tabs = useMemo(() => {
+    const base = [{ value: 'all', label: 'All' }];
+    const cats = (categories ?? []).slice(0, 6).map(c => ({
+      value: c.slug,
+      label: c.name,
+    }));
+    return [...base, ...cats];
+  }, [categories]);
+
+  const services = useMemo(() => {
+    const all = data ?? [];
+    if (tab === 'all') return all;
+    return all.filter(service => service.categorySlug === tab);
+  }, [data, tab]);
 
   const scrollBy = (direction: 1 | -1) => {
     railRef.current?.scrollBy({
@@ -32,5 +38,5 @@ export function useServiceRail() {
     });
   };
 
-  return { tabs: TABS, tab, setTab, services, railRef, scrollBy };
+  return { tabs, tab, setTab, services, railRef, scrollBy };
 }

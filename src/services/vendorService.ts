@@ -206,16 +206,126 @@ export const vendorService = {
     });
   },
 
-  async updatePortfolio(
-    vendorId: string,
-    portfolio: VendorPrivate['portfolio'],
-  ): Promise<ServiceResponse<VendorPrivate>> {
+  async listServiceImages(
+    serviceId: string,
+  ): Promise<ServiceResponse<{ id: string; image_url: string }[]>> {
+    return wrap(() =>
+      apiRequest<{ id: string; image_url: string }[]>(
+        `/services/${serviceId}/images`,
+        { auth: true },
+      ),
+    );
+  },
+
+  async deleteServiceImage(
+    serviceId: string,
+    imageId: string,
+  ): Promise<ServiceResponse<null>> {
     return wrap(async () => {
-      const vendor = await apiRequest<ApiVendor>(`/vendors/${vendorId}`, {
-        method: 'PATCH',
-        body: {},
+      await apiRequest(`/services/${serviceId}/images/${imageId}`, {
+        method: 'DELETE',
       });
-      return { ...toPrivate(vendor), portfolio };
+      return null;
+    });
+  },
+
+  async updateVendor(
+    vendorId: string,
+    payload: {
+      business_name?: string;
+      description?: string;
+      experience_years?: number;
+      address?: string;
+      city?: string;
+      state?: string;
+    },
+  ): Promise<ServiceResponse<VendorPrivate>> {
+    return wrap(async () =>
+      toPrivate(
+        await apiRequest<ApiVendor>(`/vendors/${vendorId}`, {
+          method: 'PATCH',
+          body: payload,
+        }),
+      ),
+    );
+  },
+
+  async getAvailability(
+    serviceId: string,
+  ): Promise<
+    ServiceResponse<
+      {
+        id: string;
+        day_of_week: number;
+        start_time: string;
+        end_time: string;
+        is_available: boolean;
+      }[]
+    >
+  > {
+    return wrap(() =>
+      apiRequest(`/services/${serviceId}/availability`, { auth: true }),
+    );
+  },
+
+  async setAvailability(
+    serviceId: string,
+    windows: {
+      day_of_week: number;
+      start_time: string;
+      end_time: string;
+      is_available: boolean;
+    }[],
+  ): Promise<ServiceResponse<unknown>> {
+    return wrap(() =>
+      apiRequest(`/services/${serviceId}/availability`, {
+        method: 'PUT',
+        body: { windows },
+      }),
+    );
+  },
+
+  async submitVerification(
+    vendorId: string,
+    documentType:
+      | 'ID_PROOF'
+      | 'BUSINESS_LICENSE'
+      | 'ADDRESS_PROOF'
+      | 'GST_CERTIFICATE'
+      | 'OTHER',
+    file: File,
+  ): Promise<ServiceResponse<{ id: string; status: string }>> {
+    return wrap(async () => {
+      const formData = new FormData();
+      formData.append('document_type', documentType);
+      formData.append('file', file);
+      return apiRequest<{ id: string; status: string }>(
+        `/vendors/${vendorId}/verification`,
+        { method: 'POST', formData },
+      );
+    });
+  },
+
+  async listMyPayouts(): Promise<
+    ServiceResponse<
+      {
+        id: string;
+        amount: string | number;
+        vendor_amount: string | number;
+        status: string;
+        created_at: string;
+      }[]
+    >
+  > {
+    return wrap(async () => {
+      const page = await apiRequestPaginated<{
+        id: string;
+        amount: string | number;
+        vendor_amount: string | number;
+        status: string;
+        created_at: string;
+      }>('/payouts/me', { query: { page: 1, page_size: 100 } });
+      return page.items;
     });
   },
 

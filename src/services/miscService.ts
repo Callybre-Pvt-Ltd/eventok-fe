@@ -1,4 +1,5 @@
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
+import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 import type { Category, Review, ServiceResponse } from '@/types';
 
 interface ApiCategory {
@@ -31,6 +32,51 @@ const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
   }
 };
 
+const mapCategory = (c: ApiCategory): Category => ({
+  id: c.id,
+  name: c.name,
+  slug: c.slug,
+  icon: c.icon ?? 'sparkles',
+  description: '',
+});
+
+/** Prefer static decoration order; attach live IDs when the API has them. */
+const mergeWithStatic = (apiItems: ApiCategory[]): Category[] => {
+  const bySlug = new Map(apiItems.map(c => [c.slug, c]));
+  const byName = new Map(
+    apiItems.map(c => [c.name.trim().toLowerCase(), c]),
+  );
+
+  const merged: Category[] = DECORATION_CATEGORIES.map(staticCat => {
+    const hit =
+      bySlug.get(staticCat.slug) ??
+      byName.get(staticCat.name.toLowerCase());
+    if (hit) {
+      return {
+        ...mapCategory(hit),
+        icon: staticCat.icon,
+        description: staticCat.blurb,
+      };
+    }
+    return {
+      id: '',
+      name: staticCat.name,
+      slug: staticCat.slug,
+      icon: staticCat.icon,
+      description: staticCat.blurb,
+    };
+  });
+
+  // Keep any extra API categories (legacy seed) at the end
+  const known = new Set(merged.map(c => c.slug));
+  for (const item of apiItems) {
+    if (!known.has(item.slug) && item.is_active !== false) {
+      merged.push(mapCategory(item));
+    }
+  }
+  return merged;
+};
+
 export const categoryService = {
   async getAll(): Promise<ServiceResponse<Category[]>> {
     return wrap(async () => {
@@ -38,13 +84,36 @@ export const categoryService = {
         auth: false,
         query: { page: 1, page_size: 100 },
       });
-      return page.items.map(c => ({
-        id: c.id,
-        name: c.name,
-        slug: c.slug,
-        icon: c.icon ?? 'sparkles',
-        description: '',
-      }));
+      return mergeWithStatic(page.items ?? []);
+    });
+  },
+
+  /** Admin-only: create any static decoration category missing from the API. */
+  async ensureDecorationCategories(): Promise<ServiceResponse<Category[]>> {
+    return wrap(async () => {
+      const current = await categoryService.getAll();
+      const existing = current.data ?? [];
+      const haveSlug = new Set(existing.filter(c => c.id).map(c => c.slug));
+      const haveName = new Set(
+        existing.filter(c => c.id).map(c => c.name.toLowerCase()),
+      );
+
+      for (const cat of DECORATION_CATEGORIES) {
+        if (haveSlug.has(cat.slug) || haveName.has(cat.name.toLowerCase())) {
+          continue;
+        }
+        try {
+          await apiRequest<ApiCategory>('/admin/categories', {
+            method: 'POST',
+            body: { name: cat.name, icon: cat.icon },
+          });
+        } catch {
+          // may already exist under a slightly different slug
+        }
+      }
+
+      const refreshed = await categoryService.getAll();
+      return refreshed.data ?? [];
     });
   },
 
@@ -56,13 +125,7 @@ export const categoryService = {
         method: 'POST',
         body: { name: payload.name, icon: payload.icon ?? null },
       });
-      return {
-        id: created.id,
-        name: created.name,
-        slug: created.slug,
-        icon: created.icon ?? 'sparkles',
-        description: '',
-      };
+      return mapCategory(created);
     });
   },
 

@@ -127,7 +127,8 @@ export const storefront = {
   shopPriceRange: 'Price range',
   shopTags: 'Tags',
   shopResults: '{{count}} services',
-  shopEmpty: 'No services match these filters yet.',
+  shopEmpty:
+    'No vendor services published yet. Categories are ready — vendors can create and publish listings to appear here.',
   shopEmptyAction: 'Clear filters',
   shopOpenFilters: 'Show filters',
 

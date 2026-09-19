@@ -30,9 +30,7 @@ export function useStoreHeader() {
       event.preventDefault();
       const query = term.trim();
       navigate(
-        query
-          ? `${ROUTES.SERVICES}?q=${encodeURIComponent(query)}`
-          : ROUTES.SERVICES,
+        query ? `${ROUTES.SHOP}?q=${encodeURIComponent(query)}` : ROUTES.SHOP,
       );
     },
     [navigate, term],

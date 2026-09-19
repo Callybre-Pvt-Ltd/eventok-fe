@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { PublicHeader } from '@/components/global/public-header';
-import { PublicFooter } from '@/components/global/public-footer';
+import { StoreLayout } from '@/components/storefront/store-layout';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
 import { photography } from '@/design-system/tokens/photography';
@@ -76,8 +75,8 @@ export default function AboutPage() {
   const { palette, stats } = useAboutPage();
 
   return (
+    <StoreLayout>
     <PageWrap $palette={palette}>
-      <PublicHeader />
       <Hero>
         <HeroMedia>
           <HeroImage
@@ -247,14 +246,13 @@ export default function AboutPage() {
 
       <CtaBand $palette={palette}>
         <h2>{t('marketplace.aboutCta')}</h2>
-        <Link to={ROUTES.SERVICES}>
+        <Link to={ROUTES.SHOP}>
           <Button variant="primary" size="lg">
             {t('landing.heroCta')}
           </Button>
         </Link>
       </CtaBand>
-
-      <PublicFooter />
     </PageWrap>
+    </StoreLayout>
   );
 }

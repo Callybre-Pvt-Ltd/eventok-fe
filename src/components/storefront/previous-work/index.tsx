@@ -15,8 +15,10 @@ export function PreviousWork() {
   const { t } = useTranslation();
   const { items } = usePreviousWork();
 
+  if (!items.length) return null;
+
   return (
-    <Section $tint>
+    <Section $tint id="previous-work">
       <SectionInner>
         <Eyebrow>{t('storefront.previousWorkEyebrow')}</Eyebrow>
         <SectionTitle>{t('storefront.previousWorkTitle')}</SectionTitle>

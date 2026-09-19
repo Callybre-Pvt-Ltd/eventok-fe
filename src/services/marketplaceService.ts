@@ -64,18 +64,19 @@ const initialsOf = (title: string) =>
 
 export const toDiscoveryCard = (
   service: ApiService,
-  categoryName?: string,
+  category?: Pick<ApiCategory, 'id' | 'name' | 'slug'> | null,
   images: string[] = [],
 ): DiscoveryVendor => {
   const price = Number(service.starting_price) || 0;
   const image = images[0] || placeholder;
+  const categoryName = category?.name;
   return {
     id: service.id,
     displayName: service.title,
     description: service.description ?? '',
     initials: initialsOf(service.title),
     category: categoryName ?? 'Service',
-    categorySlug: service.category_id,
+    categorySlug: category?.slug ?? service.category_id,
     city: '',
     state: '',
     country: 'India',
@@ -112,7 +113,7 @@ export const marketplaceService = {
         auth: false,
         query: { page: 1, page_size: 100 },
       });
-      return page.items.filter(c => c.is_active);
+      return page.items.filter(c => c.is_active !== false);
     });
   },
 
@@ -154,7 +155,7 @@ export const marketplaceService = {
             images = [];
           }
           const cat = byId.get(service.category_id);
-          return toDiscoveryCard(service, cat?.name, images);
+          return toDiscoveryCard(service, cat ?? null, images);
         }),
       );
 
@@ -184,7 +185,7 @@ export const marketplaceService = {
         images = [];
       }
       return {
-        ...toDiscoveryCard(service, cat?.name, images),
+        ...toDiscoveryCard(service, cat ?? null, images),
         raw: service,
       };
     });

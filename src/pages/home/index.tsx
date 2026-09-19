@@ -23,6 +23,7 @@ export default function HomePage() {
         <CategoryTiles limit={20} />
         <PackagesShowcase />
         <PreviousWork />
+        <div id="faq" />
         <ReferEarn />
       </PageWrap>
     </StoreLayout>

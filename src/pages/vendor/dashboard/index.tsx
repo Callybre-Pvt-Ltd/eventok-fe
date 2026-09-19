@@ -4,6 +4,9 @@ import { useVendorDashboard } from './helper';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import {
   Banner,
+  PageEyebrow,
+  PageHeader,
+  PageLead,
   PageTitle,
   StatCard,
   StatLabel,
@@ -22,7 +25,15 @@ export default function VendorDashboardPage() {
       {isPending && (
         <Banner $palette={palette}>{t('vendor.pendingBanner')}</Banner>
       )}
-      <PageTitle $palette={palette}>{t('vendor.dashboardTitle')}</PageTitle>
+      <PageHeader>
+        <div>
+          <PageEyebrow>Partner workspace</PageEyebrow>
+          <PageTitle $palette={palette}>{t('vendor.dashboardTitle')}</PageTitle>
+          <PageLead $palette={palette}>
+            Track bookings and keep your decoration services ready to book.
+          </PageLead>
+        </div>
+      </PageHeader>
       <StatsGrid>
         <StatCard $palette={palette}>
           <StatLabel $palette={palette}>{t('vendor.totalBookings')}</StatLabel>
