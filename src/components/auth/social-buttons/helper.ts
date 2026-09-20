@@ -1,8 +1,12 @@
 import { useTheme } from '@/theme';
+import { useAuth } from '@/hooks/auth/use-auth';
 
-export function useSocialButtons(onSocial?: (p: 'google' | 'apple') => void) {
+export function useSocialButtons(onSocial?: (p: 'google') => void) {
   const { palette } = useTheme();
-  const handleGoogle = () => onSocial?.('google');
-  const handleApple = () => onSocial?.('apple');
-  return { palette, handleGoogle, handleApple };
+  const { signInWithGoogle } = useAuth();
+  const handleGoogle = () => {
+    onSocial?.('google');
+    void signInWithGoogle();
+  };
+  return { palette, handleGoogle };
 }

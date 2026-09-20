@@ -25,10 +25,14 @@ export function ProtectedRoute({
   roles,
   allowPendingVendor = false,
 }: ProtectedRouteProps) {
-  const { session, isLoading } = useAuth();
+  const { session, isLoading, onboardingRequired } = useAuth();
   const location = useLocation();
 
   if (isLoading) return <LoadingState />;
+
+  if (onboardingRequired) {
+    return <Navigate to={ROUTES.ONBOARDING} replace />;
+  }
 
   if (!session) {
     return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;

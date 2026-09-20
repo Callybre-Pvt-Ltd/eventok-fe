@@ -9,12 +9,13 @@ interface FormDraft {
   name: string;
   email: string;
   password: string;
+  phone: string;
   city: string;
 }
 
 export function useRegisterPage() {
   const { palette } = useTheme();
-  const { register } = useAuth();
+  const { register, verifyRegistration, verificationPending } = useAuth();
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,8 +25,10 @@ export function useRegisterPage() {
     name: '',
     email: '',
     password: '',
+    phone: '',
     city: '',
   });
+  const [verificationCode, setVerificationCode] = useState('');
 
   const totalSteps = role === 'vendor' ? 3 : 2;
 
@@ -44,9 +47,22 @@ export function useRegisterPage() {
       setError(err);
       return;
     }
-    if (role === 'vendor') navigate(ROUTES.VENDOR_PENDING, { replace: true });
-    else navigate(ROUTES.CUSTOMER_DASHBOARD, { replace: true });
-  }, [register, navigate, role, draft]);
+  }, [register, role, draft]);
+
+  const submitVerification = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const err = await verifyRegistration(verificationCode);
+    setLoading(false);
+    if (err) {
+      setError(err);
+      return;
+    }
+    navigate(
+      role === 'vendor' ? ROUTES.VENDOR_PENDING : ROUTES.CUSTOMER_DASHBOARD,
+      { replace: true },
+    );
+  }, [navigate, role, verificationCode, verifyRegistration]);
 
   return {
     palette,
@@ -61,5 +77,9 @@ export function useRegisterPage() {
     draft,
     updateDraft,
     submitRegistration,
+    verificationPending,
+    verificationCode,
+    setVerificationCode,
+    submitVerification,
   };
 }

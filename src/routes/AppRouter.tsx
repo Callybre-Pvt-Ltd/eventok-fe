@@ -1,3 +1,4 @@
+import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { PortalLayout } from '@/components/global/portal-layout';
@@ -16,6 +17,8 @@ import AboutPage from '@/pages/about';
 import ContactPage from '@/pages/contact';
 import LoginPage from '@/pages/login';
 import RegisterPage from '@/pages/register';
+import OnboardingPage from '@/pages/onboarding';
+import ForgotPasswordPage from '@/pages/forgot-password';
 import VendorLoginPage from '@/pages/vendor-login';
 
 import CustomerDashboardPage from '@/pages/customer/dashboard';
@@ -104,6 +107,12 @@ export function AppRouter() {
         {/* Auth */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+        <Route path={ROUTES.ONBOARDING} element={<OnboardingPage />} />
+        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
+        <Route
+          path={ROUTES.SSO_CALLBACK}
+          element={<AuthenticateWithRedirectCallback />}
+        />
         <Route path={ROUTES.VENDOR_LOGIN} element={<VendorLoginPage />} />
 
         {/* Customer portal */}

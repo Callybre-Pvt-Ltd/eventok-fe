@@ -3,16 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme';
-import type { UserRole } from '@/types';
-
-function getRedirect(role: UserRole, vendorStatus?: string): string {
-  if (role === 'admin') return ROUTES.ADMIN_DASHBOARD;
-  if (role === 'vendor')
-    return vendorStatus === 'pending'
-      ? ROUTES.VENDOR_PENDING
-      : ROUTES.VENDOR_DASHBOARD;
-  return ROUTES.CUSTOMER_DASHBOARD;
-}
 
 export function useLoginPage() {
   const { palette } = useTheme();
@@ -38,12 +28,7 @@ export function useLoginPage() {
         navigate(from, { replace: true });
         return;
       }
-      const session = JSON.parse(
-        localStorage.getItem('eventok_session') || '{}',
-      );
-      navigate(getRedirect(session.user?.role, session.user?.vendorStatus), {
-        replace: true,
-      });
+      navigate(ROUTES.ONBOARDING, { replace: true });
     },
     [login, navigate, location],
   );

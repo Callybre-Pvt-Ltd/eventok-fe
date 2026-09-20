@@ -69,6 +69,9 @@ export default function LoginPage() {
         >
           {t('auth.login')}
         </Button>
+        <AuthFooter $palette={palette}>
+          <Link to={ROUTES.FORGOT_PASSWORD}>Forgot your password?</Link>
+        </AuthFooter>
       </AuthForm>
       <AuthFooter $palette={palette}>
         {t('auth.noAccount')}{' '}

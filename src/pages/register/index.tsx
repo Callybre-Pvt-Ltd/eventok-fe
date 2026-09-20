@@ -37,7 +37,42 @@ export default function RegisterPage() {
     draft,
     updateDraft,
     submitRegistration,
+    verificationPending,
+    verificationCode,
+    setVerificationCode,
+    submitVerification,
   } = useRegisterPage();
+
+  if (verificationPending) {
+    return (
+      <AuthShell>
+        <AuthTitle $palette={palette}>Verify your email</AuthTitle>
+        <AuthSubtitle $palette={palette}>
+          Enter the one-time code Clerk sent to {draft.email}.
+        </AuthSubtitle>
+        {error && <ErrorMsg $palette={palette}>{error}</ErrorMsg>}
+        <Field $palette={palette}>
+          <Label $palette={palette}>Verification code</Label>
+          <Input
+            $palette={palette}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            value={verificationCode}
+            onChange={event => setVerificationCode(event.target.value)}
+          />
+        </Field>
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          loading={loading}
+          onClick={submitVerification}
+        >
+          Verify and continue
+        </Button>
+      </AuthShell>
+    );
+  }
 
   return (
     <AuthShell>
@@ -130,6 +165,16 @@ export default function RegisterPage() {
                 required
               />
               <PasswordStrength password={draft.password} />
+            </Field>
+            <Field $palette={palette}>
+              <Label $palette={palette}>Phone number</Label>
+              <Input
+                $palette={palette}
+                type="tel"
+                value={draft.phone}
+                onChange={e => updateDraft({ phone: e.target.value })}
+                required
+              />
             </Field>
             <Field $palette={palette}>
               <Label $palette={palette}>{t('auth.city')}</Label>

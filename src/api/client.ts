@@ -1,5 +1,4 @@
 import { ENV } from '@/config/env';
-import { tokenStore } from './tokens';
 
 export class ApiError extends Error {
   code: string;
@@ -21,6 +20,7 @@ export class ApiError extends Error {
 }
 
 type QueryValue = string | number | boolean | null | undefined;
+type TokenProvider = () => Promise<string | null>;
 
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -32,9 +32,7 @@ interface RequestOptions {
 }
 
 interface ApiEnvelope<T> {
-  success: boolean;
   data: T;
-  message?: string;
 }
 
 interface PaginatedEnvelope<T> {
@@ -47,15 +45,18 @@ interface PaginatedEnvelope<T> {
 }
 
 interface ErrorEnvelope {
-  success: false;
-  error: {
+  error?: {
     code?: string;
     message?: string;
     details?: Record<string, unknown>;
   };
 }
 
-let refreshPromise: Promise<boolean> | null = null;
+let tokenProvider: TokenProvider = async () => null;
+
+export const setAuthTokenProvider = (provider: TokenProvider) => {
+  tokenProvider = provider;
+};
 
 const buildUrl = (path: string, query?: Record<string, QueryValue>) => {
   const base = ENV.apiBaseUrl.replace(/\/$/, '');
@@ -73,17 +74,17 @@ const buildUrl = (path: string, query?: Record<string, QueryValue>) => {
 };
 
 const parseBody = async (response: Response): Promise<unknown> => {
-  const text = await response.text();
-  if (!text) return null;
+  const body = await response.text();
+  if (!body) return null;
   try {
-    return JSON.parse(text);
+    return JSON.parse(body);
   } catch {
-    return text;
+    return body;
   }
 };
 
 const toApiError = (payload: unknown, status: number): ApiError => {
-  if (payload && typeof payload === 'object' && 'error' in payload) {
+  if (payload && typeof payload === 'object') {
     const error = (payload as ErrorEnvelope).error;
     return new ApiError(
       error?.message ?? 'Request failed',
@@ -95,49 +96,18 @@ const toApiError = (payload: unknown, status: number): ApiError => {
   return new ApiError('Request failed', 'UNKNOWN', status);
 };
 
-const refreshTokens = async (): Promise<boolean> => {
-  const refresh = tokenStore.getRefresh();
-  if (!refresh) return false;
-  const response = await fetch(buildUrl('/auth/refresh'), {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ refresh_token: refresh }),
-  });
-  if (!response.ok) {
-    tokenStore.clear();
-    return false;
-  }
-  const payload = (await parseBody(response)) as ApiEnvelope<{
-    access_token: string;
-    refresh_token: string;
-  }> | null;
-  if (!payload?.data?.access_token || !payload.data.refresh_token) {
-    tokenStore.clear();
-    return false;
-  }
-  tokenStore.set(payload.data.access_token, payload.data.refresh_token);
-  return true;
-};
-
-const ensureRefreshed = () => {
-  if (!refreshPromise) {
-    refreshPromise = refreshTokens().finally(() => {
-      refreshPromise = null;
-    });
-  }
-  return refreshPromise;
-};
-
 const execute = async (
   path: string,
   options: RequestOptions,
-  accessToken: string | null,
 ): Promise<Response> => {
   const headers: Record<string, string> = {};
   if (options.formData === undefined && options.body !== undefined) {
     headers['Content-Type'] = 'application/json';
   }
-  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+  if (options.auth !== false) {
+    const token = await tokenProvider();
+    if (token) headers.Authorization = `Bearer ${token}`;
+  }
 
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), ENV.requestTimeoutMs);
@@ -159,40 +129,20 @@ export const apiRequest = async <T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T> => {
-  const withAuth = options.auth !== false;
-  let access = withAuth ? tokenStore.getAccess() : null;
-
   let response: Response;
   try {
-    response = await execute(path, options, access);
+    response = await execute(path, options);
   } catch (error) {
     const aborted = error instanceof Error && error.name === 'AbortError';
     throw new ApiError(
       aborted ? 'Request timed out' : 'Network unavailable',
       aborted ? 'TIMEOUT' : 'NETWORK_ERROR',
-      0,
     );
   }
-
-  if (response.status === 401 && withAuth && tokenStore.getRefresh()) {
-    const ok = await ensureRefreshed();
-    if (!ok) {
-      tokenStore.clear();
-      throw new ApiError('Session expired', 'UNAUTHENTICATED', 401);
-    }
-    access = tokenStore.getAccess();
-    response = await execute(path, options, access);
-  }
-
   const payload = await parseBody(response);
-  if (!response.ok) {
-    if (response.status === 401 && withAuth) tokenStore.clear();
-    throw toApiError(payload, response.status);
-  }
-
-  if (payload && typeof payload === 'object' && 'items' in payload) {
+  if (!response.ok) throw toApiError(payload, response.status);
+  if (payload && typeof payload === 'object' && 'items' in payload)
     return payload as T;
-  }
   return ((payload as ApiEnvelope<T>)?.data ?? payload) as T;
 };
 
@@ -200,29 +150,12 @@ export const apiRequestPaginated = async <T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<PaginatedEnvelope<T>> => {
-  const withAuth = options.auth !== false;
-  let access = withAuth ? tokenStore.getAccess() : null;
-  let response = await execute(path, options, access);
-
-  if (response.status === 401 && withAuth && tokenStore.getRefresh()) {
-    const ok = await ensureRefreshed();
-    if (ok) {
-      access = tokenStore.getAccess();
-      response = await execute(path, options, access);
-    }
-  }
-
+  const response = await execute(path, options);
   const payload = await parseBody(response);
   if (!response.ok) throw toApiError(payload, response.status);
-
-  // Backend wraps pagination: { success, data: { items, total, ... } } OR flat
   if (payload && typeof payload === 'object') {
     const root = payload as Record<string, unknown>;
-    if (
-      root.data &&
-      typeof root.data === 'object' &&
-      'items' in (root.data as object)
-    ) {
+    if (root.data && typeof root.data === 'object' && 'items' in root.data) {
       return root.data as PaginatedEnvelope<T>;
     }
     if ('items' in root) return payload as PaginatedEnvelope<T>;
