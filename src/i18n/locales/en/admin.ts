@@ -1,7 +1,7 @@
 export const admin = {
   dashboard: 'Dashboard',
   approvals: 'Vendor Approvals',
-  customers: 'Customers',
+  customers: 'Users',
   vendors: 'Vendors',
   categories: 'Categories',
   bookings: 'Bookings',
@@ -18,7 +18,7 @@ export const admin = {
   totalRevenue: 'Total Revenue',
   totalBookings: 'Total Bookings',
   totalVendors: 'Total Vendors',
-  totalCustomers: 'Total Customers',
+  totalCustomers: 'Total Users',
   addCategory: 'Add Category',
   refund: 'Refund',
   exportReport: 'Export Report',

@@ -61,6 +61,30 @@ const saveMeta = (meta: Partial<User>) => {
   localStorage.setItem(SESSION_META_KEY, JSON.stringify(meta));
 };
 
+const mapVendorStatus = (status: string): User['vendorStatus'] => {
+  if (status === 'APPROVED') return 'approved';
+  if (status === 'REJECTED') return 'rejected';
+  return 'pending';
+};
+
+const ensureVendorProfile = async (input: {
+  businessName: string;
+  city?: string;
+}): Promise<{ id: string; status: string }> => {
+  try {
+    return await apiRequest<{ id: string; status: string }>('/vendors/me');
+  } catch {
+    return apiRequest<{ id: string; status: string }>('/vendors', {
+      method: 'POST',
+      body: {
+        business_name: input.businessName || 'EventOK Vendor',
+        city: input.city || null,
+        description: null,
+      },
+    });
+  }
+};
+
 const fetchMe = async (): Promise<User> => {
   const raw = await apiRequest<BackendUser>('/auth/me');
   const meta = loadMeta();
@@ -68,17 +92,20 @@ const fetchMe = async (): Promise<User> => {
   let vendorId = meta.vendorId;
   if (raw.role === 'VENDOR') {
     try {
-      const vendor = await apiRequest<{ id: string; status: string }>(
-        '/vendors/me',
-      );
+      let vendor: { id: string; status: string };
+      try {
+        vendor = await apiRequest<{ id: string; status: string }>(
+          '/vendors/me',
+        );
+      } catch {
+        vendor = await ensureVendorProfile({
+          businessName: raw.full_name,
+          city: meta.city,
+        });
+      }
       vendorId = vendor.id;
-      vendorStatus =
-        vendor.status === 'APPROVED'
-          ? 'approved'
-          : vendor.status === 'REJECTED'
-          ? 'rejected'
-          : 'pending';
-      saveMeta({ ...meta, vendorStatus, vendorId });
+      vendorStatus = mapVendorStatus(vendor.status);
+      saveMeta({ ...meta, vendorStatus, vendorId, city: meta.city });
     } catch {
       vendorStatus ??= 'pending';
     }
@@ -108,9 +135,22 @@ export const authService = {
         role: toBackendRole(payload.role),
       },
     });
+
+    let vendorStatus: User['vendorStatus'];
+    let vendorId: string | undefined;
+    if (payload.role === 'vendor') {
+      const vendor = await ensureVendorProfile({
+        businessName: payload.fullName,
+        city: payload.city,
+      });
+      vendorId = vendor.id;
+      vendorStatus = mapVendorStatus(vendor.status);
+    }
+
     saveMeta({
       city: payload.city ?? '',
-      vendorStatus: payload.role === 'vendor' ? 'pending' : undefined,
+      vendorStatus,
+      vendorId,
     });
     return { user: mapUser(raw, loadMeta()) };
   },

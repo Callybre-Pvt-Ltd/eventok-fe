@@ -60,6 +60,7 @@ export function FiltersPanel({
         </GroupHead>
         <Slider
           type="range"
+          $fill={Math.round((maxPrice / CATALOG_MAX_PRICE) * 100)}
           min={0}
           max={CATALOG_MAX_PRICE}
           step={500}

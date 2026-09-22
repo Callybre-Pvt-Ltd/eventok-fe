@@ -5,14 +5,28 @@ import { Row, SocialBtn, Divider, DividerLine, DividerText } from './styled';
 
 interface SocialButtonsProps {
   onSocial?: (provider: 'google') => void;
+  /** 'above' renders the buttons then the divider; 'below' renders the divider first. */
+  dividerPosition?: 'above' | 'below';
 }
 
-export function SocialButtons({ onSocial }: SocialButtonsProps) {
+export function SocialButtons({
+  onSocial,
+  dividerPosition = 'below',
+}: SocialButtonsProps) {
   const { t } = useTranslation();
   const { palette, handleGoogle } = useSocialButtons(onSocial);
 
+  const divider = (
+    <Divider>
+      <DividerLine $palette={palette} />
+      <DividerText $palette={palette}>{t('marketplace.authOr')}</DividerText>
+      <DividerLine $palette={palette} />
+    </Divider>
+  );
+
   return (
     <>
+      {dividerPosition === 'above' && divider}
       <Row>
         <SocialBtn
           type="button"
@@ -37,11 +51,7 @@ export function SocialButtons({ onSocial }: SocialButtonsProps) {
           {t('marketplace.authGoogle')}
         </SocialBtn>
       </Row>
-      <Divider>
-        <DividerLine $palette={palette} />
-        <DividerText $palette={palette}>{t('marketplace.authOr')}</DividerText>
-        <DividerLine $palette={palette} />
-      </Divider>
+      {dividerPosition === 'below' && divider}
     </>
   );
 }

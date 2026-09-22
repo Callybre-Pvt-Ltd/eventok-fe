@@ -1,16 +1,51 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme';
+import { readNextPath, withNextPath } from '@/utils/auth/auth-return';
+import { getSafeReturnPath, setAuthIntent } from '@/utils/auth/post-auth';
 
 export function useLoginPage() {
   const { palette } = useTheme();
-  const { login } = useAuth();
+  const { login, session, onboardingRequired, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  // Destination carried in the URL, e.g. /login?next=/checkout.
+  const nextPath = readNextPath(location.search);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Arriving on the customer login fixes the intent: anyone completing auth from here
+  // is a shopper. This also clears a stale 'vendor' intent left in sessionStorage by an
+  // earlier visit to /vendor-login, which would otherwise onboard them as a vendor.
+  useEffect(() => {
+    setAuthIntent('customer');
+  }, []);
+
+  useEffect(() => {
+    if (isLoading || loading) return;
+    if (onboardingRequired) {
+      navigate(ROUTES.ONBOARDING, { replace: true });
+      return;
+    }
+    if (!session) return;
+    const from =
+      nextPath ??
+      (location.state as { from?: { pathname: string } })?.from?.pathname;
+    navigate(
+      getSafeReturnPath(from, session.user.role, session.user.vendorStatus),
+      { replace: true },
+    );
+  }, [
+    isLoading,
+    loading,
+    location.state,
+    navigate,
+    nextPath,
+    onboardingRequired,
+    session,
+  ]);
 
   const onSubmit = useCallback(
     async (email: string, password: string) => {
@@ -22,16 +57,17 @@ export function useLoginPage() {
         setError(err);
         return;
       }
-      const from = (location.state as { from?: { pathname: string } })?.from
-        ?.pathname;
-      if (from) {
-        navigate(from, { replace: true });
-        return;
-      }
-      navigate(ROUTES.ONBOARDING, { replace: true });
+      navigate(withNextPath(ROUTES.AUTH_CONTINUE, nextPath), { replace: true });
     },
-    [login, navigate, location],
+    [login, navigate, nextPath],
   );
 
-  return { palette, error, loading, onSubmit };
+  return {
+    palette,
+    error,
+    loading,
+    authLoading: isLoading,
+    nextPath,
+    onSubmit,
+  };
 }

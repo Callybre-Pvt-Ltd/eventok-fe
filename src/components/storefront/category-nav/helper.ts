@@ -51,6 +51,7 @@ export function useCategoryNav() {
   const { data: categories } = useQuery({
     queryKey: ['storefront', 'categories'],
     queryFn: async () => (await catalogService.getCategories()).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const groups = useMemo(

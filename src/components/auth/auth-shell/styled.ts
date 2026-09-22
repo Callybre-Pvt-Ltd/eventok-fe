@@ -12,12 +12,26 @@ export const Shell = styled.div<{ $palette: ThemePalette }>`
   justify-content: center;
   padding: ${spacing.xl};
   background: ${brandColors.pink100};
+
+  ${media.belowMd} {
+    padding: ${spacing.sm};
+    align-items: flex-start;
+  }
+
+  ${media.belowSm} {
+    padding: ${spacing.xs};
+  }
 `;
 
 export const BgLayer = styled.div<{ $palette: ThemePalette }>`
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg, ${brandColors.pink100} 0%, ${brandColors.white} 55%, ${brandColors.accent100} 100%);
+  background: linear-gradient(
+    180deg,
+    ${brandColors.pink100} 0%,
+    ${brandColors.white} 55%,
+    ${brandColors.accent100} 100%
+  );
   z-index: 0;
 `;
 
@@ -137,6 +151,10 @@ export const QuoteAuthor = styled.p<{ $palette: ThemePalette }>`
 export const CardWrap = styled.div`
   padding: clamp(1.75rem, 4vw, 2.5rem);
   background: ${brandColors.white};
+
+  ${media.belowMd} {
+    padding: 1.15rem 1rem 1.5rem;
+  }
 `;
 
 export const GlassCard = styled.div<{ $palette: ThemePalette }>`

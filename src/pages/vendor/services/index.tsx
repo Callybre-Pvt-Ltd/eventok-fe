@@ -16,6 +16,7 @@ import {
   PartyPopper,
   Plus,
   Sparkles,
+  Pencil,
   Tent,
   Trash2,
   Baby,
@@ -23,10 +24,9 @@ import {
 } from 'lucide-react';
 import { LoadingState } from '@/components/global/loading-state';
 import { brandColors } from '@/theme/brand';
-import {
-  INDIA_STATES,
-  SERVICE_CITIES,
-} from '@/constants/decorationCategories';
+import { INDIA_STATES, SERVICE_CITIES } from '@/constants/decorationCategories';
+import { MAX_SERVICE_IMAGES } from '@/constants/servicePresets';
+import { ListBuilder } from '@/components/vendor/list-builder';
 import { useVendorServices } from './helper';
 import {
   CardActions,
@@ -34,6 +34,7 @@ import {
   CategoryGrid,
   CategoryTile,
   CatName,
+  ChipSection,
   Composer,
   CountHint,
   CountryLock,
@@ -48,6 +49,8 @@ import {
   HeroEyebrow,
   HeroLead,
   HeroTitle,
+  ImagePreview,
+  ImagePreviewGrid,
   Meta,
   Page,
   Price,
@@ -89,6 +92,7 @@ export default function VendorServicesPage() {
     categoriesReady,
     isLoading,
     createMutation,
+    updateMutation,
     publishMutation,
     deleteMutation,
     uploadMutation,
@@ -96,16 +100,28 @@ export default function VendorServicesPage() {
   } = useVendorServices();
 
   const [open, setOpen] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [categoryId, setCategoryId] = useState('');
   const [title, setTitle] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [city, setCity] = useState('Delhi');
   const [state, setState] = useState('Delhi');
+  const [whatsIncluded, setWhatsIncluded] = useState<string[]>([]);
+  const [goodToKnow, setGoodToKnow] = useState<string[]>([]);
+  const [cancellation, setCancellation] = useState<string[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>([]);
 
   useEffect(() => {
     if (vendorCity) setCity(vendorCity);
   }, [vendorCity]);
+
+  useEffect(() => {
+    const urls = images.map(file => URL.createObjectURL(file));
+    setPreviews(urls);
+    return () => urls.forEach(url => URL.revokeObjectURL(url));
+  }, [images]);
 
   const selected = useMemo(
     () => categories.find(c => c.id === categoryId || c.slug === categoryId),
@@ -115,10 +131,31 @@ export default function VendorServicesPage() {
   if (isLoading) return <LoadingState />;
 
   const resetForm = () => {
+    setEditingId(null);
     setTitle('');
     setPrice('');
     setDescription('');
     setCategoryId('');
+    setWhatsIncluded([]);
+    setGoodToKnow([]);
+    setCancellation([]);
+    setImages([]);
+  };
+
+  const startEdit = (service: (typeof services)[number]) => {
+    const raw = service.description ?? '';
+    const withoutArea = raw.split(/\n\nService area:/)[0];
+    setEditingId(service.id);
+    setCategoryId(service.category_id ?? '');
+    setTitle(service.title);
+    setPrice(String(service.starting_price ?? ''));
+    setDescription(withoutArea === raw ? '' : withoutArea);
+    setWhatsIncluded(service.whats_included ?? []);
+    setGoodToKnow(service.good_to_know ?? []);
+    setCancellation(service.cancellation_policy ?? []);
+    setImages([]);
+    setOpen(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const onSubmit = (event: FormEvent) => {
@@ -127,6 +164,31 @@ export default function VendorServicesPage() {
     if (!selected?.id || !title.trim() || !starting_price || !city || !state) {
       return;
     }
+    if (editingId) {
+      updateMutation.mutate(
+        {
+          serviceId: editingId,
+          category_id: selected.id,
+          title: title.trim(),
+          description: description.trim() || undefined,
+          starting_price,
+          city,
+          state,
+          whats_included: whatsIncluded,
+          good_to_know: goodToKnow,
+          cancellation_policy: cancellation,
+          images,
+        },
+        {
+          onSuccess: () => {
+            resetForm();
+            setOpen(false);
+          },
+        },
+      );
+      return;
+    }
+    if (!images.length) return;
     createMutation.mutate(
       {
         category_id: selected.id,
@@ -135,6 +197,10 @@ export default function VendorServicesPage() {
         starting_price,
         city,
         state,
+        whats_included: whatsIncluded,
+        good_to_know: goodToKnow,
+        cancellation_policy: cancellation,
+        images,
       },
       {
         onSuccess: () => {
@@ -151,9 +217,9 @@ export default function VendorServicesPage() {
         <HeroEyebrow>Vendor workspace</HeroEyebrow>
         <HeroTitle>Your decoration services</HeroTitle>
         <HeroLead>
-          Pick a decoration category, set the city you cover, and add photos.
-          New services publish automatically so customers can book them on the
-          shop.
+          Tap common options, add your own notes, and upload real photos of the
+          setup. New services publish automatically so customers can book them
+          on the shop.
         </HeroLead>
       </Hero>
 
@@ -163,7 +229,13 @@ export default function VendorServicesPage() {
             ? 'No services yet'
             : `${services.length} service${services.length === 1 ? '' : 's'}`}
         </CountHint>
-        <PrimaryBtn type="button" onClick={() => setOpen(v => !v)}>
+        <PrimaryBtn
+          type="button"
+          onClick={() => {
+            if (open) resetForm();
+            setOpen(v => !v);
+          }}
+        >
           <Plus size={16} strokeWidth={2.4} />
           {open ? 'Close form' : 'Add service'}
         </PrimaryBtn>
@@ -171,18 +243,20 @@ export default function VendorServicesPage() {
 
       {open ? (
         <Composer>
-          <SectionLabel>New service</SectionLabel>
+          <SectionLabel>
+            {editingId ? 'Edit service' : 'New service'}
+          </SectionLabel>
           <SectionHint>
-            Choose one static decoration category, then fill pricing and service
-            area (country is always India).
+            {editingId
+              ? `Change any detail and save. Existing photos stay; anything you add here is appended (up to ${MAX_SERVICE_IMAGES}).`
+              : `Pick a category, price, service area, then customise inclusions and upload photos (up to ${MAX_SERVICE_IMAGES}).`}
           </SectionHint>
 
           {!categoriesReady ? (
             <WarnBanner>
               Decoration categories are not synced from the API yet. Ask an
               admin to open Admin → Categories once (that creates them), or run{' '}
-              <code>just seed-demo</code> on the backend. You can still preview
-              the category list below.
+              <code>just seed-demo</code> on the backend.
             </WarnBanner>
           ) : null}
 
@@ -200,11 +274,7 @@ export default function VendorServicesPage() {
                   $active={Boolean(active)}
                   onClick={() => setCategoryId(cat.id || cat.slug)}
                 >
-                  <Icon
-                    size={18}
-                    strokeWidth={1.75}
-                    color={brandColors.gold}
-                  />
+                  <Icon size={18} strokeWidth={1.75} color={brandColors.gold} />
                   <CatName>{cat.name}</CatName>
                   <CatBlurb>{cat.description || 'Decoration service'}</CatBlurb>
                 </CategoryTile>
@@ -267,22 +337,111 @@ export default function VendorServicesPage() {
                 <CountryLock>India</CountryLock>
               </Field>
               <Field className="span-2">
-                Description
+                About this experience
                 <textarea
                   value={description}
                   onChange={e => setDescription(e.target.value)}
-                  placeholder="What's included, guest capacity, setup time…"
+                  placeholder="Short pitch customers read on the product page…"
                 />
               </Field>
             </FieldGrid>
+
+            <ListBuilder
+              label="What's included"
+              hint="One line per inclusion. These appear under What's Included on your listing."
+              placeholder="e.g. Complete theme & colour setup"
+              emptyText="Nothing added yet — type an inclusion above and press +."
+              items={whatsIncluded}
+              onChange={setWhatsIncluded}
+            />
+            <ListBuilder
+              label="Good to know"
+              hint="Practical notes the customer should read before booking."
+              placeholder="e.g. Setup needs 3 hours before the event"
+              emptyText="Nothing added yet — type a note above and press +."
+              items={goodToKnow}
+              onChange={setGoodToKnow}
+            />
+            <ListBuilder
+              label="Cancellation policy"
+              hint="State your terms plainly, one rule per line."
+              placeholder="e.g. Free cancellation up to 48 hours before"
+              emptyText="Nothing added yet — type a rule above and press +."
+              items={cancellation}
+              onChange={setCancellation}
+            />
+
+            <ChipSection>
+              <SectionLabel>Photos</SectionLabel>
+              <SectionHint>
+                Real photos only — no stock placeholders on the shop. Upload up
+                to {MAX_SERVICE_IMAGES} images (JPEG / PNG / WebP).
+              </SectionHint>
+              <FileLabel>
+                <ImagePlus size={14} />
+                {images.length
+                  ? `Add more (${images.length}/${MAX_SERVICE_IMAGES})`
+                  : 'Upload photos'}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={e => {
+                    const next = Array.from(e.target.files ?? []);
+                    setImages(prev =>
+                      [...prev, ...next].slice(0, MAX_SERVICE_IMAGES),
+                    );
+                    e.target.value = '';
+                  }}
+                />
+              </FileLabel>
+              {previews.length ? (
+                <ImagePreviewGrid>
+                  {previews.map((src, index) => (
+                    <ImagePreview key={`${src}-${index}`}>
+                      <img src={src} alt="" />
+                      <button
+                        type="button"
+                        aria-label="Remove photo"
+                        onClick={() =>
+                          setImages(prev => prev.filter((_, i) => i !== index))
+                        }
+                      >
+                        ×
+                      </button>
+                    </ImagePreview>
+                  ))}
+                </ImagePreviewGrid>
+              ) : (
+                <SectionHint>At least one photo is required.</SectionHint>
+              )}
+            </ChipSection>
+
             <FormActions>
               <PrimaryBtn
                 type="submit"
-                disabled={createMutation.isPending || !categoriesReady}
+                disabled={
+                  createMutation.isPending ||
+                  updateMutation.isPending ||
+                  !categoriesReady ||
+                  (!editingId && !images.length)
+                }
               >
-                {createMutation.isPending ? 'Creating…' : 'Create service'}
+                {editingId
+                  ? updateMutation.isPending
+                    ? 'Saving…'
+                    : 'Save changes'
+                  : createMutation.isPending
+                  ? 'Publishing…'
+                  : 'Create & publish'}
               </PrimaryBtn>
-              <GhostBtn type="button" onClick={() => setOpen(false)}>
+              <GhostBtn
+                type="button"
+                onClick={() => {
+                  resetForm();
+                  setOpen(false);
+                }}
+              >
                 Cancel
               </GhostBtn>
             </FormActions>
@@ -294,8 +453,8 @@ export default function VendorServicesPage() {
         <EmptyBlock>
           <h3>List your first decoration service</h3>
           <p>
-            Customers will discover it under Browse Services and request a
-            booking for their event date — no quantity steppers.
+            Customers discover it under Shop and book for their event date —
+            with your real photos and clear packaging.
           </p>
           <PrimaryBtn type="button" onClick={() => setOpen(true)}>
             <Plus size={16} /> Add service
@@ -323,9 +482,15 @@ export default function VendorServicesPage() {
                 </Price>
                 <Meta>
                   {cat?.name ? `${cat.name}\n` : ''}
-                  {s.description || 'No description yet'}
+                  {(s.whats_included?.length
+                    ? `${s.whats_included.length} inclusions · `
+                    : '') + (s.description || 'No about text yet')}
                 </Meta>
                 <CardActions>
+                  <GhostBtn type="button" onClick={() => startEdit(s)}>
+                    <Pencil size={14} />
+                    Edit
+                  </GhostBtn>
                   {!live ? (
                     <PrimaryBtn
                       type="button"
@@ -337,14 +502,15 @@ export default function VendorServicesPage() {
                   ) : null}
                   <FileLabel>
                     <ImagePlus size={14} />
-                    Upload image
+                    Add photos
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/jpeg,image/png,image/webp"
+                      multiple
                       onChange={e => {
-                        const file = e.target.files?.[0];
-                        if (file) {
-                          uploadMutation.mutate({ serviceId: s.id, file });
+                        const files = Array.from(e.target.files ?? []);
+                        if (files.length) {
+                          uploadMutation.mutate({ serviceId: s.id, files });
                         }
                         e.target.value = '';
                       }}

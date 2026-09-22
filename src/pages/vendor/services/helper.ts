@@ -3,6 +3,21 @@ import { message } from 'antd';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { categoryService, vendorService } from '@/services';
 import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
+import { MAX_SERVICE_IMAGES } from '@/constants/servicePresets';
+
+export type UpdateServiceInput = {
+  serviceId: string;
+  category_id: string;
+  title: string;
+  description?: string;
+  starting_price: number;
+  city: string;
+  state: string;
+  whats_included: string[];
+  good_to_know: string[];
+  cancellation_policy: string[];
+  images: File[];
+};
 
 export type CreateServiceInput = {
   category_id: string;
@@ -11,6 +26,10 @@ export type CreateServiceInput = {
   starting_price: number;
   city: string;
   state: string;
+  whats_included: string[];
+  good_to_know: string[];
+  cancellation_policy: string[];
+  images: File[];
 };
 
 function buildDescription(values: CreateServiceInput) {
@@ -57,7 +76,6 @@ export function useVendorServices() {
       if (res.error) throw new Error(res.error);
       const live = (res.data ?? []).filter(c => c.id);
       if (live.length) return live;
-      // Still show static labels so the UI is usable; create will explain if IDs missing
       return DECORATION_CATEGORIES.map(c => ({
         id: '',
         name: c.name,
@@ -75,11 +93,21 @@ export function useVendorServices() {
           'Categories are not loaded from the server yet. Ask admin to open Categories once, or run seed-demo.',
         );
       }
+      if (!values.images.length) {
+        throw new Error('Add at least one real photo of this setup.');
+      }
+      if (values.images.length > MAX_SERVICE_IMAGES) {
+        throw new Error(`You can upload at most ${MAX_SERVICE_IMAGES} images.`);
+      }
+
       const res = await vendorService.createService(resolvedVendorId!, {
         category_id: values.category_id,
         title: values.title,
         description: buildDescription(values),
         starting_price: values.starting_price,
+        whats_included: values.whats_included,
+        good_to_know: values.good_to_know,
+        cancellation_policy: values.cancellation_policy,
       });
       if (res.error || !res.data) throw new Error(res.error ?? 'Create failed');
 
@@ -87,6 +115,19 @@ export function useVendorServices() {
         city: values.city,
         state: values.state,
       });
+
+      for (const file of values.images) {
+        const uploaded = await vendorService.uploadServiceImage(
+          res.data.id,
+          file,
+        );
+        if (uploaded.error) {
+          throw new Error(
+            uploaded.error ??
+              'Service created but an image failed to upload — retry from the card.',
+          );
+        }
+      }
 
       const published = await vendorService.updateService(res.data.id, {
         status: 'PUBLISHED',
@@ -102,8 +143,54 @@ export function useVendorServices() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
       queryClient.invalidateQueries({ queryKey: ['vendor', 'me'] });
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'portfolio'] });
       queryClient.invalidateQueries({ queryKey: ['storefront'] });
-      message.success('Service created and published — customers can book it');
+      message.success('Service live with your photos — customers can book it');
+    },
+    onError: (err: Error) => message.error(err.message),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: async (values: UpdateServiceInput) => {
+      if (!values.category_id) {
+        throw new Error('Pick a category before saving.');
+      }
+      const res = await vendorService.updateService(values.serviceId, {
+        category_id: values.category_id,
+        title: values.title,
+        description: buildDescription(values),
+        starting_price: values.starting_price,
+        whats_included: values.whats_included,
+        good_to_know: values.good_to_know,
+        cancellation_policy: values.cancellation_policy,
+      });
+      if (res.error || !res.data) throw new Error(res.error ?? 'Update failed');
+
+      await vendorService.updateVendor(resolvedVendorId!, {
+        city: values.city,
+        state: values.state,
+      });
+
+      // Images are additive on edit: existing photos stay, new ones are appended.
+      for (const file of values.images.slice(0, MAX_SERVICE_IMAGES)) {
+        const uploaded = await vendorService.uploadServiceImage(
+          values.serviceId,
+          file,
+        );
+        if (uploaded.error) {
+          throw new Error(
+            uploaded.error ??
+              'Service saved but an image failed to upload — retry from the card.',
+          );
+        }
+      }
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
+      queryClient.invalidateQueries({ queryKey: ['vendor', 'portfolio'] });
+      queryClient.invalidateQueries({ queryKey: ['storefront'] });
+      message.success('Service updated');
     },
     onError: (err: Error) => message.error(err.message),
   });
@@ -139,20 +226,22 @@ export function useVendorServices() {
   const uploadMutation = useMutation({
     mutationFn: async ({
       serviceId,
-      file,
+      files,
     }: {
       serviceId: string;
-      file: File;
+      files: File[];
     }) => {
-      const res = await vendorService.uploadServiceImage(serviceId, file);
-      if (res.error) throw new Error(res.error);
-      return res.data;
+      if (!files.length) throw new Error('Choose at least one image');
+      for (const file of files.slice(0, MAX_SERVICE_IMAGES)) {
+        const res = await vendorService.uploadServiceImage(serviceId, file);
+        if (res.error) throw new Error(res.error);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
       queryClient.invalidateQueries({ queryKey: ['vendor', 'portfolio'] });
       queryClient.invalidateQueries({ queryKey: ['storefront'] });
-      message.success('Image uploaded');
+      message.success('Images uploaded');
     },
     onError: (err: Error) => message.error(err.message),
   });
@@ -165,6 +254,7 @@ export function useVendorServices() {
     categoriesReady,
     isLoading: servicesQuery.isLoading || meQuery.isLoading,
     createMutation,
+    updateMutation,
     publishMutation,
     deleteMutation,
     uploadMutation,

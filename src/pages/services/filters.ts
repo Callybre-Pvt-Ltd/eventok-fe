@@ -273,6 +273,9 @@ export type DiscoveryVendor = {
   images: string[];
   tags: string[];
   eventTypes: string[];
+  whatsIncluded?: string[];
+  goodToKnow?: string[];
+  cancellationPolicy?: string[];
   verified: boolean;
   featured: boolean;
   trending: boolean;

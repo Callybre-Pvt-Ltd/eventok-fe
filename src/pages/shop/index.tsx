@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, SlidersHorizontal, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { EVENT_TYPE_FILTERS } from '@/constants/catalog';
 import { ROUTES } from '@/constants/routes';
@@ -8,6 +8,9 @@ import { StoreLayout } from '@/components/storefront/store-layout';
 import { useShopPage } from './helper';
 import {
   Breadcrumbs,
+  FabCount,
+  FilterFab,
+  FiltersColumn,
   Crumb,
   CrumbCurrent,
   Empty,
@@ -15,6 +18,16 @@ import {
   FilterPill,
   Grid,
   Layout,
+  Sheet,
+  SheetApply,
+  SheetBody,
+  SheetClose,
+  SheetFoot,
+  SheetGrip,
+  SheetHead,
+  SheetOverlay,
+  SheetReset,
+  SheetTitle,
   Page,
   PageTitle,
   PillRow,
@@ -40,13 +53,15 @@ export default function ShopPage() {
         </Breadcrumbs>
 
         <Layout>
-          <FiltersPanel
-            maxPrice={shop.maxPrice}
-            selectedTags={shop.selectedTags}
-            onPriceChange={shop.setMaxPrice}
-            onTagToggle={shop.toggleTag}
-            onReset={shop.reset}
-          />
+          <FiltersColumn>
+            <FiltersPanel
+              maxPrice={shop.maxPrice}
+              selectedTags={shop.selectedTags}
+              onPriceChange={shop.setMaxPrice}
+              onTagToggle={shop.toggleTag}
+              onReset={shop.reset}
+            />
+          </FiltersColumn>
 
           <Results>
             <PillRow>
@@ -93,6 +108,52 @@ export default function ShopPage() {
             )}
           </Results>
         </Layout>
+
+        <FilterFab type="button" onClick={shop.openFilters}>
+          <SlidersHorizontal size={16} />
+          {t('storefront.shopFilters')}
+          {shop.activeFilterCount > 0 && (
+            <FabCount>{shop.activeFilterCount}</FabCount>
+          )}
+        </FilterFab>
+
+        <SheetOverlay
+          $open={shop.filtersOpen}
+          onClick={shop.closeFilters}
+          aria-hidden
+        />
+        <Sheet $open={shop.filtersOpen} aria-hidden={!shop.filtersOpen}>
+          <SheetGrip />
+          <SheetHead>
+            <SheetTitle>{t('storefront.shopFilters')}</SheetTitle>
+            <SheetClose
+              type="button"
+              onClick={shop.closeFilters}
+              aria-label={t('common.close')}
+            >
+              <X size={18} />
+            </SheetClose>
+          </SheetHead>
+          <SheetBody>
+            <FiltersPanel
+              maxPrice={shop.maxPrice}
+              selectedTags={shop.selectedTags}
+              onPriceChange={shop.setMaxPrice}
+              onTagToggle={shop.toggleTag}
+              onReset={shop.reset}
+            />
+          </SheetBody>
+          <SheetFoot>
+            <SheetReset type="button" onClick={shop.reset}>
+              {t('storefront.shopReset')}
+            </SheetReset>
+            <SheetApply type="button" onClick={shop.closeFilters}>
+              {t('storefront.shopShowResults', {
+                count: shop.services.length,
+              })}
+            </SheetApply>
+          </SheetFoot>
+        </Sheet>
       </Page>
     </StoreLayout>
   );

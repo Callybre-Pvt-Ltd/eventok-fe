@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { CATALOG_MAX_PRICE } from '@/constants/catalog';
@@ -20,6 +20,7 @@ export function useShopPage() {
   const { data: categories } = useQuery({
     queryKey: ['storefront', 'categories'],
     queryFn: async () => (await catalogService.getCategories()).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const { data: services, isLoading } = useQuery({
@@ -83,9 +84,18 @@ export function useShopPage() {
 
   const category = (categories ?? []).find(item => item.slug === categorySlug);
 
+  // Phones get the filters in a bottom sheet instead of a column above the results.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const activeFilterCount =
+    selectedTags.length + (maxPrice < CATALOG_MAX_PRICE ? 1 : 0);
+
   return {
     services: services ?? [],
     isLoading,
+    filtersOpen,
+    openFilters: () => setFiltersOpen(true),
+    closeFilters: () => setFiltersOpen(false),
+    activeFilterCount,
     search,
     eventType,
     maxPrice,

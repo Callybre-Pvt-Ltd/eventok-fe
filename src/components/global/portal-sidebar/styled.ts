@@ -15,8 +15,8 @@ export const Sidebar = styled.aside<{
   $mobileOpen: boolean;
 }>`
   width: ${({ $collapsed }) => ($collapsed ? '72px' : '252px')};
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   ${inkNav}
   border-right: 1px solid rgba(${brandRgb.pink}, 0.18);
   display: flex;
@@ -25,7 +25,10 @@ export const Sidebar = styled.aside<{
   font-family: ${fontFamily.body};
   position: sticky;
   top: 0;
+  align-self: flex-start;
   flex-shrink: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   box-shadow: 4px 0 24px rgba(${brandRgb.ink}, 0.12);
 
   &::before {
@@ -34,7 +37,7 @@ export const Sidebar = styled.aside<{
     inset: 0;
     pointer-events: none;
     background: ${brandGradients.heroGlow};
-    opacity: 0.55;
+    opacity: 0.12;
   }
 
   ${media.belowLg} {
@@ -43,7 +46,7 @@ export const Sidebar = styled.aside<{
     width: min(288px, 88vw);
     height: 100dvh;
     max-height: 100dvh;
-    overflow: hidden;
+    overflow-y: auto;
     z-index: 200;
     box-shadow: ${({ $mobileOpen }) => ($mobileOpen ? shadows.xl : 'none')};
     transition: left 0.3s ease;
@@ -154,20 +157,14 @@ export const NavItem = styled(Link)<{
   color: ${({ $active }) =>
     $active ? brandColors.white : 'rgba(255, 255, 255, 0.68)'};
   background: ${({ $active }) =>
-    $active
-      ? `linear-gradient(135deg, ${brandColors.pink500} 0%, ${brandColors.pink600} 100%)`
-      : 'transparent'};
-  box-shadow: ${({ $active }) =>
-    $active ? `0 8px 20px rgba(${brandRgb.pink}, 0.35)` : 'none'};
+    $active ? brandColors.pink500 : 'transparent'};
   font-size: ${fontSizes.sm};
   font-weight: ${({ $active }) => ($active ? 600 : 500)};
-  transition: all 0.2s ease;
+  transition: background 0.18s ease, color 0.18s ease;
 
   &:hover {
     background: ${({ $active }) =>
-      $active
-        ? `linear-gradient(135deg, ${brandColors.pink500} 0%, ${brandColors.pink600} 100%)`
-        : 'rgba(255, 255, 255, 0.06)'};
+      $active ? brandColors.pink500 : 'rgba(255, 255, 255, 0.07)'};
     color: ${brandColors.white};
   }
 `;
@@ -191,6 +188,30 @@ export const SidebarFooter = styled.div<{ $palette: ThemePalette }>`
   padding: 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   flex-shrink: 0;
+`;
+
+export const BackToSiteLink = styled(Link)<{ $palette: ThemePalette }>`
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid rgba(${brandRgb.pink}, 0.35);
+  border-radius: ${radii.md};
+  background: rgba(${brandRgb.pink}, 0.14);
+  color: ${brandColors.white};
+  font-size: ${fontSizes.sm};
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(${brandRgb.pink}, 0.26);
+    border-color: ${brandColors.pink500};
+  }
 `;
 
 export const LogoutBtn = styled.button<{ $palette: ThemePalette }>`

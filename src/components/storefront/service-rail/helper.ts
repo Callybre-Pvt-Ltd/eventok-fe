@@ -9,11 +9,13 @@ export function useServiceRail() {
   const { data: categories } = useQuery({
     queryKey: ['storefront', 'categories'],
     queryFn: async () => (await catalogService.getCategories()).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const { data } = useQuery({
     queryKey: ['storefront', 'services', 'all'],
     queryFn: async () => (await catalogService.list()).data ?? [],
+    staleTime: 60_000,
   });
 
   const tabs = useMemo(() => {

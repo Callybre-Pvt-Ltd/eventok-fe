@@ -21,7 +21,12 @@ if (!ENV.clerkPublishableKey) {
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={ENV.clerkPublishableKey}>
+    <ClerkProvider
+      publishableKey={ENV.clerkPublishableKey}
+      signInFallbackRedirectUrl="/auth/continue"
+      signUpFallbackRedirectUrl="/auth/continue"
+      afterSignOutUrl="/"
+    >
       <App />
     </ClerkProvider>
   </StrictMode>,

@@ -9,6 +9,11 @@
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* html is the scroll container, so the clip has to live here too — on body alone
+     it never applies and pages can still be dragged sideways on phones.
+     `clip` rather than `hidden` so position: sticky keeps working. */
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -21,7 +26,23 @@ body {
   font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
   font-weight: 500;
   line-height: 1.65;
+  max-width: 100%;
   overflow-x: clip;
+  overflow-wrap: break-word;
+}
+
+img,
+video,
+canvas,
+svg,
+iframe {
+  max-width: 100%;
+}
+
+pre,
+code {
+  overflow-x: auto;
+  max-width: 100%;
 }
 
 h1,
@@ -40,17 +61,17 @@ em.brand-emphasis,
   font-family: 'Lora', Georgia, serif;
   font-style: italic;
   font-weight: 600;
-  color: #e91e63;
+  color: #f0559f;
 }
 
 [data-theme='light'] body {
-  background: #fafafb;
-  color: #111111;
+  background: #faf7fc;
+  color: #1b0b33;
 }
 
 [data-theme='dark'] body {
-  background: #0a0a0a;
-  color: #fafafb;
+  background: #12071f;
+  color: #faf7fc;
 }
 
 #root {
@@ -75,13 +96,13 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid #e8006f;
+  outline: 2px solid #ec2e8e;
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(232, 0, 111, 0.22);
-  color: #111111;
+  background: rgba(236, 46, 142, 0.22);
+  color: #1b0b33;
 }
 
 .skip-link {
@@ -89,7 +110,7 @@ button {
   left: -9999px;
   z-index: 9999;
   padding: 0.75rem 1rem;
-  background: #e8006f;
+  background: #ec2e8e;
   color: #fff;
   border-radius: 9999px;
 }

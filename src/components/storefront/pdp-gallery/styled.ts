@@ -17,6 +17,22 @@ export const Image = styled.img`
   object-fit: cover;
 `;
 
+export const EmptyFrame = styled.div`
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 12rem;
+  color: ${brandColors.gray600};
+  font-size: ${fontSizes.sm};
+  font-weight: 650;
+  background: linear-gradient(
+    145deg,
+    ${brandColors.pink50} 0%,
+    rgba(${brandRgb.chocolate}, 0.06) 100%
+  );
+`;
+
 export const BadgeRow = styled.div`
   position: absolute;
   left: 0.875rem;

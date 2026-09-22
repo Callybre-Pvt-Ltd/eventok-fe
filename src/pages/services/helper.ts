@@ -97,7 +97,7 @@ export function useServicesPage() {
         city: filters.cities[0],
         sort: sortToApi(filters.sort),
         page: 1,
-        page_size: 100,
+        page_size: 20,
       });
       if (res.error) throw new Error(res.error);
       return res.data ?? { items: [], total: 0, pages: 0 };

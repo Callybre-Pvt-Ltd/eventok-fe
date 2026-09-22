@@ -4,9 +4,9 @@ import type { User } from '@/types';
 
 export function useAdminCustomers() {
   const query = useQuery({
-    queryKey: ['admin-customers'],
+    queryKey: ['admin-users'],
     queryFn: async () => {
-      const res = await authService.listUsers('CLIENT');
+      const res = await authService.listUsers();
       if (res.error) throw new Error(res.error);
       return (res.data ?? []) as User[];
     },

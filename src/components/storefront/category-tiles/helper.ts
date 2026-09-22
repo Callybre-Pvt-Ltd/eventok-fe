@@ -6,6 +6,7 @@ export function useCategoryTiles(limit?: number) {
   const { data, isLoading } = useQuery({
     queryKey: ['storefront', 'categories'],
     queryFn: async () => (await catalogService.getCategories()).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const categories: CatalogCategory[] = limit

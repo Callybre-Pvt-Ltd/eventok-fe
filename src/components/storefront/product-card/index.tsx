@@ -18,6 +18,7 @@ import {
   Strike,
   TitleLink,
   WishButton,
+  EmptyMedia,
 } from './styled';
 
 interface ProductCardProps {
@@ -28,11 +29,16 @@ interface ProductCardProps {
 export function ProductCard({ service, width }: ProductCardProps) {
   const { t } = useTranslation();
   const card = useProductCard(service);
+  const cover = service.images[0];
 
   return (
     <Card $width={width}>
       <Media to={card.to}>
-        <Image src={service.images[0]} alt={service.title} loading="lazy" />
+        {cover ? (
+          <Image src={cover} alt={service.title} loading="lazy" />
+        ) : (
+          <EmptyMedia aria-hidden>No photo</EmptyMedia>
+        )}
         {card.discount > 0 && (
           <Ribbon>
             {card.discount}% {t('storefront.off')}

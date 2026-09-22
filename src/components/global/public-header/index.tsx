@@ -1,7 +1,10 @@
 import { createPortal } from 'react-dom';
 import { ArrowRight, Gem, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { ProfileMenu } from '@/components/auth/profile-menu';
 import { ROUTES } from '@/constants/routes';
+import { useAuth } from '@/hooks/auth/use-auth';
+import { getPostAuthPath } from '@/utils/auth/post-auth';
 import { usePublicHeader } from './helper';
 import {
   Actions,
@@ -37,6 +40,10 @@ interface PublicHeaderProps {
 export function PublicHeader({ overlay = false }: PublicHeaderProps) {
   const { t } = useTranslation();
   const nav = usePublicHeader(overlay);
+  const { session, isSignedIn } = useAuth();
+  const portalPath = session
+    ? getPostAuthPath(session.user.role, session.user.vendorStatus)
+    : ROUTES.AUTH_CONTINUE;
 
   const menu = createPortal(
     <>
@@ -84,10 +91,17 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
         </MobileLinks>
 
         <MobileFoot>
-          <MobileCta data-nav-item to={ROUTES.CONTACT} onClick={nav.closeMenu}>
-            Request Consultation
-            <ArrowRight size={18} aria-hidden />
-          </MobileCta>
+          {isSignedIn ? (
+            <MobileCta data-nav-item to={portalPath} onClick={nav.closeMenu}>
+              Open portal
+              <ArrowRight size={18} aria-hidden />
+            </MobileCta>
+          ) : (
+            <MobileCta data-nav-item to={ROUTES.CONTACT} onClick={nav.closeMenu}>
+              Request Consultation
+              <ArrowRight size={18} aria-hidden />
+            </MobileCta>
+          )}
         </MobileFoot>
       </MobilePanel>
     </>,
@@ -120,10 +134,14 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
           </CenterNav>
 
           <Actions>
-            <ConsultCta data-nav-cta to={ROUTES.CONTACT}>
-              Request Consultation
-              <ArrowRight size={16} aria-hidden />
-            </ConsultCta>
+            {isSignedIn ? (
+              <ProfileMenu tone="light" />
+            ) : (
+              <ConsultCta data-nav-cta to={ROUTES.CONTACT}>
+                Request Consultation
+                <ArrowRight size={16} aria-hidden />
+              </ConsultCta>
+            )}
             <MenuToggle
               ref={nav.menuBtnRef}
               type="button"

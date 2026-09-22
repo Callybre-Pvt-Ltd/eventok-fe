@@ -1,21 +1,14 @@
 import styled from 'styled-components';
 import type { ThemePalette } from '@/theme';
 import { fontFamily, media, spacing } from '@/theme';
-import { brandColors, brandGradients, brandRgb } from '@/theme/brand';
+import { brandColors } from '@/theme/brand';
 
 export const Layout = styled.div<{ $palette: ThemePalette }>`
   display: flex;
   min-height: 100vh;
   min-height: 100dvh;
-  background:
-    radial-gradient(
-      70% 50% at 100% 0%,
-      rgba(${brandRgb.pink}, 0.12) 0%,
-      transparent 55%
-    ),
-    linear-gradient(180deg, ${brandColors.pink50} 0%, ${brandColors.ivory} 42%, ${brandColors.white} 100%);
+  background: ${brandColors.ivory};
   font-family: ${fontFamily.body};
-  overflow-x: hidden;
 `;
 
 export const Main = styled.main`
@@ -42,13 +35,11 @@ export const TopBar = styled.div<{ $palette: ThemePalette }>`
   align-items: center;
   gap: ${spacing.md};
   padding: ${spacing.md} ${spacing.xl};
-  border-bottom: 1px solid rgba(${brandRgb.pink}, 0.12);
-  background: rgba(255, 255, 255, 0.82);
-  backdrop-filter: blur(14px);
+  border-bottom: 1px solid ${brandColors.tan};
+  background: ${brandColors.white};
   position: sticky;
   top: 0;
   z-index: 50;
-  box-shadow: 0 1px 0 rgba(${brandRgb.pink}, 0.06);
 
   ${media.belowMd} {
     padding: ${spacing.md};
@@ -61,10 +52,10 @@ export const MenuBtn = styled.button<{ $palette: ThemePalette }>`
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border: 1px solid rgba(${brandRgb.pink}, 0.2);
+  border: 1px solid ${brandColors.tan};
   border-radius: 10px;
-  background: ${brandColors.pink100};
-  color: ${brandColors.pink600};
+  background: ${brandColors.white};
+  color: ${brandColors.chocolate};
   cursor: pointer;
   flex-shrink: 0;
   transition: background 0.2s ease;
@@ -92,7 +83,7 @@ export const TopBarEyebrow = styled.span`
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: ${brandColors.pink500};
+  color: ${brandColors.gray600};
 `;
 
 export const TopBarTitle = styled.h2<{ $palette: ThemePalette }>`
@@ -109,7 +100,6 @@ export const TopBarTitle = styled.h2<{ $palette: ThemePalette }>`
 `;
 
 export const RolePill = styled.span`
-  margin-left: auto;
   display: inline-flex;
   align-items: center;
   padding: 0.35rem 0.75rem;
@@ -118,12 +108,20 @@ export const RolePill = styled.span`
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: ${brandColors.pink600};
-  background: ${brandGradients.celebration};
-  border: 1px solid rgba(${brandRgb.pink}, 0.22);
+  color: ${brandColors.gray600};
+  background: ${brandColors.gray100};
+  border: 1px solid ${brandColors.tan};
   flex-shrink: 0;
 
   ${media.belowSm} {
     display: none;
   }
+`;
+
+export const TopBarTrailing = styled.div`
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
 `;

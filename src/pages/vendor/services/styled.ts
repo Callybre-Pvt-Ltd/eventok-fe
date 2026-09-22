@@ -17,9 +17,16 @@ export const Hero = styled.header`
   margin-bottom: 1.75rem;
   padding: 1.35rem 1.4rem;
   border-radius: 0.35rem;
-  background:
-    linear-gradient(120deg, rgba(${brandRgb.pink}, 0.14) 0%, transparent 42%),
-    linear-gradient(180deg, ${brandColors.charcoal} 0%, ${brandColors.ink900} 100%);
+  background: linear-gradient(
+      120deg,
+      rgba(${brandRgb.pink}, 0.14) 0%,
+      transparent 42%
+    ),
+    linear-gradient(
+      180deg,
+      ${brandColors.charcoal} 0%,
+      ${brandColors.ink900} 100%
+    );
   color: ${brandColors.white};
 `;
 
@@ -176,7 +183,8 @@ export const CategoryTile = styled.button<{ $active?: boolean }>`
     $active ? brandColors.pink50 : brandColors.ivory};
   color: ${brandColors.chocolate};
   cursor: pointer;
-  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, background 0.15s ease,
+    transform 0.15s ease;
 
   &:hover {
     border-color: ${brandColors.gold};
@@ -405,5 +413,48 @@ export const FileLabel = styled.label`
   &:hover {
     border-color: ${brandColors.gold};
     color: ${brandColors.brown};
+  }
+`;
+
+export const ChipSection = styled.div`
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1rem;
+`;
+
+export const ImagePreviewGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.65rem;
+`;
+
+export const ImagePreview = styled.div`
+  position: relative;
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 0.3rem;
+  border: 1px solid rgba(${brandRgb.ink}, 0.1);
+  background: ${brandColors.gray100};
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  button {
+    position: absolute;
+    top: 0.25rem;
+    right: 0.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    border: none;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.65);
+    color: ${brandColors.white};
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
   }
 `;

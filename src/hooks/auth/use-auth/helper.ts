@@ -1,4 +1,5 @@
 import { useClerk, useAuth as useClerkAuth } from '@clerk/react';
+import { useSignIn, useSignUp } from '@clerk/react/legacy';
 import {
   createContext,
   createElement,
@@ -6,10 +7,13 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
 import { ApiError, setAuthTokenProvider } from '@/api/client';
+import { ROUTES } from '@/constants/routes';
+import { withNextPath } from '@/utils/auth/auth-return';
 import { authService } from '@/services';
 import type { Session, UserRole } from '@/types';
 
@@ -25,6 +29,7 @@ export interface RegisterPayload {
 interface AuthContextValue {
   session: Session | null;
   isLoading: boolean;
+  isSignedIn: boolean;
   onboardingRequired: boolean;
   verificationPending: boolean;
   login: (email: string, password: string) => Promise<string | null>;
@@ -34,11 +39,16 @@ interface AuthContextValue {
   completeOnboarding: (
     payload: Omit<RegisterPayload, 'email' | 'password'>,
   ) => Promise<string | null>;
-  signInWithGoogle: () => Promise<void>;
-  refreshSession: () => Promise<void>;
+  signInWithGoogle: (nextPath?: string | null) => Promise<string | null>;
+  refreshSession: () => Promise<Session | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+const absoluteUrl = (path: string) => {
+  if (typeof window === 'undefined') return path;
+  return new URL(path, window.location.origin).toString();
+};
 
 const clerkError = (error: unknown): string => {
   if (error && typeof error === 'object' && 'errors' in error) {
@@ -57,50 +67,107 @@ const clerkError = (error: unknown): string => {
 export function AuthProvider({ children }: { children: ReactNode }) {
   const clerk = useClerkAuth();
   const clerkApi = useClerk();
-  const signIn = clerkApi.client.signIn;
-  const signUp = clerkApi.client.signUp;
+  const { isLoaded: signInLoaded, signIn } = useSignIn();
+  const { isLoaded: signUpLoaded, signUp } = useSignUp();
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [onboardingRequired, setOnboardingRequired] = useState(false);
   const [pendingRegistration, setPendingRegistration] =
     useState<RegisterPayload | null>(null);
+  const sessionInflight = useRef<Promise<Session | null> | null>(null);
+  const clerkLoaded = clerk.isLoaded;
+  const clerkSignedIn = Boolean(clerk.isSignedIn);
+  const getToken = clerk.getToken;
 
   useEffect(() => {
-    setAuthTokenProvider(async () => clerk.getToken());
-  }, [clerk]);
+    setAuthTokenProvider(async () => getToken());
+  }, [getToken]);
 
-  const refreshSession = useCallback(async () => {
-    if (!clerk.isLoaded || !clerk.isSignedIn) {
-      setSession(null);
-      setOnboardingRequired(false);
-      return;
-    }
-    try {
-      setSession(await authService.getSession());
-      setOnboardingRequired(false);
-    } catch (error) {
-      if (error instanceof ApiError && error.code === 'ONBOARDING_REQUIRED') {
+  const refreshSession = useCallback(async (): Promise<Session | null> => {
+    if (!clerkLoaded) return null;
+    if (sessionInflight.current) return sessionInflight.current;
+
+    const run = async (): Promise<Session | null> => {
+      const load = async (skipCache = false) => {
+        const token = await getToken(
+          skipCache ? { skipCache: true } : undefined,
+        );
+        if (!token) return { kind: 'signed_out' as const };
+        try {
+          const next = await authService.getSession();
+          return { kind: 'ok' as const, next };
+        } catch (error) {
+          if (
+            error instanceof ApiError &&
+            error.code === 'ONBOARDING_REQUIRED'
+          ) {
+            return { kind: 'onboarding' as const };
+          }
+          if (error instanceof ApiError && error.status === 401) {
+            return { kind: 'unauthorized' as const, error };
+          }
+          throw error;
+        }
+      };
+
+      try {
+        let result = await load(false);
+        if (result.kind === 'unauthorized') {
+          // Token/azp races after OAuth — retry once with a fresh Clerk token.
+          await new Promise(resolve => setTimeout(resolve, 250));
+          result = await load(true);
+        }
+
+        if (result.kind === 'signed_out') {
+          setSession(null);
+          setOnboardingRequired(false);
+          return null;
+        }
+        if (result.kind === 'onboarding') {
+          setSession(null);
+          setOnboardingRequired(true);
+          return null;
+        }
+        if (result.kind === 'unauthorized') {
+          setSession(null);
+          setOnboardingRequired(false);
+          console.error('Session refresh unauthorized:', result.error.message);
+          return null;
+        }
+
+        setSession(result.next);
+        setOnboardingRequired(false);
+        return result.next;
+      } catch (error) {
+        console.error('Session refresh failed:', error);
         setSession(null);
-        setOnboardingRequired(true);
-        return;
+        return null;
       }
-      if (error instanceof ApiError && error.status === 401) {
-        await clerk.signOut();
-        setSession(null);
-        return;
-      }
-      throw error;
-    }
-  }, [clerk]);
+    };
+
+    sessionInflight.current = run().finally(() => {
+      sessionInflight.current = null;
+    });
+    return sessionInflight.current;
+  }, [clerkLoaded, getToken]);
 
   useEffect(() => {
-    if (!clerk.isLoaded) return;
-    refreshSession().finally(() => setIsLoading(false));
-  }, [clerk.isLoaded, clerk.isSignedIn, refreshSession]);
+    if (!clerkLoaded) return;
+    let cancelled = false;
+    setIsLoading(true);
+    void refreshSession().finally(() => {
+      if (!cancelled) setIsLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+    // Intentionally omit refreshSession — only re-run on Clerk auth flips.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- auth-state gated
+  }, [clerkLoaded, clerkSignedIn]);
 
   const login = useCallback(
     async (email: string, password: string) => {
-      if (!clerkApi.loaded) return 'Clerk is still loading';
+      if (!signInLoaded || !signIn) return 'Clerk is still loading';
       try {
         const result = await signIn.create({ identifier: email, password });
         if (result.status !== 'complete' || !result.createdSessionId) {
@@ -108,18 +175,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         setIsLoading(true);
         await clerkApi.setActive({ session: result.createdSessionId });
+        await refreshSession();
+        setIsLoading(false);
         return null;
       } catch (error) {
         setIsLoading(false);
         return clerkError(error);
       }
     },
-    [clerkApi, signIn],
+    [clerkApi, refreshSession, signIn, signInLoaded],
   );
 
   const register = useCallback(
     async (payload: RegisterPayload) => {
-      if (!clerkApi.loaded) return 'Clerk is still loading';
+      if (!signUpLoaded || !signUp) return 'Clerk is still loading';
       try {
         await signUp.create({
           emailAddress: payload.email,
@@ -134,12 +203,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return clerkError(error);
       }
     },
-    [clerkApi.loaded, signUp],
+    [signUp, signUpLoaded],
   );
 
   const verifyRegistration = useCallback(
     async (code: string) => {
-      if (!clerkApi.loaded || !pendingRegistration) {
+      if (!signUpLoaded || !signUp || !pendingRegistration) {
         return 'Registration is not ready for verification';
       }
       try {
@@ -162,7 +231,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return clerkError(error);
       }
     },
-    [clerkApi, pendingRegistration, signUp],
+    [clerkApi, pendingRegistration, signUp, signUpLoaded],
   );
 
   const completeOnboarding = useCallback(
@@ -185,14 +254,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [],
   );
 
-  const signInWithGoogle = useCallback(async () => {
-    if (!signIn) return;
-    await signIn.authenticateWithRedirect({
-      strategy: 'oauth_google',
-      redirectUrl: '/sso-callback',
-      redirectUrlComplete: '/onboarding',
-    });
-  }, [signIn]);
+  const signInWithGoogle = useCallback(
+    async (nextPath?: string | null) => {
+      if (!signInLoaded || !signIn) return 'Clerk is still loading';
+      try {
+        // The destination rides along in the completion URL, so it survives the
+        // full-page round trip out to Google and back.
+        await signIn.authenticateWithRedirect({
+          strategy: 'oauth_google',
+          redirectUrl: absoluteUrl(withNextPath(ROUTES.SSO_CALLBACK, nextPath)),
+          redirectUrlComplete: absoluteUrl(
+            withNextPath(ROUTES.AUTH_CONTINUE, nextPath),
+          ),
+        });
+        return null;
+      } catch (error) {
+        return clerkError(error);
+      }
+    },
+    [signIn, signInLoaded],
+  );
 
   const logout = useCallback(async () => {
     await clerk.signOut();
@@ -204,7 +285,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const value = useMemo(
     () => ({
       session,
-      isLoading: isLoading || !clerk.isLoaded,
+      isLoading: isLoading || !clerkLoaded,
+      isSignedIn: clerkSignedIn,
       onboardingRequired,
       verificationPending: pendingRegistration !== null,
       login,
@@ -216,7 +298,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       refreshSession,
     }),
     [
-      clerk.isLoaded,
+      clerkLoaded,
+      clerkSignedIn,
       completeOnboarding,
       isLoading,
       login,

@@ -15,4 +15,6 @@ export const common = {
   logout: 'Logout',
   empty: 'Nothing here yet',
   close: 'Close',
+  menu: 'Menu',
+  backToSite: 'Back to public site',
 };

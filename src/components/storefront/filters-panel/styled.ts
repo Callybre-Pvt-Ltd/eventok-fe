@@ -82,31 +82,43 @@ export const GroupValue = styled.span`
   color: ${brandColors.pink500};
 `;
 
-export const Slider = styled.input`
+export const Slider = styled.input<{ $fill: number }>`
   width: 100%;
   appearance: none;
-  height: 4px;
+  height: 6px;
   border-radius: ${radii.full};
-  background: ${brandColors.tan};
+  background: ${({ $fill }) =>
+    `linear-gradient(to right, ${brandColors.pink500} 0%, ${brandColors.accent500} ${$fill}%, ${brandColors.tan} ${$fill}%, ${brandColors.tan} 100%)`};
   outline: none;
+  cursor: pointer;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(${brandRgb.pink}, 0.25);
+  }
 
   &::-webkit-slider-thumb {
     appearance: none;
     width: 1.125rem;
     height: 1.125rem;
     border-radius: ${radii.full};
-    background: ${brandColors.pink500};
-    border: 3px solid ${brandColors.white};
-    box-shadow: 0 0 0 1px rgba(${brandRgb.pink}, 0.35);
+    background: ${brandColors.white};
+    border: 4px solid ${brandColors.pink500};
+    box-shadow: 0 2px 6px rgba(${brandRgb.ink}, 0.18);
     cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  &:active::-webkit-slider-thumb {
+    transform: scale(1.12);
   }
 
   &::-moz-range-thumb {
     width: 1.125rem;
     height: 1.125rem;
     border-radius: ${radii.full};
-    background: ${brandColors.pink500};
-    border: 3px solid ${brandColors.white};
+    background: ${brandColors.white};
+    border: 4px solid ${brandColors.pink500};
+    box-shadow: 0 2px 6px rgba(${brandRgb.ink}, 0.18);
     cursor: pointer;
   }
 `;
@@ -122,20 +134,43 @@ export const RangeLabels = styled.div`
 
 export const TagList = styled.div`
   display: grid;
-  gap: 0.5rem;
-  max-height: 22rem;
+  gap: 0.125rem;
+  max-height: 18rem;
   overflow-y: auto;
+  padding-right: 0.35rem;
+  scrollbar-width: thin;
+  scrollbar-color: ${brandColors.tan} transparent;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: ${radii.full};
+    background: ${brandColors.tan};
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${brandColors.gray400};
+  }
 `;
 
 export const TagRow = styled.label`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  padding: 0.45rem 0.5rem;
+  border-radius: ${radii.md};
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.sm};
   font-weight: 500;
   color: ${brandColors.chocolate};
   cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: ${brandColors.pink50};
+  }
 `;
 
 export const Checkbox = styled.input`

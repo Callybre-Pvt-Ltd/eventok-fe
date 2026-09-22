@@ -1,4 +1,4 @@
-import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ExternalLink, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
@@ -8,6 +8,7 @@ import type { NavItem } from './helper';
 import {
   BrandBlock,
   CollapseBtn,
+  BackToSiteLink,
   LogoutBtn,
   NavItem as NavItemLink,
   NavLabel,
@@ -85,6 +86,14 @@ export function PortalSidebar({
           ))}
         </NavList>
         <SidebarFooter $palette={palette}>
+          <BackToSiteLink
+            $palette={palette}
+            to={ROUTES.HOME}
+            onClick={closeMobile}
+          >
+            <ExternalLink size={16} />
+            {!collapsed && t('common.backToSite')}
+          </BackToSiteLink>
           <LogoutBtn $palette={palette} onClick={() => logout()}>
             <LogOut size={16} />
             {!collapsed && t('common.logout')}

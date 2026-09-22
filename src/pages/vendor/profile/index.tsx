@@ -2,7 +2,16 @@ import { Button, Input, InputNumber, Upload } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
 import { useVendorProfile } from './helper';
-import { Card, FormGrid, PageEyebrow, PageHeader, PageLead, PageTitle } from './styled';
+import {
+  Card,
+  FieldLabel,
+  FormField,
+  FormGrid,
+  PageEyebrow,
+  PageHeader,
+  PageLead,
+  PageTitle,
+} from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 
 export default function VendorProfilePage() {
@@ -25,52 +34,75 @@ export default function VendorProfilePage() {
       </PageHeader>
       <Card $palette={palette}>
         <FormGrid>
-          <Input
-            value={form.name}
-            onChange={e => form.setName(e.target.value)}
-            placeholder={t('auth.name')}
-            size="large"
-          />
-          <Input value={user?.email} disabled size="large" />
-          <Input
-            value={form.businessName}
-            onChange={e => form.setBusinessName(e.target.value)}
-            placeholder="Business name"
-            size="large"
-          />
-          <Input
-            value={form.city}
-            onChange={e => form.setCity(e.target.value)}
-            placeholder={t('auth.city')}
-            size="large"
-          />
-          <Input
-            value={form.state}
-            onChange={e => form.setState(e.target.value)}
-            placeholder="State"
-            size="large"
-          />
-          <Input
-            value={form.address}
-            onChange={e => form.setAddress(e.target.value)}
-            placeholder="Address"
-            size="large"
-          />
-          <Input.TextArea
-            value={form.description}
-            onChange={e => form.setDescription(e.target.value)}
-            placeholder="About your business"
-            rows={3}
-          />
-          <InputNumber
-            value={Number(form.experience) || 0}
-            onChange={v => form.setExperience(String(v ?? 0))}
-            min={0}
-            max={80}
-            addonBefore="Years exp"
-            style={{ width: '100%' }}
-            size="large"
-          />
+          <FormField>
+            <FieldLabel>{t('auth.name')}</FieldLabel>
+            <Input
+              value={form.name}
+              onChange={e => form.setName(e.target.value)}
+              placeholder={t('auth.name')}
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>{t('auth.email')}</FieldLabel>
+            <Input value={user?.email} disabled size="large" />
+          </FormField>
+          <FormField>
+            <FieldLabel>Business name</FieldLabel>
+            <Input
+              value={form.businessName}
+              onChange={e => form.setBusinessName(e.target.value)}
+              placeholder="Business name"
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>{t('auth.city')}</FieldLabel>
+            <Input
+              value={form.city}
+              onChange={e => form.setCity(e.target.value)}
+              placeholder={t('auth.city')}
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>State</FieldLabel>
+            <Input
+              value={form.state}
+              onChange={e => form.setState(e.target.value)}
+              placeholder="State"
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>Address</FieldLabel>
+            <Input
+              value={form.address}
+              onChange={e => form.setAddress(e.target.value)}
+              placeholder="Address"
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>About your business</FieldLabel>
+            <Input.TextArea
+              value={form.description}
+              onChange={e => form.setDescription(e.target.value)}
+              placeholder="About your business"
+              rows={3}
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>Years of experience</FieldLabel>
+            <InputNumber
+              value={Number(form.experience) || 0}
+              onChange={v => form.setExperience(String(v ?? 0))}
+              min={0}
+              max={80}
+              style={{ width: '100%' }}
+              size="large"
+            />
+          </FormField>
           <Upload
             accept="image/*,.pdf"
             showUploadList={false}
@@ -79,7 +111,9 @@ export default function VendorProfilePage() {
               return false;
             }}
           >
-            <Button loading={uploadDoc.isPending}>{t('vendor.kycUpload')}</Button>
+            <Button loading={uploadDoc.isPending}>
+              {t('vendor.kycUpload')}
+            </Button>
           </Upload>
           <Upload
             accept="image/*,.pdf"
@@ -89,7 +123,9 @@ export default function VendorProfilePage() {
               return false;
             }}
           >
-            <Button loading={uploadDoc.isPending}>{t('vendor.gstUpload')}</Button>
+            <Button loading={uploadDoc.isPending}>
+              {t('vendor.gstUpload')}
+            </Button>
           </Upload>
           <Button
             type="primary"

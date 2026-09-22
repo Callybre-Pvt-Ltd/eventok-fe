@@ -23,6 +23,7 @@ export function useWeddingServices() {
   const { data } = useQuery({
     queryKey: ['storefront', 'categories'],
     queryFn: async () => (await catalogService.getCategories()).data ?? [],
+    staleTime: 5 * 60_000,
   });
 
   const tiles = WEDDING_SLUGS.map(slug =>

@@ -1,9 +1,11 @@
-import { useCallback, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useCallback, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { readNextPath, withNextPath } from '@/utils/auth/auth-return';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme';
 import type { UserRole } from '@/types';
+import { setAuthIntent } from '@/utils/auth/post-auth';
 
 interface FormDraft {
   name: string;
@@ -17,9 +19,15 @@ export function useRegisterPage() {
   const { palette } = useTheme();
   const { register, verifyRegistration, verificationPending } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const nextPath = readNextPath(location.search);
+  const initialRole =
+    (location.state as { role?: UserRole } | null)?.role === 'vendor'
+      ? 'vendor'
+      : 'customer';
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState<UserRole>('customer');
+  const [role, setRole] = useState<UserRole>(initialRole);
   const [step, setStep] = useState(1);
   const [draft, setDraft] = useState<FormDraft>({
     name: '',
@@ -29,6 +37,10 @@ export function useRegisterPage() {
     city: '',
   });
   const [verificationCode, setVerificationCode] = useState('');
+
+  useEffect(() => {
+    if (role === 'vendor') setAuthIntent('vendor');
+  }, [role]);
 
   const totalSteps = role === 'vendor' ? 3 : 2;
 
@@ -58,11 +70,8 @@ export function useRegisterPage() {
       setError(err);
       return;
     }
-    navigate(
-      role === 'vendor' ? ROUTES.VENDOR_PENDING : ROUTES.CUSTOMER_DASHBOARD,
-      { replace: true },
-    );
-  }, [navigate, role, verificationCode, verifyRegistration]);
+    navigate(withNextPath(ROUTES.AUTH_CONTINUE, nextPath), { replace: true });
+  }, [navigate, nextPath, verificationCode, verifyRegistration]);
 
   return {
     palette,

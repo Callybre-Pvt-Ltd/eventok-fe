@@ -5,6 +5,7 @@ import { AuthShell } from '@/components/auth/auth-shell';
 import { SocialButtons } from '@/components/auth/social-buttons';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '@/constants/routes';
+import { withNextPath } from '@/utils/auth/auth-return';
 import { useLoginPage } from './helper';
 import {
   AuthTitle,
@@ -19,13 +20,13 @@ import {
 
 export default function LoginPage() {
   const { t } = useTranslation();
-  const { palette, error, loading, onSubmit } = useLoginPage();
+  const { palette, error, loading, authLoading, nextPath, onSubmit } =
+    useLoginPage();
 
   return (
     <AuthShell>
       <AuthTitle $palette={palette}>{t('auth.loginTitle')}</AuthTitle>
       <AuthSubtitle $palette={palette}>{t('auth.loginSubtitle')}</AuthSubtitle>
-      <SocialButtons />
       {error && (
         <ErrorMsg $palette={palette}>{t('auth.invalidCredentials')}</ErrorMsg>
       )}
@@ -65,7 +66,8 @@ export default function LoginPage() {
           variant="primary"
           size="lg"
           fullWidth
-          loading={loading}
+          loading={loading || authLoading}
+          disabled={authLoading}
         >
           {t('auth.login')}
         </Button>
@@ -73,9 +75,12 @@ export default function LoginPage() {
           <Link to={ROUTES.FORGOT_PASSWORD}>Forgot your password?</Link>
         </AuthFooter>
       </AuthForm>
+      <SocialButtons dividerPosition="above" />
       <AuthFooter $palette={palette}>
         {t('auth.noAccount')}{' '}
-        <Link to={ROUTES.REGISTER}>{t('auth.register')}</Link>
+        <Link to={withNextPath(ROUTES.REGISTER, nextPath)}>
+          {t('auth.register')}
+        </Link>
       </AuthFooter>
     </AuthShell>
   );

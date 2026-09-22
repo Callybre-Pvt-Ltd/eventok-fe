@@ -33,6 +33,22 @@ export const Image = styled.img`
   object-fit: cover;
 `;
 
+export const EmptyMedia = styled.div`
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    145deg,
+    ${brandColors.pink50} 0%,
+    ${brandColors.tan} 100%
+  );
+  color: ${brandColors.gray600};
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.sm};
+  font-weight: 650;
+`;
+
 export const Ribbon = styled.span`
   position: absolute;
   top: 0.625rem;

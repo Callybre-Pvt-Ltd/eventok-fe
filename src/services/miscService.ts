@@ -82,7 +82,7 @@ export const categoryService = {
     return wrap(async () => {
       const page = await apiRequestPaginated<ApiCategory>('/categories', {
         auth: false,
-        query: { page: 1, page_size: 100 },
+        query: { page: 1, page_size: 20 },
       });
       return mergeWithStatic(page.items ?? []);
     });

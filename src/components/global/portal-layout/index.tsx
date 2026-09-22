@@ -1,7 +1,9 @@
 import { Menu, X } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import type { UserRole } from '@/types';
+import { AccountAvatar } from '@/components/auth/account-avatar';
 import { PortalSidebar } from '@/components/global/portal-sidebar';
+import { getRoleLabel } from '@/utils/auth/roles';
 import { usePortalLayout } from './helper';
 import {
   Content,
@@ -13,6 +15,7 @@ import {
   TopBarCopy,
   TopBarEyebrow,
   TopBarTitle,
+  TopBarTrailing,
 } from './styled';
 
 interface PortalLayoutProps {
@@ -60,7 +63,10 @@ export function PortalLayout({ role }: PortalLayoutProps) {
             <TopBarEyebrow>{portalEyebrow}</TopBarEyebrow>
             <TopBarTitle $palette={palette}>{portalLabel}</TopBarTitle>
           </TopBarCopy>
-          <RolePill>{role === 'admin' ? 'Super admin' : role}</RolePill>
+          <TopBarTrailing>
+            <RolePill>{getRoleLabel(role)}</RolePill>
+            <AccountAvatar />
+          </TopBarTrailing>
         </TopBar>
         <Content>
           <Outlet />

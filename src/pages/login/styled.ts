@@ -130,3 +130,17 @@ export const VendorNote = styled.p<{ $palette: ThemePalette }>`
   border-radius: ${radii.md};
   background: ${({ $palette }) => $palette.primaryLight};
 `;
+
+export const CaptchaSlot = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: ${spacing.md};
+
+  &:empty {
+    margin-bottom: 0;
+  }
+`;
+
+export const SubmitRow = styled.div`
+  margin-top: ${spacing.sm};
+`;

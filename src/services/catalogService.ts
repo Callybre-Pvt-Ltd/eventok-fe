@@ -1,6 +1,7 @@
 import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 import { photography } from '@/design-system/tokens/photography';
 import {
+  DEFAULT_PAGE_SIZE,
   marketplaceService,
   type ApiCategory,
   type ApiService,
@@ -16,8 +17,6 @@ import type {
   VenueListing,
 } from '@/types/catalog';
 import type { ServiceResponse } from '@/types';
-
-const placeholder = photography.hero.wedding;
 
 const EVENT_FROM_SLUG: Record<string, CatalogEventType> = {
   'wedding-decorations': 'wedding',
@@ -48,7 +47,9 @@ const toCatalog = (
   const price = Number(service.starting_price) || 0;
   const slug = category?.slug ?? '';
   const eventType = EVENT_FROM_SLUG[slug] ?? 'wedding';
-  const pics = images.length ? images : [placeholder];
+  const included = service.whats_included ?? [];
+  const goodToKnow = service.good_to_know ?? [];
+  const cancellation = service.cancellation_policy ?? [];
   return {
     id: service.id,
     slug: service.id,
@@ -61,16 +62,13 @@ const toCatalog = (
     bookingAmount: Math.max(19, Math.round(price * 0.05)),
     rating: 0,
     reviewCount: 0,
-    images: pics,
+    images,
     tags: category ? [category.name] : [],
     attributes: category ? [category.name] : [],
-    whatsIncluded: [],
-    goodToKnow: [],
+    whatsIncluded: included.map(label => ({ label, included: true })),
+    goodToKnow,
     aboutExperience: service.description ?? '',
-    cancellationPolicy: [
-      'Booking amount is adjustable against the final invoice.',
-      'Cancellation policy is confirmed with the vendor after booking.',
-    ],
+    cancellationPolicy: cancellation,
   };
 };
 
@@ -94,7 +92,7 @@ export const catalogService = {
         category_id: categoryId,
         max_price: filters.maxPrice,
         page: 1,
-        page_size: 100,
+        page_size: DEFAULT_PAGE_SIZE,
       });
       if (page.error || !page.data) {
         throw new Error(page.error ?? 'Failed to load services');
@@ -118,16 +116,16 @@ export const catalogService = {
           bookingAmount: Math.max(19, Math.round(d.budgetFrom * 0.05)),
           rating: d.rating,
           reviewCount: 0,
-          images: d.images.length ? d.images : [placeholder],
+          images: d.images,
           tags: d.tags,
           attributes: d.tags,
-          whatsIncluded: [],
-          goodToKnow: [],
+          whatsIncluded: (d.whatsIncluded ?? []).map(label => ({
+            label,
+            included: true,
+          })),
+          goodToKnow: d.goodToKnow ?? [],
           aboutExperience: d.description,
-          cancellationPolicy: [
-            'Booking amount is adjustable against the final invoice.',
-            'Cancellation policy is confirmed with the vendor after booking.',
-          ],
+          cancellationPolicy: d.cancellationPolicy ?? [],
         };
       });
 
@@ -188,17 +186,6 @@ export const catalogService = {
       const bySlug = new Map(api.map(c => [c.slug, c]));
       const byName = new Map(api.map(c => [c.name.toLowerCase(), c]));
 
-      const services = await marketplaceService.listServices({
-        page: 1,
-        page_size: 100,
-      });
-      const live = services.data?.items ?? [];
-      const countByCatKey = new Map<string, number>();
-      for (const s of live) {
-        const key = s.categorySlug;
-        countByCatKey.set(key, (countByCatKey.get(key) ?? 0) + 1);
-      }
-
       const merged: CatalogCategory[] = DECORATION_CATEGORIES.map(staticCat => {
         const hit =
           bySlug.get(staticCat.slug) ??
@@ -209,10 +196,7 @@ export const catalogService = {
           slug: hit?.slug ?? staticCat.slug,
           eventType: EVENT_FROM_SLUG[staticCat.slug] ?? 'wedding',
           icon: staticCat.icon,
-          serviceCount: hit
-            ? (countByCatKey.get(hit.id) ?? 0) +
-              (countByCatKey.get(hit.slug) ?? 0)
-            : 0,
+          serviceCount: hit?.service_count ?? 0,
           featuredOnHome: true,
         };
       });
@@ -226,7 +210,7 @@ export const catalogService = {
             slug: c.slug,
             eventType: EVENT_FROM_SLUG[c.slug] ?? 'wedding',
             icon: c.icon ?? 'Sparkles',
-            serviceCount: countByCatKey.get(c.id) ?? 0,
+            serviceCount: c.service_count ?? 0,
             featuredOnHome: false,
           });
         }
@@ -246,7 +230,7 @@ export const catalogService = {
           titleTrail: 'Memories',
           subtitle:
             'Browse decoration categories and book services created by verified vendors.',
-          image: placeholder,
+          image: photography.hero.wedding,
           ctaHref: '/shop',
         },
       ],

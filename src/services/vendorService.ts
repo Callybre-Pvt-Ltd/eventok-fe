@@ -24,6 +24,9 @@ interface ApiService {
   starting_price: string | number;
   status: string;
   created_at: string;
+  whats_included?: string[];
+  good_to_know?: string[];
+  cancellation_policy?: string[];
 }
 
 const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
@@ -138,6 +141,22 @@ export const vendorService = {
     );
   },
 
+  async createProfile(payload: {
+    business_name: string;
+    description?: string;
+    city?: string;
+    state?: string;
+  }): Promise<ServiceResponse<VendorPrivate>> {
+    return wrap(async () =>
+      toPrivate(
+        await apiRequest<ApiVendor>('/vendors', {
+          method: 'POST',
+          body: payload,
+        }),
+      ),
+    );
+  },
+
   async listMyServices(
     vendorId: string,
   ): Promise<ServiceResponse<ApiService[]>> {
@@ -157,6 +176,9 @@ export const vendorService = {
       title: string;
       description?: string;
       starting_price: number;
+      whats_included?: string[];
+      good_to_know?: string[];
+      cancellation_policy?: string[];
     },
   ): Promise<ServiceResponse<ApiService>> {
     return wrap(() =>
@@ -175,6 +197,9 @@ export const vendorService = {
       starting_price?: number;
       status?: string;
       category_id?: string;
+      whats_included?: string[];
+      good_to_know?: string[];
+      cancellation_policy?: string[];
     },
   ): Promise<ServiceResponse<ApiService>> {
     return wrap(() =>

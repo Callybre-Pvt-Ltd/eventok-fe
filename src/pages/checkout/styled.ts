@@ -225,3 +225,31 @@ export const SuccessLink = styled(Link)`
   font-weight: 700;
   text-decoration: none;
 `;
+
+export const ConfirmList = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.25rem 0;
+`;
+
+export const ConfirmRow = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: ${fontSizes.sm};
+  color: ${brandColors.gray600};
+
+  > span:last-child {
+    text-align: right;
+    color: ${brandColors.chocolate};
+    font-weight: 600;
+  }
+`;
+
+export const ConfirmTotal = styled.span`
+  font-size: ${fontSizes.md};
+  font-weight: 800;
+  color: ${brandColors.chocolate};
+`;

@@ -9,7 +9,7 @@ const PORTAL_COPY: Record<
 > = {
   admin: { eyebrow: 'EventOK control', label: 'Super admin portal' },
   vendor: { eyebrow: 'EventOK partners', label: 'Vendor workspace' },
-  customer: { eyebrow: 'EventOK', label: 'Customer portal' },
+  customer: { eyebrow: 'EventOK', label: 'User portal' },
 };
 
 export function usePortalLayout(role: UserRole) {

@@ -14,28 +14,36 @@ import {
   ThumbImage,
   Thumbs,
   VerifiedBadge,
+  EmptyFrame,
 } from './styled';
 
 export function PdpGallery({ service }: { service: CatalogService }) {
   const { t } = useTranslation();
-  const gallery = usePdpGallery(service.images.length);
+  const hasImages = service.images.length > 0;
+  const gallery = usePdpGallery(Math.max(service.images.length, 1));
 
   return (
     <div>
       <Frame>
-        <Image src={service.images[gallery.index]} alt={service.title} />
+        {hasImages ? (
+          <Image src={service.images[gallery.index]} alt={service.title} />
+        ) : (
+          <EmptyFrame>Photos coming soon</EmptyFrame>
+        )}
         <BadgeRow>
           <VerifiedBadge>
             <BadgeCheck size={13} />
             {t('storefront.pdpVerified')}
           </VerifiedBadge>
-          <Badge>
-            <Camera size={13} />
-            {t('storefront.pdpPhotoCount', {
-              current: gallery.index + 1,
-              total: service.images.length,
-            })}
-          </Badge>
+          {hasImages ? (
+            <Badge>
+              <Camera size={13} />
+              {t('storefront.pdpPhotoCount', {
+                current: gallery.index + 1,
+                total: service.images.length,
+              })}
+            </Badge>
+          ) : null}
         </BadgeRow>
         <RatingBadge>
           <Star size={13} />

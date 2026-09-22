@@ -3,21 +3,12 @@ import { LoadingState } from '@/components/global/loading-state';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import type { UserRole } from '@/types';
+import { getPostAuthPath } from '@/utils/auth/post-auth';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
   roles?: UserRole[];
   allowPendingVendor?: boolean;
-}
-
-function getDefaultRoute(role: UserRole, vendorStatus?: string): string {
-  if (role === 'admin') return ROUTES.ADMIN_DASHBOARD;
-  if (role === 'vendor') {
-    return vendorStatus === 'pending'
-      ? ROUTES.VENDOR_PENDING
-      : ROUTES.VENDOR_DASHBOARD;
-  }
-  return ROUTES.CUSTOMER_DASHBOARD;
 }
 
 export function ProtectedRoute({
@@ -42,13 +33,13 @@ export function ProtectedRoute({
 
   if (roles && !roles.includes(user.role)) {
     return (
-      <Navigate to={getDefaultRoute(user.role, user.vendorStatus)} replace />
+      <Navigate to={getPostAuthPath(user.role, user.vendorStatus)} replace />
     );
   }
 
   if (
     user.role === 'vendor' &&
-    user.vendorStatus === 'pending' &&
+    user.vendorStatus !== 'approved' &&
     !allowPendingVendor
   ) {
     return <Navigate to={ROUTES.VENDOR_PENDING} replace />;

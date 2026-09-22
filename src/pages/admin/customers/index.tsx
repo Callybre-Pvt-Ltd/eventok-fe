@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
 import { EmptyState } from '@/components/global/empty-state';
+import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
+import { formatEmailWithRole } from '@/utils/auth/roles';
 import { useAdminCustomers } from './helper';
 import { ItemMeta, ItemTitle, List, ListItem, PageTitle } from './styled';
-import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 
 export default function AdminCustomersPage() {
   const { t } = useTranslation();
@@ -21,7 +22,7 @@ export default function AdminCustomersPage() {
             <ListItem $palette={palette} key={c.id}>
               <ItemTitle $palette={palette}>{c.name}</ItemTitle>
               <ItemMeta $palette={palette}>
-                {c.email} · {c.city || '—'}
+                {formatEmailWithRole(c.email, c.role)} · {c.city || '—'}
               </ItemMeta>
             </ListItem>
           ))}

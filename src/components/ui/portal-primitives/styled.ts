@@ -18,7 +18,7 @@ export const PageEyebrow = styled.p`
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: ${brandColors.pink500};
+  color: ${brandColors.gray600};
 `;
 
 export const PageLead = styled.p<{ $palette: ThemePalette }>`
@@ -43,7 +43,7 @@ export const PageHeader = styled.div`
 export const Card = styled.div<{ $palette: ThemePalette }>`
   background: ${({ $palette }) => $palette.surface};
   border-radius: 1rem;
-  border: 1px solid rgba(${brandRgb.pink}, 0.1);
+  border: 1px solid ${brandColors.tan};
   padding: 1.5rem;
   box-shadow: 0 8px 24px rgba(${brandRgb.ink}, 0.04);
 
@@ -71,9 +71,7 @@ export const StatCard = styled.div<{ $palette: ThemePalette }>`
   border: 1px solid rgba(${brandRgb.pink}, 0.12);
   padding: 1.25rem 1.5rem;
   box-shadow: 0 8px 22px rgba(${brandRgb.ink}, 0.04);
-  transition:
-    box-shadow 0.25s ease,
-    transform 0.25s ease,
+  transition: box-shadow 0.25s ease, transform 0.25s ease,
     border-color 0.25s ease;
 
   &::before {
@@ -125,11 +123,9 @@ export const ListItem = styled.div<{ $palette: ThemePalette }>`
   padding: 1rem 1.25rem;
   background: ${({ $palette }) => $palette.surface};
   border-radius: 0.9rem;
-  border: 1px solid rgba(${brandRgb.pink}, 0.1);
+  border: 1px solid ${brandColors.tan};
   box-shadow: 0 4px 14px rgba(${brandRgb.ink}, 0.03);
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     border-color: rgba(${brandRgb.pink}, 0.35);
@@ -219,6 +215,22 @@ export const FormGrid = styled.div`
   gap: 1rem;
   max-width: 480px;
   width: 100%;
+`;
+
+export const FormField = styled.label`
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+`;
+
+export const FieldLabel = styled.span`
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: ${brandColors.gray600};
 `;
 
 export const PendingWrap = styled.div`

@@ -40,32 +40,49 @@ export function PdpTabs({ service }: { service: CatalogService }) {
         {tab === 'whatsIncluded' && (
           <>
             <Intro>{t('storefront.pdpIncludedIntro')}</Intro>
-            {service.whatsIncluded.map(item => (
-              <FeatureRow key={item.label}>
-                <FeatureName>{item.label}</FeatureName>
-                <IncludedChip>{t('storefront.pdpIncludedChip')}</IncludedChip>
-              </FeatureRow>
-            ))}
+            {service.whatsIncluded.length ? (
+              service.whatsIncluded.map(item => (
+                <FeatureRow key={item.label}>
+                  <FeatureName>{item.label}</FeatureName>
+                  <IncludedChip>{t('storefront.pdpIncludedChip')}</IncludedChip>
+                </FeatureRow>
+              ))
+            ) : (
+              <Paragraph>Vendor has not listed inclusions yet.</Paragraph>
+            )}
           </>
         )}
 
         {tab === 'goodToKnow' && (
           <List>
-            {service.goodToKnow.map(item => (
-              <ListItem key={item}>{item}</ListItem>
-            ))}
+            {service.goodToKnow.length ? (
+              service.goodToKnow.map(item => (
+                <ListItem key={item}>{item}</ListItem>
+              ))
+            ) : (
+              <Paragraph>No extra notes from the vendor yet.</Paragraph>
+            )}
           </List>
         )}
 
         {tab === 'aboutExperience' && (
-          <Paragraph>{service.aboutExperience}</Paragraph>
+          <Paragraph>
+            {service.aboutExperience || 'No description yet.'}
+          </Paragraph>
         )}
 
         {tab === 'cancellationPolicy' && (
           <List>
-            {service.cancellationPolicy.map(item => (
-              <ListItem key={item}>{item}</ListItem>
-            ))}
+            {service.cancellationPolicy.length ? (
+              service.cancellationPolicy.map(item => (
+                <ListItem key={item}>{item}</ListItem>
+              ))
+            ) : (
+              <Paragraph>
+                Cancellation terms will be confirmed with the vendor after
+                booking.
+              </Paragraph>
+            )}
           </List>
         )}
       </Body>

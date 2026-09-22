@@ -82,17 +82,6 @@ export const LineMeta = styled.span`
   color: ${brandColors.gray600};
 `;
 
-export const DateInput = styled.input`
-  padding: 0.5rem 0.75rem;
-  border-radius: ${radii.md};
-  border: 1px solid ${brandColors.tan};
-  font-family: ${fontFamily.body};
-  font-size: ${fontSizes.xs};
-  font-weight: 600;
-  color: ${brandColors.chocolate};
-  justify-self: start;
-`;
-
 export const LineFoot = styled.div`
   display: flex;
   flex-wrap: wrap;

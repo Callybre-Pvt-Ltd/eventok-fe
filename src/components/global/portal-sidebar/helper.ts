@@ -3,7 +3,6 @@ import { useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Calendar,
-  MessageSquare,
   CreditCard,
   Bell,
   User,
@@ -28,35 +27,6 @@ export interface NavItem {
   labelKey: string;
   icon: LucideIcon;
 }
-
-const customerNav: NavItem[] = [
-  {
-    path: ROUTES.CUSTOMER_DASHBOARD,
-    labelKey: 'customer.dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    path: ROUTES.CUSTOMER_BOOKINGS,
-    labelKey: 'customer.bookings',
-    icon: Calendar,
-  },
-  {
-    path: ROUTES.CUSTOMER_CHAT,
-    labelKey: 'customer.chat',
-    icon: MessageSquare,
-  },
-  {
-    path: ROUTES.CUSTOMER_PAYMENTS,
-    labelKey: 'customer.payments',
-    icon: CreditCard,
-  },
-  {
-    path: ROUTES.CUSTOMER_NOTIFICATIONS,
-    labelKey: 'customer.notifications',
-    icon: Bell,
-  },
-  { path: ROUTES.CUSTOMER_PROFILE, labelKey: 'customer.profile', icon: User },
-];
 
 const vendorNav: NavItem[] = [
   {
@@ -111,7 +81,6 @@ const adminNav: NavItem[] = [
 ];
 
 export function getNavItems(role: UserRole): NavItem[] {
-  if (role === 'customer') return customerNav;
   if (role === 'vendor') return vendorNav;
   return adminNav;
 }

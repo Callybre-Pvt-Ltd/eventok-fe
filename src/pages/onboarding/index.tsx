@@ -7,25 +7,20 @@ import { useAuth } from '@/hooks/auth/use-auth';
 import { useTheme } from '@/theme';
 import type { UserRole } from '@/types';
 import {
+  consumeAuthIntent,
+  getPostAuthPath,
+  peekAuthIntent,
+} from '@/utils/auth/post-auth';
+import {
   AuthTitle,
   AuthSubtitle,
+  AuthForm,
   Field,
   Label,
   Input,
   ErrorMsg,
-  RoleGroup,
-  RoleLabel,
+  SubmitRow,
 } from '../login/styled';
-
-const destination = (role: UserRole, vendorStatus?: string) => {
-  if (role === 'admin') return ROUTES.ADMIN_DASHBOARD;
-  if (role === 'vendor') {
-    return vendorStatus === 'pending'
-      ? ROUTES.VENDOR_PENDING
-      : ROUTES.VENDOR_DASHBOARD;
-  }
-  return ROUTES.CUSTOMER_DASHBOARD;
-};
 
 export default function OnboardingPage() {
   const { palette } = useTheme();
@@ -35,15 +30,16 @@ export default function OnboardingPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('');
-  const [role, setRole] = useState<UserRole>('customer');
+  const role: UserRole = peekAuthIntent() === 'vendor' ? 'vendor' : 'customer';
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    if (session)
-      navigate(destination(session.user.role, session.user.vendorStatus), {
-        replace: true,
-      });
+    if (!session) return;
+    consumeAuthIntent();
+    navigate(getPostAuthPath(session.user.role, session.user.vendorStatus), {
+      replace: true,
+    });
   }, [navigate, session]);
 
   if (isLoading) return null;
@@ -55,71 +51,63 @@ export default function OnboardingPage() {
     setError(null);
     const message = await completeOnboarding({ name, phone, city, role });
     setSubmitting(false);
-    if (message) setError(message);
+    if (message) {
+      setError(message);
+      return;
+    }
+    consumeAuthIntent();
   };
 
   return (
-    <AuthShell>
+    <AuthShell showVendorCta={false}>
       <AuthTitle $palette={palette}>Complete your EventOK profile</AuthTitle>
       <AuthSubtitle $palette={palette}>
         Your Clerk account is ready. Add the details EventOK needs to continue.
       </AuthSubtitle>
       {error && <ErrorMsg $palette={palette}>{error}</ErrorMsg>}
-      <Field $palette={palette}>
-        <Label $palette={palette}>Full name</Label>
-        <Input
-          $palette={palette}
-          value={name}
-          onChange={event => setName(event.target.value)}
-        />
-      </Field>
-      <Field $palette={palette}>
-        <Label $palette={palette}>Phone number</Label>
-        <Input
-          $palette={palette}
-          type="tel"
-          value={phone}
-          onChange={event => setPhone(event.target.value)}
-        />
-      </Field>
-      <Field $palette={palette}>
-        <Label $palette={palette}>City</Label>
-        <Input
-          $palette={palette}
-          value={city}
-          onChange={event => setCity(event.target.value)}
-        />
-      </Field>
-      <Field $palette={palette}>
-        <Label $palette={palette}>Account type</Label>
-        <RoleGroup $palette={palette}>
-          <RoleLabel $palette={palette} $active={role === 'customer'}>
-            <input
-              type="radio"
-              checked={role === 'customer'}
-              onChange={() => setRole('customer')}
-            />
-            Client
-          </RoleLabel>
-          <RoleLabel $palette={palette} $active={role === 'vendor'}>
-            <input
-              type="radio"
-              checked={role === 'vendor'}
-              onChange={() => setRole('vendor')}
-            />
-            Vendor
-          </RoleLabel>
-        </RoleGroup>
-      </Field>
-      <Button
-        variant="primary"
-        size="lg"
-        fullWidth
-        loading={submitting}
-        onClick={submit}
+      <AuthForm
+        onSubmit={event => {
+          event.preventDefault();
+          void submit();
+        }}
       >
-        Continue
-      </Button>
+        <Field $palette={palette}>
+          <Label $palette={palette}>Full name</Label>
+          <Input
+            $palette={palette}
+            value={name}
+            onChange={event => setName(event.target.value)}
+          />
+        </Field>
+        <Field $palette={palette}>
+          <Label $palette={palette}>Phone number</Label>
+          <Input
+            $palette={palette}
+            type="tel"
+            value={phone}
+            onChange={event => setPhone(event.target.value)}
+          />
+        </Field>
+        <Field $palette={palette}>
+          <Label $palette={palette}>City</Label>
+          <Input
+            $palette={palette}
+            value={city}
+            onChange={event => setCity(event.target.value)}
+          />
+        </Field>
+        <SubmitRow>
+          <Button
+            type="submit"
+            variant="primary"
+            size="lg"
+            fullWidth
+            loading={submitting}
+          >
+            Continue
+          </Button>
+        </SubmitRow>
+      </AuthForm>
     </AuthShell>
   );
 }

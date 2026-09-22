@@ -1,7 +1,6 @@
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
 import type { ServiceResponse } from '@/types';
 import type { DiscoveryVendor } from '@/pages/services/filters';
-import { photography } from '@/design-system/tokens/photography';
 
 export interface ApiCategory {
   id: string;
@@ -10,6 +9,7 @@ export interface ApiCategory {
   icon: string | null;
   is_active: boolean;
   created_at: string;
+  service_count: number;
 }
 
 export interface ApiService {
@@ -21,6 +21,9 @@ export interface ApiService {
   status: string;
   created_at: string;
   vendor_id?: string;
+  whats_included?: string[];
+  good_to_know?: string[];
+  cancellation_policy?: string[];
 }
 
 export interface ApiServiceImage {
@@ -53,7 +56,12 @@ const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
   }
 };
 
-const placeholder = photography.hero.wedding;
+/** Default list page size — keep payloads small for storefront. */
+export const DEFAULT_PAGE_SIZE = 20;
+
+const CATEGORIES_TTL_MS = 60_000;
+let categoriesCache: { at: number; items: ApiCategory[] } | null = null;
+let categoriesInflight: Promise<ApiCategory[]> | null = null;
 
 const initialsOf = (title: string) =>
   title
@@ -68,7 +76,6 @@ export const toDiscoveryCard = (
   images: string[] = [],
 ): DiscoveryVendor => {
   const price = Number(service.starting_price) || 0;
-  const image = images[0] || placeholder;
   const categoryName = category?.name;
   return {
     id: service.id,
@@ -88,10 +95,13 @@ export const toDiscoveryCard = (
     budgetFrom: price,
     years: 0,
     portfolioCount: images.length,
-    image,
-    images: images.length ? images : [image],
+    image: images[0] ?? '',
+    images,
     tags: categoryName ? [categoryName] : [],
     eventTypes: [],
+    whatsIncluded: service.whats_included ?? [],
+    goodToKnow: service.good_to_know ?? [],
+    cancellationPolicy: service.cancellation_policy ?? [],
     verified: true,
     featured: false,
     trending: false,
@@ -106,15 +116,33 @@ export const toDiscoveryCard = (
   };
 };
 
+async function fetchCategories(): Promise<ApiCategory[]> {
+  if (
+    categoriesCache &&
+    Date.now() - categoriesCache.at < CATEGORIES_TTL_MS
+  ) {
+    return categoriesCache.items;
+  }
+  if (categoriesInflight) return categoriesInflight;
+
+  categoriesInflight = (async () => {
+    const page = await apiRequestPaginated<ApiCategory>('/categories', {
+      auth: false,
+      query: { page: 1, page_size: DEFAULT_PAGE_SIZE },
+    });
+    const items = page.items.filter(c => c.is_active !== false);
+    categoriesCache = { at: Date.now(), items };
+    return items;
+  })().finally(() => {
+    categoriesInflight = null;
+  });
+
+  return categoriesInflight;
+}
+
 export const marketplaceService = {
   async listCategories(): Promise<ServiceResponse<ApiCategory[]>> {
-    return wrap(async () => {
-      const page = await apiRequestPaginated<ApiCategory>('/categories', {
-        auth: false,
-        query: { page: 1, page_size: 100 },
-      });
-      return page.items.filter(c => c.is_active !== false);
-    });
+    return wrap(async () => fetchCategories());
   },
 
   async listServices(
@@ -123,8 +151,7 @@ export const marketplaceService = {
     ServiceResponse<{ items: DiscoveryVendor[]; total: number; pages: number }>
   > {
     return wrap(async () => {
-      const categoriesRes = await marketplaceService.listCategories();
-      const categories = categoriesRes.data ?? [];
+      const categories = await fetchCategories();
       const byId = new Map(categories.map(c => [c.id, c]));
 
       const page = await apiRequestPaginated<ApiService>('/services', {
@@ -138,12 +165,13 @@ export const marketplaceService = {
           city: filters.city,
           sort: filters.sort,
           page: filters.page ?? 1,
-          page_size: filters.page_size ?? 20,
+          page_size: filters.page_size ?? DEFAULT_PAGE_SIZE,
         },
       });
 
       const items = await Promise.all(
         page.items.map(async service => {
+          const cat = byId.get(service.category_id);
           let images: string[] = [];
           try {
             const imgs = await apiRequest<ApiServiceImage[]>(
@@ -154,7 +182,6 @@ export const marketplaceService = {
           } catch {
             images = [];
           }
-          const cat = byId.get(service.category_id);
           return toDiscoveryCard(service, cat ?? null, images);
         }),
       );
@@ -170,10 +197,8 @@ export const marketplaceService = {
       const service = await apiRequest<ApiService>(`/services/${id}`, {
         auth: false,
       });
-      const categoriesRes = await marketplaceService.listCategories();
-      const cat = (categoriesRes.data ?? []).find(
-        c => c.id === service.category_id,
-      );
+      const categories = await fetchCategories();
+      const cat = categories.find(c => c.id === service.category_id);
       let images: string[] = [];
       try {
         const imgs = await apiRequest<ApiServiceImage[]>(

@@ -16,6 +16,7 @@ export function useStoreHeader() {
   const { cartCount, wishlist } = useBasket();
   const [term, setTerm] = useState('');
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const id = window.setInterval(
@@ -36,10 +37,16 @@ export function useStoreHeader() {
     [navigate, term],
   );
 
+  const openMenu = useCallback(() => setMenuOpen(true), []);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+
   return {
     term,
     setTerm,
     submit,
+    menuOpen,
+    openMenu,
+    closeMenu,
     cartCount,
     wishlistCount: wishlist.length,
     placeholder: PLACEHOLDER_KEYS[placeholderIndex],

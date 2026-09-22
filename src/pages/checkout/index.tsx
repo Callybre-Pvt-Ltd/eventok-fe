@@ -1,3 +1,5 @@
+import { DatePicker, Modal, TimePicker } from 'antd';
+import dayjs from 'dayjs';
 import { CheckCircle2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
@@ -7,6 +9,9 @@ import { useCheckoutPage } from './helper';
 import {
   BookingId,
   Card,
+  ConfirmList,
+  ConfirmRow,
+  ConfirmTotal,
   CardTitle,
   Checkbox,
   ErrorText,
@@ -66,21 +71,44 @@ export default function CheckoutPage() {
               <Row>
                 <Field>
                   {t('storefront.checkoutDate')}
-                  <Input
-                    type="date"
-                    value={checkout.form.eventDate}
-                    onChange={event =>
-                      checkout.setField('eventDate', event.target.value)
+                  <DatePicker
+                    size="large"
+                    format="DD MMM YYYY"
+                    placeholder={t('storefront.checkoutDate')}
+                    value={
+                      checkout.form.eventDate
+                        ? dayjs(checkout.form.eventDate)
+                        : null
+                    }
+                    disabledDate={current =>
+                      current && current < dayjs().startOf('day')
+                    }
+                    onChange={value =>
+                      checkout.setField(
+                        'eventDate',
+                        value ? value.format('YYYY-MM-DD') : '',
+                      )
                     }
                   />
                 </Field>
                 <Field>
                   {t('storefront.checkoutTime')}
-                  <Input
-                    type="time"
-                    value={checkout.form.eventTime}
-                    onChange={event =>
-                      checkout.setField('eventTime', event.target.value)
+                  <TimePicker
+                    size="large"
+                    format="h:mm A"
+                    use12Hours
+                    minuteStep={5}
+                    placeholder={t('storefront.checkoutTime')}
+                    value={
+                      checkout.form.eventTime
+                        ? dayjs(checkout.form.eventTime, 'HH:mm')
+                        : null
+                    }
+                    onChange={value =>
+                      checkout.setField(
+                        'eventTime',
+                        value ? value.format('HH:mm') : '',
+                      )
                     }
                   />
                 </Field>
@@ -199,14 +227,68 @@ export default function CheckoutPage() {
               <span>{t('storefront.cartDueLater')}</span>
               <span>{formatPrice(checkout.totals.dueLater)}</span>
             </SummaryLine>
-            <PayButton type="submit" onClick={checkout.submit}>
-              {t('storefront.checkoutPay', {
-                amount: formatPrice(checkout.totals.dueNow),
-              })}
+            <PayButton
+              type="submit"
+              onClick={checkout.submit}
+              disabled={checkout.authLoading}
+            >
+              {checkout.isSignedIn
+                ? t('storefront.checkoutReview')
+                : t('storefront.checkoutSignInToBook')}
             </PayButton>
+            {checkout.error && (
+              <ErrorText>{t('storefront.checkoutRequired')}</ErrorText>
+            )}
             <PrivacyNote>{t('storefront.checkoutPrivacyNote')}</PrivacyNote>
           </Summary>
         </Layout>
+
+        <Modal
+          open={checkout.confirming}
+          title={t('storefront.checkoutConfirmTitle')}
+          okText={t('storefront.checkoutConfirmOk')}
+          cancelText={t('common.back')}
+          onOk={checkout.confirmOrder}
+          onCancel={checkout.cancelConfirm}
+          centered
+        >
+          <ConfirmList>
+            {checkout.lines.map(line => (
+              <ConfirmRow key={line.serviceSlug}>
+                <span>
+                  {line.service.title} × {line.quantity}
+                </span>
+                <span>{formatPrice(line.service.price * line.quantity)}</span>
+              </ConfirmRow>
+            ))}
+            <ConfirmRow>
+              <span>{t('storefront.checkoutDate')}</span>
+              <span>
+                {checkout.form.eventDate
+                  ? dayjs(checkout.form.eventDate).format('DD MMM YYYY')
+                  : '—'}
+                {checkout.form.eventTime ? `, ${checkout.form.eventTime}` : ''}
+              </span>
+            </ConfirmRow>
+            <ConfirmRow>
+              <span>{t('storefront.checkoutVenue')}</span>
+              <span>
+                {checkout.form.venue}
+                {checkout.form.city ? `, ${checkout.form.city}` : ''}
+              </span>
+            </ConfirmRow>
+            <ConfirmRow>
+              <span>{t('storefront.checkoutName')}</span>
+              <span>
+                {checkout.form.name} · {checkout.form.phone}
+              </span>
+            </ConfirmRow>
+            <ConfirmRow>
+              <ConfirmTotal>{t('storefront.cartDueNow')}</ConfirmTotal>
+              <ConfirmTotal>{formatPrice(checkout.totals.dueNow)}</ConfirmTotal>
+            </ConfirmRow>
+          </ConfirmList>
+        </Modal>
       </Page>
     </StoreLayout>
   );

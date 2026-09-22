@@ -1,7 +1,7 @@
-import { AuthenticateWithRedirectCallback } from '@clerk/react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { PortalLayout } from '@/components/global/portal-layout';
+import { StoreOutlet } from '@/components/storefront/store-outlet';
 import { ProtectedRoute } from '@/routes/ProtectedRoute';
 import { ScrollToTop } from '@/routes/ScrollToTop';
 
@@ -18,10 +18,11 @@ import ContactPage from '@/pages/contact';
 import LoginPage from '@/pages/login';
 import RegisterPage from '@/pages/register';
 import OnboardingPage from '@/pages/onboarding';
+import AuthContinuePage from '@/pages/auth-continue';
+import SsoCallbackPage from '@/pages/sso-callback';
 import ForgotPasswordPage from '@/pages/forgot-password';
 import VendorLoginPage from '@/pages/vendor-login';
 
-import CustomerDashboardPage from '@/pages/customer/dashboard';
 import CustomerBookingsPage from '@/pages/customer/bookings';
 import CustomerChatPage from '@/pages/customer/chat';
 import CustomerPaymentsPage from '@/pages/customer/payments';
@@ -108,27 +109,28 @@ export function AppRouter() {
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
         <Route path={ROUTES.ONBOARDING} element={<OnboardingPage />} />
+        <Route path={ROUTES.AUTH_CONTINUE} element={<AuthContinuePage />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
-        <Route
-          path={ROUTES.SSO_CALLBACK}
-          element={<AuthenticateWithRedirectCallback />}
-        />
+        <Route path={ROUTES.SSO_CALLBACK} element={<SsoCallbackPage />} />
         <Route path={ROUTES.VENDOR_LOGIN} element={<VendorLoginPage />} />
 
-        {/* Customer portal */}
+        {/* Signed-in shopper pages — part of the website, not a portal. */}
         <Route
           path={ROUTES.CUSTOMER}
           element={
             <ProtectedRoute roles={['customer']}>
-              <PortalLayout role="customer" />
+              <StoreOutlet />
             </ProtectedRoute>
           }
         >
           <Route
             index
-            element={<Navigate to={ROUTES.CUSTOMER_DASHBOARD} replace />}
+            element={<Navigate to={ROUTES.CUSTOMER_BOOKINGS} replace />}
           />
-          <Route path="dashboard" element={<CustomerDashboardPage />} />
+          <Route
+            path="dashboard"
+            element={<Navigate to={ROUTES.CUSTOMER_BOOKINGS} replace />}
+          />
           <Route path="bookings" element={<CustomerBookingsPage />} />
           <Route path="chat" element={<CustomerChatPage />} />
           <Route path="payments" element={<CustomerPaymentsPage />} />

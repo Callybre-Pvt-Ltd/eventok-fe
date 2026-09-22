@@ -22,6 +22,7 @@ export const ROUTES = {
   REGISTER: '/register',
   ONBOARDING: '/onboarding',
   SSO_CALLBACK: '/sso-callback',
+  AUTH_CONTINUE: '/auth/continue',
   FORGOT_PASSWORD: '/forgot-password',
   CUSTOMER: '/customer',
   CUSTOMER_DASHBOARD: '/customer/dashboard',

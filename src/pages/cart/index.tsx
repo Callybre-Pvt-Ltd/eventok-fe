@@ -9,7 +9,6 @@ import {
   CouponButton,
   CouponInput,
   CouponRow,
-  DateInput,
   Empty,
   EmptyLink,
   Layout,
@@ -66,17 +65,6 @@ export default function CartPage() {
                       {t('storefront.cartDueNow')}:{' '}
                       {formatPrice(line.service.bookingAmount * line.quantity)}
                     </LineMeta>
-                    <DateInput
-                      type="date"
-                      value={line.eventDate ?? ''}
-                      onChange={event =>
-                        cart.basket.setEventDate(
-                          line.serviceSlug,
-                          event.target.value,
-                        )
-                      }
-                      aria-label={t('storefront.cartEventDate')}
-                    />
                     <LineFoot>
                       <Stepper>
                         <StepButton

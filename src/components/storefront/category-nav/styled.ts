@@ -4,9 +4,14 @@ import { brandColors } from '@/theme/brand';
 import { fontSizes, media, radii, shadows } from '@/theme';
 
 export const NavBar = styled.nav`
+  position: relative;
   background: ${brandColors.white};
   border-bottom: 1px solid ${brandColors.tan};
   overflow: visible;
+
+  ${media.belowLg} {
+    display: none;
+  }
 `;
 
 export const NavScroller = styled.div`
@@ -14,6 +19,12 @@ export const NavScroller = styled.div`
   align-items: stretch;
   gap: 1.5rem;
   padding: 0 1rem;
+  scroll-padding-left: 1rem;
+
+  ${media.belowSm} {
+    gap: 1.1rem;
+    padding: 0 0.625rem;
+  }
   overflow-x: auto;
   scrollbar-width: none;
 

@@ -17,6 +17,11 @@ export const MainBar = styled.div`
   padding: 0.625rem 1rem;
   background: ${brandColors.ink900};
 
+  ${media.belowSm} {
+    gap: 0.375rem;
+    padding: 0.5rem 0.625rem;
+  }
+
   ${media.lg} {
     gap: 1.25rem;
     padding: 0.75rem 2.5rem;
@@ -90,6 +95,11 @@ export const SearchForm = styled.form`
   padding: 0.25rem 0.25rem 0.25rem 1rem;
   background: ${brandColors.white};
   border-radius: ${radii.full};
+
+  ${media.belowSm} {
+    gap: 0.25rem;
+    padding: 0.2rem 0.2rem 0.2rem 0.7rem;
+  }
 `;
 
 export const SearchIcon = styled.span`
@@ -138,6 +148,10 @@ export const Actions = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex: 0 0 auto;
+
+  ${media.belowSm} {
+    gap: 0.125rem;
+  }
 `;
 
 export const VendorLink = styled(Link)`
@@ -157,6 +171,41 @@ export const VendorLink = styled(Link)`
   }
 `;
 
+export const MobileOnly = styled.div`
+  display: inline-flex;
+
+  ${media.lg} {
+    display: none;
+  }
+`;
+
+export const DesktopOnly = styled.div`
+  display: none;
+
+  ${media.lg} {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+`;
+
+export const MenuButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: none;
+  border-radius: ${radii.full};
+  background: rgba(${brandRgb.white}, 0.12);
+  color: ${brandColors.white};
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(${brandRgb.white}, 0.2);
+  }
+`;
+
 export const IconLink = styled(Link)`
   position: relative;
   display: inline-flex;
@@ -167,6 +216,11 @@ export const IconLink = styled(Link)`
   border-radius: ${radii.full};
   color: ${brandColors.white};
   text-decoration: none;
+
+  ${media.belowSm} {
+    width: 2.125rem;
+    height: 2.125rem;
+  }
 
   &:hover {
     background: rgba(${brandRgb.white}, 0.1);
@@ -180,6 +234,16 @@ export const Badge = styled.span`
   min-width: 1.1rem;
   height: 1.1rem;
   padding: 0 0.25rem;
+
+  ${media.belowLg} {
+    top: 0.15rem;
+    right: 0.1rem;
+    min-width: 0.85rem;
+    height: 0.85rem;
+    padding: 0 0.15rem;
+    font-size: 0.5rem;
+    line-height: 1;
+  }
   display: inline-flex;
   align-items: center;
   justify-content: center;

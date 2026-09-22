@@ -20,6 +20,7 @@ import {
   StepDots,
   StepDot,
   VendorNote,
+  CaptchaSlot,
 } from '../login/styled';
 
 export default function RegisterPage() {
@@ -228,6 +229,8 @@ export default function RegisterPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <CaptchaSlot id="clerk-captcha" />
 
       <AuthFooter $palette={palette}>
         {t('auth.hasAccount')} <Link to={ROUTES.LOGIN}>{t('auth.login')}</Link>
