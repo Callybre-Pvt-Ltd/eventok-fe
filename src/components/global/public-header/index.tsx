@@ -97,7 +97,11 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
               <ArrowRight size={18} aria-hidden />
             </MobileCta>
           ) : (
-            <MobileCta data-nav-item to={ROUTES.CONTACT} onClick={nav.closeMenu}>
+            <MobileCta
+              data-nav-item
+              to={ROUTES.CONTACT}
+              onClick={nav.closeMenu}
+            >
               Request Consultation
               <ArrowRight size={18} aria-hidden />
             </MobileCta>

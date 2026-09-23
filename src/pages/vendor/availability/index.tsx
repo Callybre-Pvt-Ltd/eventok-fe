@@ -35,10 +35,12 @@ export default function VendorAvailabilityPage() {
       <PageHeader>
         <div>
           <PageEyebrow>Booking windows</PageEyebrow>
-          <PageTitle $palette={palette}>{t('vendor.availabilityTitle')}</PageTitle>
+          <PageTitle $palette={palette}>
+            {t('vendor.availabilityTitle')}
+          </PageTitle>
           <PageLead $palette={palette}>
-            Availability is stored per service on the backend (9am–6pm on selected
-            days).
+            Availability is stored per service on the backend (9am–6pm on
+            selected days).
           </PageLead>
         </div>
       </PageHeader>

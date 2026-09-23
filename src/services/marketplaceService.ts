@@ -117,10 +117,7 @@ export const toDiscoveryCard = (
 };
 
 async function fetchCategories(): Promise<ApiCategory[]> {
-  if (
-    categoriesCache &&
-    Date.now() - categoriesCache.at < CATEGORIES_TTL_MS
-  ) {
+  if (categoriesCache && Date.now() - categoriesCache.at < CATEGORIES_TTL_MS) {
     return categoriesCache.items;
   }
   if (categoriesInflight) return categoriesInflight;

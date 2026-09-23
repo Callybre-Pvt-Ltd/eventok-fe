@@ -43,14 +43,11 @@ const mapCategory = (c: ApiCategory): Category => ({
 /** Prefer static decoration order; attach live IDs when the API has them. */
 const mergeWithStatic = (apiItems: ApiCategory[]): Category[] => {
   const bySlug = new Map(apiItems.map(c => [c.slug, c]));
-  const byName = new Map(
-    apiItems.map(c => [c.name.trim().toLowerCase(), c]),
-  );
+  const byName = new Map(apiItems.map(c => [c.name.trim().toLowerCase(), c]));
 
   const merged: Category[] = DECORATION_CATEGORIES.map(staticCat => {
     const hit =
-      bySlug.get(staticCat.slug) ??
-      byName.get(staticCat.name.toLowerCase());
+      bySlug.get(staticCat.slug) ?? byName.get(staticCat.name.toLowerCase());
     if (hit) {
       return {
         ...mapCategory(hit),

@@ -9,7 +9,10 @@ export function useVendorPending() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (session?.user.role === 'vendor' && session.user.vendorStatus === 'approved') {
+    if (
+      session?.user.role === 'vendor' &&
+      session.user.vendorStatus === 'approved'
+    ) {
       navigate(ROUTES.VENDOR_DASHBOARD, { replace: true });
     }
   }, [navigate, session]);

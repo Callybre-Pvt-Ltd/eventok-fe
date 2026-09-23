@@ -275,9 +275,7 @@ export const vendorService = {
     );
   },
 
-  async getAvailability(
-    serviceId: string,
-  ): Promise<
+  async getAvailability(serviceId: string): Promise<
     ServiceResponse<
       {
         id: string;

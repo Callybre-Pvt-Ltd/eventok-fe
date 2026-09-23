@@ -2,7 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
 import { EmptyState } from '@/components/global/empty-state';
 import { useAdminCategories } from './helper';
-import { ItemMeta, ItemTitle, List, ListItem, PageHeader, PageTitle } from './styled';
+import {
+  ItemMeta,
+  ItemTitle,
+  List,
+  ListItem,
+  PageHeader,
+  PageTitle,
+} from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import { Button } from 'antd';
 

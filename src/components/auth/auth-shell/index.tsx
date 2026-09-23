@@ -91,9 +91,7 @@ export function AuthShell({ children, showVendorCta = true }: AuthShellProps) {
           transition={{ duration: 0.55 }}
         >
           <Eyebrow>Welcome back</Eyebrow>
-          <h2>
-            Login to {t('common.appName')}
-          </h2>
+          <h2>Login to {t('common.appName')}</h2>
           <p>{t('auth.loginSubtitle')}</p>
           <ul>
             {benefits.map(b => (

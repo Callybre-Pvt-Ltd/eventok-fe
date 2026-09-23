@@ -20,10 +20,7 @@ const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
   }
 };
 
-const mapNotification = (
-  n: ApiNotification,
-  userId: string,
-): Notification => ({
+const mapNotification = (n: ApiNotification, userId: string): Notification => ({
   id: n.id,
   userId,
   title: n.title,

@@ -9,8 +9,7 @@ export const PendingPage = styled.div<{ $palette: ThemePalette }>`
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
-  background:
-    radial-gradient(
+  background: radial-gradient(
       70% 45% at 50% 0%,
       rgba(${brandRgb.pink}, 0.14) 0%,
       transparent 55%

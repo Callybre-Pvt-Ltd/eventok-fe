@@ -14,10 +14,7 @@ export function useVendorEarnings() {
       );
       const pending = items
         .filter(p => p.status === 'PENDING' || p.status === 'PROCESSING')
-        .reduce(
-          (sum, p) => sum + Number(p.vendor_amount ?? p.amount ?? 0),
-          0,
-        );
+        .reduce((sum, p) => sum + Number(p.vendor_amount ?? p.amount ?? 0), 0);
       return { total, pending, items };
     },
   });

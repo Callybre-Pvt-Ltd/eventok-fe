@@ -47,7 +47,12 @@ export function useVendorPortfolio() {
   }, [services, serviceId]);
 
   const portfolioQuery = useQuery({
-    queryKey: ['vendor', 'portfolio', resolvedVendorId, services.map(s => s.id).join(',')],
+    queryKey: [
+      'vendor',
+      'portfolio',
+      resolvedVendorId,
+      services.map(s => s.id).join(','),
+    ],
     queryFn: async () => {
       const items: PortfolioItem[] = [];
       for (const service of services) {
