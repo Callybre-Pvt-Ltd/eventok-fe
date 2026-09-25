@@ -24,4 +24,12 @@ export interface BookingRequest {
 export interface Booking extends BookingRequest {
   assignedVendorId?: string;
   adminNotes?: string;
+  customerName?: string;
+  customerEmail?: string;
+  customerPhone?: string;
+  serviceName?: string;
+  serviceCategory?: string;
+  vendorName?: string;
+  vendorBusinessName?: string;
+  totalAmount?: string | number;
 }

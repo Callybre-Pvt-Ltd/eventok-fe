@@ -144,3 +144,49 @@ export const CaptchaSlot = styled.div`
 export const SubmitRow = styled.div`
   margin-top: ${spacing.sm};
 `;
+
+export const StepBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${spacing.md};
+`;
+
+export const FieldHint = styled.span<{ $palette: ThemePalette }>`
+  font-size: ${fontSizes.xs};
+  color: ${({ $palette }) => $palette.textMuted};
+`;
+
+export const LinkRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  gap: ${spacing.sm};
+  flex-wrap: wrap;
+`;
+
+export const TextButton = styled.button<{ $palette: ThemePalette }>`
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: ${fontSizes.sm};
+  font-weight: 600;
+  color: ${({ $palette }) => $palette.primary};
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+`;
+
+export const SuccessIcon = styled.div<{ $palette: ThemePalette }>`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  margin-bottom: ${spacing.md};
+  border-radius: ${radii.full};
+  background: ${({ $palette }) => $palette.primaryLight};
+  color: ${({ $palette }) => $palette.primary};
+`;

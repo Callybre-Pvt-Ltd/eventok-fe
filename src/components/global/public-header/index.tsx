@@ -41,9 +41,7 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
   const { t } = useTranslation();
   const nav = usePublicHeader(overlay);
   const { session, isSignedIn } = useAuth();
-  const portalPath = session
-    ? getPostAuthPath(session.user.role, session.user.vendorStatus)
-    : ROUTES.AUTH_CONTINUE;
+  const role = session?.user.role;
 
   const menu = createPortal(
     <>
@@ -91,8 +89,16 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
         </MobileLinks>
 
         <MobileFoot>
-          {isSignedIn ? (
-            <MobileCta data-nav-item to={portalPath} onClick={nav.closeMenu}>
+          {isSignedIn && role !== 'customer' ? (
+            <MobileCta
+              data-nav-item
+              to={
+                role === 'admin'
+                  ? ROUTES.ADMIN_DASHBOARD
+                  : getPostAuthPath('vendor', session?.user.vendorStatus)
+              }
+              onClick={nav.closeMenu}
+            >
               Open portal
               <ArrowRight size={18} aria-hidden />
             </MobileCta>

@@ -8,13 +8,15 @@ import { getSafeReturnPath, setAuthIntent } from '@/utils/auth/post-auth';
 
 export function useLoginPage() {
   const { palette } = useTheme();
-  const { login, session, onboardingRequired, isLoading } = useAuth();
+  const { login, verifyLoginCode, session, isLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   // Destination carried in the URL, e.g. /login?next=/checkout.
   const nextPath = readNextPath(location.search);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [needsCode, setNeedsCode] = useState(false);
+  const [code, setCode] = useState('');
 
   // Arriving on the customer login fixes the intent: anyone completing auth from here
   // is a shopper. This also clears a stale 'vendor' intent left in sessionStorage by an
@@ -24,12 +26,7 @@ export function useLoginPage() {
   }, []);
 
   useEffect(() => {
-    if (isLoading || loading) return;
-    if (onboardingRequired) {
-      navigate(ROUTES.ONBOARDING, { replace: true });
-      return;
-    }
-    if (!session) return;
+    if (isLoading || loading || !session) return;
     const from =
       nextPath ??
       (location.state as { from?: { pathname: string } })?.from?.pathname;
@@ -37,30 +34,50 @@ export function useLoginPage() {
       getSafeReturnPath(from, session.user.role, session.user.vendorStatus),
       { replace: true },
     );
-  }, [
-    isLoading,
-    loading,
-    location.state,
-    navigate,
-    nextPath,
-    onboardingRequired,
-    session,
-  ]);
+  }, [isLoading, loading, location.state, navigate, nextPath, session]);
+
+  const finish = useCallback(
+    () =>
+      navigate(withNextPath(ROUTES.AUTH_CONTINUE, nextPath), { replace: true }),
+    [navigate, nextPath],
+  );
 
   const onSubmit = useCallback(
     async (email: string, password: string) => {
       setLoading(true);
       setError(null);
-      const err = await login(email, password);
+      const result = await login(email, password);
       setLoading(false);
-      if (err) {
-        setError(err);
+      if (result.error) {
+        setError(result.error);
         return;
       }
-      navigate(withNextPath(ROUTES.AUTH_CONTINUE, nextPath), { replace: true });
+      if (result.needsCode) {
+        setNeedsCode(true);
+        return;
+      }
+      finish();
     },
-    [login, navigate, nextPath],
+    [finish, login],
   );
+
+  const onVerifyCode = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    const err = await verifyLoginCode(code);
+    setLoading(false);
+    if (err) {
+      setError(err);
+      return;
+    }
+    finish();
+  }, [code, finish, verifyLoginCode]);
+
+  const cancelCode = () => {
+    setNeedsCode(false);
+    setCode('');
+    setError(null);
+  };
 
   return {
     palette,
@@ -69,5 +86,10 @@ export function useLoginPage() {
     authLoading: isLoading,
     nextPath,
     onSubmit,
+    needsCode,
+    code,
+    setCode,
+    onVerifyCode,
+    cancelCode,
   };
 }

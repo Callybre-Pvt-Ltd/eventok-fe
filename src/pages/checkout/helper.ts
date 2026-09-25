@@ -9,6 +9,7 @@ import {
   readCheckoutDraft,
   saveCheckoutDraft,
 } from '@/utils/storefront/checkout-draft';
+import { bookingService } from '@/services';
 
 export interface CheckoutForm {
   eventDate: string;
@@ -108,12 +109,38 @@ export function useCheckoutPage() {
   );
 
   /** Step 2: the visitor confirmed the review modal — place the order. */
-  const confirmOrder = useCallback(() => {
+  const confirmOrder = useCallback(async () => {
     setConfirming(false);
     setBookingId(createBookingId());
+
+    if (session?.user?.id && lines.length > 0) {
+      for (const line of lines) {
+        try {
+          await bookingService.createRequest({
+            customerId: session.user.id,
+            vendorId: line.service.id,
+            eventDate: form.eventDate,
+            eventType: line.service.categorySlug || 'Service',
+            guestCount: 1,
+            city: form.city || form.venue,
+            notes: [
+              `Service: ${line.service.title}`,
+              form.venue ? `Venue: ${form.venue}` : '',
+              form.eventTime ? `Time: ${form.eventTime}` : '',
+              form.notes ? `Notes: ${form.notes}` : '',
+            ]
+              .filter(Boolean)
+              .join('\n'),
+          });
+        } catch {
+          // Non-blocking for checkout display
+        }
+      }
+    }
+
     clearCheckoutDraft();
     basket.clearCart();
-  }, [basket]);
+  }, [basket, form, lines, session]);
 
   return {
     lines,

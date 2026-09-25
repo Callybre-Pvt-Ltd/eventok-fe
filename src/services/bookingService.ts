@@ -44,52 +44,136 @@ const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
   }
 };
 
-const mapEnquiryToBooking = (enquiry: ApiEnquiry): Booking => ({
-  id: enquiry.id,
-  customerId: enquiry.client_id,
-  vendorId: '',
-  eventDate: enquiry.event_date,
-  eventType: enquiry.event_type,
-  guestCount: enquiry.guest_count ?? 0,
-  city: enquiry.location,
-  notes: enquiry.requirements ?? '',
-  status:
-    enquiry.status === 'BOOKED'
-      ? 'confirmed'
-      : enquiry.status === 'CANCELLED'
-      ? 'cancelled'
-      : enquiry.status === 'ASSIGNED' || enquiry.status === 'QUOTED'
-      ? 'vendor_assigned'
-      : enquiry.status === 'UNDER_REVIEW'
-      ? 'admin_review'
-      : 'requested',
-  createdAt: enquiry.created_at,
-});
+interface UserBasic {
+  id: string;
+  email: string;
+  phone: string | null;
+  full_name: string;
+}
 
-const mapApiBooking = (booking: ApiBooking): Booking => ({
-  id: booking.id,
-  customerId: booking.client_id,
-  vendorId: booking.vendor_id,
-  assignedVendorId: booking.vendor_id,
-  eventDate: booking.booking_date,
-  eventType: 'Service booking',
-  guestCount: 0,
-  city: '',
-  notes: `Total: ${booking.total_amount}`,
-  status:
-    booking.status === 'PENDING_PAYMENT'
-      ? 'payment_pending'
-      : booking.status === 'CONFIRMED'
-      ? 'confirmed'
-      : booking.status === 'IN_PROGRESS'
-      ? 'in_progress'
-      : booking.status === 'COMPLETED'
-      ? 'completed'
-      : booking.status === 'CANCELLED'
-      ? 'cancelled'
-      : 'requested',
-  createdAt: booking.created_at,
-});
+interface VendorBasic {
+  id: string;
+  user_id: string;
+  business_name: string;
+  city: string | null;
+}
+
+interface ServiceBasic {
+  id: string;
+  title: string;
+  category_id: string;
+  vendor_id?: string;
+}
+
+interface CategoryBasic {
+  id: string;
+  name: string;
+}
+
+const parseRequirements = (req: string | null): { serviceName?: string; preferredVendorId?: string } => {
+  if (!req) return {};
+  let serviceName: string | undefined;
+  let preferredVendorId: string | undefined;
+
+  const prefMatch = req.match(/Preferred service id:\s*([^\n\r]+)/i);
+  if (prefMatch) {
+    preferredVendorId = prefMatch[1].trim();
+  }
+
+  const srvMatch = req.match(/(?:Service|Booking request for):\s*([^\n\r]+)/i);
+  if (srvMatch) {
+    serviceName = srvMatch[1].trim();
+  }
+
+  return { serviceName, preferredVendorId };
+};
+
+const mapEnquiryToBooking = (
+  enquiry: ApiEnquiry,
+  usersById?: Map<string, UserBasic>,
+  vendorsById?: Map<string, VendorBasic>,
+  servicesById?: Map<string, ServiceBasic>,
+  categoriesById?: Map<string, CategoryBasic>,
+): Booking => {
+  const { serviceName: parsedServiceName, preferredVendorId } = parseRequirements(enquiry.requirements);
+  const matchedService = preferredVendorId ? servicesById?.get(preferredVendorId) : undefined;
+  const serviceName = matchedService?.title || parsedServiceName || enquiry.event_type;
+  const categoryId = matchedService?.category_id;
+  const serviceCategory = categoryId ? categoriesById?.get(categoryId)?.name : enquiry.event_type;
+
+  const user = usersById?.get(enquiry.client_id);
+  const vendor = preferredVendorId && matchedService?.vendor_id ? vendorsById?.get(matchedService.vendor_id) : undefined;
+
+  return {
+    id: enquiry.id,
+    customerId: enquiry.client_id,
+    vendorId: vendor?.id || '',
+    eventDate: enquiry.event_date,
+    eventType: serviceName || enquiry.event_type,
+    guestCount: enquiry.guest_count ?? 0,
+    city: enquiry.location,
+    notes: enquiry.requirements ?? '',
+    status:
+      enquiry.status === 'BOOKED'
+        ? 'confirmed'
+        : enquiry.status === 'CANCELLED'
+        ? 'cancelled'
+        : enquiry.status === 'ASSIGNED' || enquiry.status === 'QUOTED'
+        ? 'vendor_assigned'
+        : enquiry.status === 'UNDER_REVIEW'
+        ? 'admin_review'
+        : 'requested',
+    createdAt: enquiry.created_at,
+    customerName: user?.full_name,
+    customerEmail: user?.email,
+    customerPhone: user?.phone ?? undefined,
+    serviceName,
+    serviceCategory,
+    vendorName: vendor?.business_name,
+    vendorBusinessName: vendor?.business_name,
+    totalAmount: enquiry.budget ?? undefined,
+  };
+};
+
+const mapApiBooking = (
+  booking: ApiBooking,
+  usersById?: Map<string, UserBasic>,
+  vendorsById?: Map<string, VendorBasic>,
+): Booking => {
+  const user = usersById?.get(booking.client_id);
+  const vendor = vendorsById?.get(booking.vendor_id);
+
+  return {
+    id: booking.id,
+    customerId: booking.client_id,
+    vendorId: booking.vendor_id,
+    assignedVendorId: booking.vendor_id,
+    eventDate: booking.booking_date,
+    eventType: 'Service booking',
+    guestCount: 0,
+    city: '',
+    notes: `Total: ${booking.total_amount}`,
+    status:
+      booking.status === 'PENDING_PAYMENT'
+        ? 'payment_pending'
+        : booking.status === 'CONFIRMED'
+        ? 'confirmed'
+        : booking.status === 'IN_PROGRESS'
+        ? 'in_progress'
+        : booking.status === 'COMPLETED'
+        ? 'completed'
+        : booking.status === 'CANCELLED'
+        ? 'cancelled'
+        : 'requested',
+    createdAt: booking.created_at,
+    customerName: user?.full_name,
+    customerEmail: user?.email,
+    customerPhone: user?.phone ?? undefined,
+    vendorName: vendor?.business_name,
+    vendorBusinessName: vendor?.business_name,
+    totalAmount: booking.total_amount,
+  };
+};
 
 export const bookingService = {
   async createRequest(payload: {
@@ -134,17 +218,34 @@ export const bookingService = {
     _customerId: string,
   ): Promise<ServiceResponse<Booking[]>> {
     return wrap(async () => {
-      const [enquiries, bookings] = await Promise.all([
+      const [enquiriesRes, bookingsRes, servicesRes, categoriesRes] = await Promise.allSettled([
         apiRequestPaginated<ApiEnquiry>('/enquiries', {
           query: { page: 1, page_size: 50 },
         }),
         apiRequestPaginated<ApiBooking>('/bookings', {
           query: { page: 1, page_size: 50 },
         }),
+        apiRequestPaginated<ServiceBasic>('/services', {
+          auth: false,
+          query: { page: 1, page_size: 100 },
+        }),
+        apiRequestPaginated<CategoryBasic>('/categories', {
+          auth: false,
+          query: { page: 1, page_size: 100 },
+        }),
       ]);
+
+      const enquiries = enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
+      const bookings = bookingsRes.status === 'fulfilled' ? bookingsRes.value.items : [];
+      const services = servicesRes.status === 'fulfilled' ? servicesRes.value.items : [];
+      const categories = categoriesRes.status === 'fulfilled' ? categoriesRes.value.items : [];
+
+      const servicesById = new Map(services.map(s => [s.id, s]));
+      const categoriesById = new Map(categories.map(c => [c.id, c]));
+
       return [
-        ...bookings.items.map(mapApiBooking),
-        ...enquiries.items.map(mapEnquiryToBooking),
+        ...bookings.map(b => mapApiBooking(b)),
+        ...enquiries.map(e => mapEnquiryToBooking(e, undefined, undefined, servicesById, categoriesById)),
       ];
     });
   },
@@ -156,16 +257,54 @@ export const bookingService = {
       const bookings = await apiRequestPaginated<ApiBooking>('/bookings', {
         query: { page: 1, page_size: 50 },
       });
-      return bookings.items.map(mapApiBooking);
+      return bookings.items.map(b => mapApiBooking(b));
     });
   },
 
   async getAllBookings(): Promise<ServiceResponse<Booking[]>> {
     return wrap(async () => {
-      const bookings = await apiRequestPaginated<ApiBooking>('/bookings', {
-        query: { page: 1, page_size: 100 },
-      });
-      return bookings.items.map(mapApiBooking);
+      const [enquiriesRes, bookingsRes, usersRes, vendorsRes, servicesRes, categoriesRes] =
+        await Promise.allSettled([
+          apiRequestPaginated<ApiEnquiry>('/admin/enquiries', {
+            query: { page: 1, page_size: 100 },
+          }),
+          apiRequestPaginated<ApiBooking>('/admin/bookings', {
+            query: { page: 1, page_size: 100 },
+          }),
+          apiRequestPaginated<UserBasic>('/admin/users', {
+            query: { page: 1, page_size: 100 },
+          }),
+          apiRequestPaginated<VendorBasic>('/admin/vendors', {
+            query: { page: 1, page_size: 100 },
+          }),
+          apiRequestPaginated<ServiceBasic>('/services', {
+            auth: false,
+            query: { page: 1, page_size: 100 },
+          }),
+          apiRequestPaginated<CategoryBasic>('/categories', {
+            auth: false,
+            query: { page: 1, page_size: 100 },
+          }),
+        ]);
+
+      const enquiries = enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
+      const bookings = bookingsRes.status === 'fulfilled' ? bookingsRes.value.items : [];
+      const users = usersRes.status === 'fulfilled' ? usersRes.value.items : [];
+      const vendors = vendorsRes.status === 'fulfilled' ? vendorsRes.value.items : [];
+      const services = servicesRes.status === 'fulfilled' ? servicesRes.value.items : [];
+      const categories = categoriesRes.status === 'fulfilled' ? categoriesRes.value.items : [];
+
+      const usersById = new Map(users.map(u => [u.id, u]));
+      const vendorsById = new Map(vendors.map(v => [v.id, v]));
+      const servicesById = new Map(services.map(s => [s.id, s]));
+      const categoriesById = new Map(categories.map(c => [c.id, c]));
+
+      return [
+        ...bookings.map(b => mapApiBooking(b, usersById, vendorsById)),
+        ...enquiries.map(e =>
+          mapEnquiryToBooking(e, usersById, vendorsById, servicesById, categoriesById),
+        ),
+      ];
     });
   },
 

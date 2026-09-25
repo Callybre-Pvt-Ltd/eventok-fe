@@ -1,13 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { useUser } from '@clerk/react';
-import {
-  LayoutDashboard,
-  LogOut,
-  Package,
-  Shield,
-  Store,
-  User,
-} from 'lucide-react';
+import { LogOut, Package, Shield, Store, User } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { getPostAuthPath } from '@/utils/auth/post-auth';
@@ -69,10 +62,12 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
   const letter = (email.trim()[0] || 'U').toUpperCase();
   const avatarUrl =
     clerkUserLoaded && clerkUser?.hasImage ? clerkUser.imageUrl : null;
-  const vendorPath =
-    role === 'vendor'
-      ? getPostAuthPath('vendor', user?.vendorStatus)
-      : ROUTES.VENDOR_PENDING;
+  const isVendor =
+    role === 'vendor' ||
+    (role === 'admin' && Boolean(user?.vendorId || user?.vendorStatus));
+  const vendorPath = isVendor
+    ? getPostAuthPath('vendor', user?.vendorStatus)
+    : ROUTES.VENDOR_PENDING;
 
   return (
     <MenuRoot ref={rootRef}>
@@ -113,7 +108,7 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
             </MenuItem>
           ) : null}
 
-          {role === 'vendor' ? (
+          {isVendor ? (
             <MenuItem
               role="menuitem"
               to={vendorPath}
@@ -143,17 +138,6 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
                 My account
               </MenuItem>
             </>
-          ) : null}
-
-          {!role ? (
-            <MenuItem
-              role="menuitem"
-              to={ROUTES.AUTH_CONTINUE}
-              onClick={() => setOpen(false)}
-            >
-              <LayoutDashboard size={16} aria-hidden />
-              Continue to portal
-            </MenuItem>
           ) : null}
 
           <MenuDivider />

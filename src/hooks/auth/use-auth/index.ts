@@ -1,1 +1,6 @@
-export { AuthProvider, useAuth, type RegisterPayload } from './helper';
+export {
+  AuthProvider,
+  useAuth,
+  type LoginResult,
+  type RegisterPayload,
+} from './helper';

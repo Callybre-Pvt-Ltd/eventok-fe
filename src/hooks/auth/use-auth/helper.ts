@@ -14,33 +14,36 @@ import {
 import { ApiError, setAuthTokenProvider } from '@/api/client';
 import { ROUTES } from '@/constants/routes';
 import { withNextPath } from '@/utils/auth/auth-return';
+import { peekAuthIntent } from '@/utils/auth/post-auth';
 import { authService } from '@/services';
-import type { Session, UserRole } from '@/types';
+import type { Session } from '@/types';
 
 export interface RegisterPayload {
   email: string;
   password: string;
   name: string;
-  phone: string;
-  city: string;
-  role: UserRole;
+}
+
+/** `needsCode`: Clerk wants an email code before it trusts this device. */
+export interface LoginResult {
+  error: string | null;
+  needsCode?: boolean;
 }
 
 interface AuthContextValue {
   session: Session | null;
   isLoading: boolean;
   isSignedIn: boolean;
-  onboardingRequired: boolean;
-  verificationPending: boolean;
-  login: (email: string, password: string) => Promise<string | null>;
+  login: (email: string, password: string) => Promise<LoginResult>;
+  verifyLoginCode: (code: string) => Promise<string | null>;
   logout: () => Promise<void>;
   register: (payload: RegisterPayload) => Promise<string | null>;
+  resendRegistrationCode: () => Promise<string | null>;
   verifyRegistration: (code: string) => Promise<string | null>;
-  completeOnboarding: (
-    payload: Omit<RegisterPayload, 'email' | 'password'>,
-  ) => Promise<string | null>;
   signInWithGoogle: (nextPath?: string | null) => Promise<string | null>;
   refreshSession: () => Promise<Session | null>;
+  /** Signs in with the session Clerk created (e.g. after a password reset). */
+  activateSession: (sessionId: string) => Promise<string | null>;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -71,9 +74,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { isLoaded: signUpLoaded, signUp } = useSignUp();
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [onboardingRequired, setOnboardingRequired] = useState(false);
-  const [pendingRegistration, setPendingRegistration] =
-    useState<RegisterPayload | null>(null);
   const sessionInflight = useRef<Promise<Session | null> | null>(null);
   const clerkLoaded = clerk.isLoaded;
   const clerkSignedIn = Boolean(clerk.isSignedIn);
@@ -120,23 +120,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (result.kind === 'signed_out') {
           setSession(null);
-          setOnboardingRequired(false);
           return null;
         }
         if (result.kind === 'onboarding') {
-          setSession(null);
-          setOnboardingRequired(true);
-          return null;
+          // First sign-in: create the EventOK profile silently. Profile details
+          // (phone, city…) are collected later, never as a gate on logging in.
+          const provisioned = await authService.onboard({
+            role: peekAuthIntent() === 'vendor' ? 'vendor' : 'customer',
+          });
+          setSession(provisioned);
+          return provisioned;
         }
         if (result.kind === 'unauthorized') {
           setSession(null);
-          setOnboardingRequired(false);
           console.error('Session refresh unauthorized:', result.error.message);
           return null;
         }
 
         setSession(result.next);
-        setOnboardingRequired(false);
         return result.next;
       } catch (error) {
         console.error('Session refresh failed:', error);
@@ -165,39 +166,89 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- auth-state gated
   }, [clerkLoaded, clerkSignedIn]);
 
+  const activateSession = useCallback(
+    async (sessionId: string) => {
+      try {
+        setIsLoading(true);
+        await clerkApi.setActive({ session: sessionId });
+        const next = await refreshSession();
+        return next
+          ? null
+          : 'We could not open your account. Please try again.';
+      } catch (error) {
+        return clerkError(error);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [clerkApi, refreshSession],
+  );
+
   const login = useCallback(
-    async (email: string, password: string) => {
-      if (!signInLoaded || !signIn) return 'Clerk is still loading';
+    async (email: string, password: string): Promise<LoginResult> => {
+      if (!signInLoaded || !signIn) return { error: 'Clerk is still loading' };
       try {
         const result = await signIn.create({ identifier: email, password });
-        if (result.status !== 'complete' || !result.createdSessionId) {
-          return 'Additional sign-in verification is required';
+        if (result.status === 'complete' && result.createdSessionId) {
+          return { error: await activateSession(result.createdSessionId) };
         }
-        setIsLoading(true);
-        await clerkApi.setActive({ session: result.createdSessionId });
-        await refreshSession();
-        setIsLoading(false);
-        return null;
+        // New-device check (Device Trust) or email MFA: confirm with an email code.
+        const emailFactor = result.supportedSecondFactors?.find(
+          factor => factor.strategy === 'email_code',
+        );
+        if (
+          (result.status === 'needs_client_trust' ||
+            result.status === 'needs_second_factor') &&
+          emailFactor &&
+          'emailAddressId' in emailFactor
+        ) {
+          await signIn.prepareSecondFactor({
+            strategy: 'email_code',
+            emailAddressId: emailFactor.emailAddressId,
+          });
+          return { error: null, needsCode: true };
+        }
+        return { error: 'Additional sign-in verification is required' };
       } catch (error) {
-        setIsLoading(false);
+        return { error: clerkError(error) };
+      }
+    },
+    [activateSession, signIn, signInLoaded],
+  );
+
+  const verifyLoginCode = useCallback(
+    async (code: string) => {
+      if (!signInLoaded || !signIn) return 'Clerk is still loading';
+      try {
+        const result = await signIn.attemptSecondFactor({
+          strategy: 'email_code',
+          code: code.trim(),
+        });
+        if (result.status !== 'complete' || !result.createdSessionId) {
+          return 'Verification is incomplete';
+        }
+        return await activateSession(result.createdSessionId);
+      } catch (error) {
         return clerkError(error);
       }
     },
-    [clerkApi, refreshSession, signIn, signInLoaded],
+    [activateSession, signIn, signInLoaded],
   );
 
   const register = useCallback(
     async (payload: RegisterPayload) => {
       if (!signUpLoaded || !signUp) return 'Clerk is still loading';
+      const [firstName, ...rest] = payload.name.trim().split(/\s+/);
       try {
         await signUp.create({
-          emailAddress: payload.email,
+          emailAddress: payload.email.trim(),
           password: payload.password,
+          firstName: firstName || undefined,
+          lastName: rest.join(' ') || undefined,
         });
         await signUp.prepareEmailAddressVerification({
           strategy: 'email_code',
         });
-        setPendingRegistration(payload);
         return null;
       } catch (error) {
         return clerkError(error);
@@ -206,52 +257,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [signUp, signUpLoaded],
   );
 
+  const resendRegistrationCode = useCallback(async () => {
+    if (!signUpLoaded || !signUp) return 'Clerk is still loading';
+    try {
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
+      return null;
+    } catch (error) {
+      return clerkError(error);
+    }
+  }, [signUp, signUpLoaded]);
+
   const verifyRegistration = useCallback(
     async (code: string) => {
-      if (!signUpLoaded || !signUp || !pendingRegistration) {
-        return 'Registration is not ready for verification';
-      }
+      if (!signUpLoaded || !signUp) return 'Clerk is still loading';
       try {
-        const result = await signUp.attemptEmailAddressVerification({ code });
+        const result = await signUp.attemptEmailAddressVerification({
+          code: code.trim(),
+        });
         if (result.status !== 'complete' || !result.createdSessionId) {
           return 'Email verification is incomplete';
         }
-        await clerkApi.setActive({ session: result.createdSessionId });
-        const localSession = await authService.onboard({
-          fullName: pendingRegistration.name,
-          phone: pendingRegistration.phone,
-          role: pendingRegistration.role,
-          city: pendingRegistration.city,
-        });
-        setSession(localSession);
-        setOnboardingRequired(false);
-        setPendingRegistration(null);
-        return null;
+        return await activateSession(result.createdSessionId);
       } catch (error) {
         return clerkError(error);
       }
     },
-    [clerkApi, pendingRegistration, signUp, signUpLoaded],
-  );
-
-  const completeOnboarding = useCallback(
-    async (payload: Omit<RegisterPayload, 'email' | 'password'>) => {
-      try {
-        setSession(
-          await authService.onboard({
-            fullName: payload.name,
-            phone: payload.phone,
-            role: payload.role,
-            city: payload.city,
-          }),
-        );
-        setOnboardingRequired(false);
-        return null;
-      } catch (error) {
-        return clerkError(error);
-      }
-    },
-    [],
+    [activateSession, signUp, signUpLoaded],
   );
 
   const signInWithGoogle = useCallback(
@@ -279,7 +310,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await clerk.signOut();
     authService.clearLocalState();
     setSession(null);
-    setOnboardingRequired(false);
   }, [clerk]);
 
   const value = useMemo(
@@ -287,29 +317,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       isLoading: isLoading || !clerkLoaded,
       isSignedIn: clerkSignedIn,
-      onboardingRequired,
-      verificationPending: pendingRegistration !== null,
       login,
+      verifyLoginCode,
       logout,
       register,
+      resendRegistrationCode,
       verifyRegistration,
-      completeOnboarding,
       signInWithGoogle,
       refreshSession,
+      activateSession,
     }),
     [
+      activateSession,
       clerkLoaded,
       clerkSignedIn,
-      completeOnboarding,
       isLoading,
       login,
       logout,
-      onboardingRequired,
-      pendingRegistration,
       refreshSession,
       register,
+      resendRegistrationCode,
       session,
       signInWithGoogle,
+      verifyLoginCode,
       verifyRegistration,
     ],
   );

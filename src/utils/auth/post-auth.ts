@@ -36,10 +36,10 @@ export function getPostAuthPath(role: UserRole, vendorStatus?: string): string {
 /** Deep-link back to where auth interrupted them, when that destination is safe. */
 export function getSafeReturnPath(
   fromPath: string | undefined,
-  role: UserRole,
-  vendorStatus?: string,
+  _role: UserRole,
+  _vendorStatus?: string,
 ): string {
-  const fallback = getPostAuthPath(role, vendorStatus);
+  const fallback = ROUTES.HOME;
   if (!fromPath || fromPath === ROUTES.HOME) return fallback;
   if (
     fromPath.startsWith('/admin') ||

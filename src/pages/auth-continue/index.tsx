@@ -1,15 +1,23 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { LoadingState } from '@/components/global/loading-state';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { readNextPath } from '@/utils/auth/auth-return';
-import { getPostAuthPath } from '@/utils/auth/post-auth';
+import { getPostAuthPath, peekAuthIntent } from '@/utils/auth/post-auth';
+import type { Session } from '@/types';
+
+/** Shoppers land on the storefront; the vendor login sends vendors to their portal. */
+const landingPath = (session: Session) =>
+  peekAuthIntent() === 'vendor'
+    ? getPostAuthPath(session.user.role, session.user.vendorStatus)
+    : ROUTES.HOME;
 
 /** Resolves the correct portal after Clerk sign-in / SSO completes. */
 export default function AuthContinuePage() {
-  const { session, isLoading, isSignedIn, onboardingRequired, refreshSession } =
-    useAuth();
+  const { t } = useTranslation();
+  const { session, isLoading, isSignedIn, refreshSession } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   // Read, never consumed: this render can run more than once (StrictMode remounts),
@@ -19,24 +27,14 @@ export default function AuthContinuePage() {
   const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
-    if (!isSignedIn || session || onboardingRequired || isLoading) return;
+    if (!isSignedIn || session || isLoading) return;
     const timer = window.setTimeout(() => setTimedOut(true), 12_000);
     return () => window.clearTimeout(timer);
-  }, [isLoading, isSignedIn, onboardingRequired, session]);
-
-  if (onboardingRequired) return <Navigate to={ROUTES.ONBOARDING} replace />;
+  }, [isLoading, isSignedIn, session]);
 
   if (session) {
     // An explicit destination (e.g. checkout) wins over the default landing page.
-    return (
-      <Navigate
-        to={
-          nextPath ??
-          getPostAuthPath(session.user.role, session.user.vendorStatus)
-        }
-        replace
-      />
-    );
+    return <Navigate to={nextPath ?? landingPath(session)} replace />;
   }
 
   if (!isSignedIn && !isLoading) {
@@ -65,11 +63,7 @@ export default function AuthContinuePage() {
             void refreshSession().then(next => {
               setRetrying(false);
               if (next) {
-                navigate(
-                  nextPath ??
-                    getPostAuthPath(next.user.role, next.user.vendorStatus),
-                  { replace: true },
-                );
+                navigate(nextPath ?? landingPath(next), { replace: true });
               } else {
                 setTimedOut(true);
               }
@@ -82,5 +76,5 @@ export default function AuthContinuePage() {
     );
   }
 
-  return <LoadingState />;
+  return <LoadingState text={t('auth.signingIn')} />;
 }

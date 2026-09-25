@@ -6,7 +6,7 @@ type BackendRole = 'CLIENT' | 'VENDOR' | 'ADMIN';
 interface BackendUser {
   id: string;
   email: string;
-  phone: string;
+  phone: string | null;
   full_name: string;
   role: BackendRole;
   status: 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED';
@@ -26,7 +26,7 @@ const mapUser = (raw: BackendUser, extras?: Partial<User>): User => ({
   id: raw.id,
   email: raw.email,
   name: raw.full_name,
-  phone: raw.phone,
+  phone: raw.phone ?? '',
   role: toFeRole(raw.role),
   city: extras?.city ?? '',
   vendorStatus: extras?.vendorStatus,
@@ -118,10 +118,11 @@ export const authService = {
     return { user: await fetchMe() };
   },
 
+  /** Creates (or re-links) the EventOK profile; every detail is optional. */
   async onboard(payload: {
-    fullName: string;
-    phone: string;
     role: UserRole;
+    fullName?: string;
+    phone?: string;
     city?: string;
   }): Promise<Session> {
     if (payload.role === 'admin') {
@@ -130,17 +131,18 @@ export const authService = {
     const raw = await apiRequest<BackendUser>('/auth/onboarding', {
       method: 'PUT',
       body: {
-        full_name: payload.fullName,
-        phone: payload.phone,
+        full_name: payload.fullName || null,
+        phone: payload.phone || null,
         role: toBackendRole(payload.role),
       },
     });
 
     let vendorStatus: User['vendorStatus'];
     let vendorId: string | undefined;
-    if (payload.role === 'vendor') {
+    // The backend keeps an existing profile's role, so trust its answer.
+    if (raw.role === 'VENDOR') {
       const vendor = await ensureVendorProfile({
-        businessName: payload.fullName,
+        businessName: raw.full_name,
         city: payload.city,
       });
       vendorId = vendor.id;

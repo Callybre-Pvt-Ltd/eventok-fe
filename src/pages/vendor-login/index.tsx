@@ -347,9 +347,9 @@ export default function VendorLoginPage() {
   const navigate = useNavigate();
   const {
     login,
+    verifyLoginCode,
     signInWithGoogle,
     session,
-    onboardingRequired,
     isLoading,
     isSignedIn,
     refreshSession,
@@ -361,27 +361,15 @@ export default function VendorLoginPage() {
   const [googleLoading, setGoogleLoading] = useState(false);
   const [continuing, setContinuing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [needsCode, setNeedsCode] = useState(false);
 
   useEffect(() => {
     if (isLoading || loading || googleLoading || continuing) return;
-    if (onboardingRequired) {
-      setAuthIntent('vendor');
-      navigate(ROUTES.ONBOARDING, { replace: true });
-      return;
-    }
     if (!session) return;
     navigate(getPostAuthPath(session.user.role, session.user.vendorStatus), {
       replace: true,
     });
-  }, [
-    continuing,
-    googleLoading,
-    isLoading,
-    loading,
-    navigate,
-    onboardingRequired,
-    session,
-  ]);
+  }, [continuing, googleLoading, isLoading, loading, navigate, session]);
 
   const enterPortal = async () => {
     setContinuing(true);
@@ -410,7 +398,25 @@ export default function VendorLoginPage() {
     setLoading(true);
     setError(null);
     setAuthIntent('vendor');
-    const err = await login(email, password);
+    const result = await login(email, password);
+    setLoading(false);
+    if (result.needsCode) {
+      setNeedsCode(true);
+      return;
+    }
+    if (result.error) {
+      setError(result.error);
+      return;
+    }
+    navigate(ROUTES.AUTH_CONTINUE, { replace: true });
+  };
+
+  const onVerifyCode = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const code = String(new FormData(event.currentTarget).get('code') ?? '');
+    setLoading(true);
+    setError(null);
+    const err = await verifyLoginCode(code);
     setLoading(false);
     if (err) {
       setError(err);
@@ -526,7 +532,28 @@ export default function VendorLoginPage() {
                 </ToggleBtn>
               </Toggle>
 
-              {mode === 'login' ? (
+              {mode === 'login' && needsCode ? (
+                <form onSubmit={onVerifyCode}>
+                  {error ? <ErrorText>{error}</ErrorText> : null}
+                  <InfoCallout>
+                    We sent a verification code to your email to confirm this
+                    new device.
+                  </InfoCallout>
+                  <Field>
+                    Verification code
+                    <input
+                      name="code"
+                      inputMode="numeric"
+                      autoComplete="one-time-code"
+                      maxLength={6}
+                      required
+                    />
+                  </Field>
+                  <Primary type="submit" disabled={loading}>
+                    {loading ? 'Verifying…' : 'Verify and continue'}
+                  </Primary>
+                </form>
+              ) : mode === 'login' ? (
                 <form onSubmit={onLogin}>
                   {error ? <ErrorText>{error}</ErrorText> : null}
                   <GoogleBtn
@@ -564,7 +591,7 @@ export default function VendorLoginPage() {
                     />
                   </Field>
                   <Forgot>
-                    <Link to={ROUTES.LOGIN}>Forgot Password?</Link>
+                    <Link to={ROUTES.FORGOT_PASSWORD}>Forgot Password?</Link>
                   </Forgot>
                   <Field>
                     Password

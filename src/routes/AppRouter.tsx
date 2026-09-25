@@ -17,7 +17,6 @@ import AboutPage from '@/pages/about';
 import ContactPage from '@/pages/contact';
 import LoginPage from '@/pages/login';
 import RegisterPage from '@/pages/register';
-import OnboardingPage from '@/pages/onboarding';
 import AuthContinuePage from '@/pages/auth-continue';
 import SsoCallbackPage from '@/pages/sso-callback';
 import ForgotPasswordPage from '@/pages/forgot-password';
@@ -108,7 +107,11 @@ export function AppRouter() {
         {/* Auth */}
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
         <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
-        <Route path={ROUTES.ONBOARDING} element={<OnboardingPage />} />
+        {/* Old onboarding links: profiles are now created silently on sign-in. */}
+        <Route
+          path={ROUTES.ONBOARDING}
+          element={<Navigate to={ROUTES.AUTH_CONTINUE} replace />}
+        />
         <Route path={ROUTES.AUTH_CONTINUE} element={<AuthContinuePage />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
         <Route path={ROUTES.SSO_CALLBACK} element={<SsoCallbackPage />} />
