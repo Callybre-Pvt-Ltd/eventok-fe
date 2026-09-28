@@ -22,11 +22,12 @@ export function useTestimonialsExperience() {
     queryFn: () => reviewService.getFeatured(),
   });
 
-  const reviews = reviewsQuery.data?.data ?? [];
+  const reviews = reviewsQuery.data?.data;
 
   const stories = useMemo(() => {
-    if (filter === 'all') return reviews;
-    return reviews;
+    const list = reviews ?? [];
+    if (filter === 'all') return list;
+    return list;
   }, [reviews, filter]);
 
   const featured = {

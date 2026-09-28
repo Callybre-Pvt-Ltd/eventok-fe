@@ -139,7 +139,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         if (result.kind === 'unauthorized') {
           setSession(null);
-          console.error('Session refresh unauthorized after retries:', result.error.message);
+          console.error(
+            'Session refresh unauthorized after retries:',
+            result.error.message,
+          );
           return null;
         }
 

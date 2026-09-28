@@ -17,8 +17,8 @@ export function useVendorsPage() {
     queryKey: ['categories'],
     queryFn: () => categoryService.getAll(),
   });
-  const categories = categoriesQuery.data?.data ?? [];
-  const categoryId = categories.find(c => c.slug === categorySlug)?.id;
+  const categories = categoriesQuery.data?.data;
+  const categoryId = categories?.find(c => c.slug === categorySlug)?.id;
   const filtered = useMemo(() => {
     let list = vendorsQuery.data?.data ?? [];
     if (categoryId) list = list.filter(v => v.categories.includes(categoryId));
@@ -30,7 +30,7 @@ export function useVendorsPage() {
   }, [vendorsQuery.data?.data, categoryId, cityFilter]);
 
   const categoryMap = useMemo(
-    () => Object.fromEntries(categories.map(c => [c.id, c.name])),
+    () => Object.fromEntries(categories?.map(c => [c.id, c.name]) ?? []),
     [categories],
   );
 

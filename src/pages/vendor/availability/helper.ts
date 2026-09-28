@@ -44,11 +44,11 @@ export function useVendorAvailability() {
     enabled: Boolean(resolvedVendorId),
   });
 
-  const services = servicesQuery.data ?? [];
+  const services = servicesQuery.data;
   const [serviceId, setServiceId] = useState('');
 
   useEffect(() => {
-    if (!serviceId && services[0]?.id) setServiceId(services[0].id);
+    if (!serviceId && services?.[0]?.id) setServiceId(services[0].id);
   }, [services, serviceId]);
 
   const availabilityQuery = useQuery({

@@ -42,6 +42,7 @@ export function usePremiumSearch() {
     } catch {
       return [];
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open]);
 
   const suggestions = useMemo(() => {
