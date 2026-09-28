@@ -39,7 +39,10 @@ export function useVendorPortfolio() {
     enabled: Boolean(resolvedVendorId),
   });
 
-  const services = useMemo(() => servicesQuery.data ?? [], [servicesQuery.data]);
+  const services = useMemo(
+    () => servicesQuery.data ?? [],
+    [servicesQuery.data],
+  );
   const [serviceId, setServiceId] = useState('');
 
   useEffect(() => {
