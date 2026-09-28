@@ -7,7 +7,6 @@ import { PageTitle } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import type { Booking } from '@/types';
 
-
 const statusColorMap: Record<string, string> = {
   requested: 'blue',
   admin_review: 'gold',
