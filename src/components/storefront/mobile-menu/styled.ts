@@ -98,6 +98,28 @@ export const MenuLink = styled(Link)`
   }
 `;
 
+export const MenuAction = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.7rem 0.75rem;
+  border-radius: ${radii.md};
+  font-size: ${fontSizes.sm};
+  font-weight: 700;
+  color: ${brandColors.chocolate};
+  text-align: left;
+
+  &:hover {
+    background: ${brandColors.pink50};
+    color: ${brandColors.pink500};
+  }
+`;
+
+
 export const MenuCount = styled.span`
   margin-left: auto;
   font-size: ${fontSizes.xs};

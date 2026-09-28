@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Heart,
   MapPin,
@@ -9,7 +10,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ProfileMenu } from '@/components/auth/profile-menu';
-import { AnnouncementBar } from '@/components/storefront/announcement-bar';
+import { BecomeVendorModal } from '@/components/vendor/become-vendor-modal';
 import { CategoryNav } from '@/components/storefront/category-nav';
 import { MobileMenu } from '@/components/storefront/mobile-menu';
 import { ROUTES } from '@/constants/routes';
@@ -34,17 +35,21 @@ import {
   SearchIcon,
   SearchInput,
   SearchSubmit,
+  VendorButton,
   VendorLink,
 } from './styled';
 
 export function StoreHeader() {
   const { t } = useTranslation();
   const header = useStoreHeader();
-  const { isSignedIn } = useAuth();
+  const { session, isSignedIn } = useAuth();
+  const [becomeVendorOpen, setBecomeVendorOpen] = useState(false);
+
+  const role = session?.user?.role;
+  const isVendor = role === 'vendor' || Boolean(session?.user?.vendorId);
 
   return (
     <HeaderRoot>
-      <AnnouncementBar />
       <MainBar>
         <Brand to={ROUTES.HOME}>
           <BrandMark>EO</BrandMark>
@@ -82,6 +87,13 @@ export function StoreHeader() {
               <VendorLink to={ROUTES.VENDOR_LOGIN}>
                 {t('storefront.becomeVendor')}
               </VendorLink>
+            ) : !isVendor ? (
+              <VendorButton
+                type="button"
+                onClick={() => setBecomeVendorOpen(true)}
+              >
+                {t('storefront.becomeVendor')}
+              </VendorButton>
             ) : null}
             <IconLink
               to={ROUTES.WISHLIST}
@@ -101,7 +113,7 @@ export function StoreHeader() {
 
           <DesktopOnly>
             {isSignedIn ? (
-              <ProfileMenu />
+              <ProfileMenu onOpenBecomeVendor={() => setBecomeVendorOpen(true)} />
             ) : (
               <LoginButton to={ROUTES.LOGIN}>
                 <User size={16} />
@@ -126,7 +138,13 @@ export function StoreHeader() {
         open={header.menuOpen}
         onClose={header.closeMenu}
         wishlistCount={header.wishlistCount}
+        onOpenBecomeVendor={() => setBecomeVendorOpen(true)}
+      />
+      <BecomeVendorModal
+        open={becomeVendorOpen}
+        onClose={() => setBecomeVendorOpen(false)}
       />
     </HeaderRoot>
   );
 }
+

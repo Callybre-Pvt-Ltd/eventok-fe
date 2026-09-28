@@ -16,7 +16,9 @@ import { ROUTES } from '@/constants/routes';
 import { withNextPath } from '@/utils/auth/auth-return';
 import { peekAuthIntent } from '@/utils/auth/post-auth';
 import { authService } from '@/services';
-import type { Session } from '@/types';
+import { ClerkSessionBridge } from '@/components/auth/clerk-session-bridge';
+import type { Session, UserRole } from '@/types';
+
 
 export interface RegisterPayload {
   email: string;
@@ -344,7 +346,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ],
   );
 
-  return createElement(AuthContext.Provider, { value }, children);
+  const handleBridgeSynced = useCallback(
+    (_role: UserRole) => {
+      void refreshSession();
+    },
+    [refreshSession],
+  );
+
+  return createElement(
+    AuthContext.Provider,
+    { value },
+    createElement(ClerkSessionBridge, {
+      sessionReady: session !== null,
+      onSynced: handleBridgeSynced,
+    }),
+    children,
+  );
 }
 
 export function useAuth() {

@@ -1,22 +1,9 @@
-import { Tag } from 'antd';
+import { Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
-import { EmptyState } from '@/components/global/empty-state';
-import { useAdminBookings } from './helper';
-import {
-  BookingCard,
-  BookingCardHeader,
-  CategoryBadge,
-  DetailSection,
-  DetailsGrid,
-  List,
-  NotesBox,
-  PageTitle,
-  PrimaryText,
-  SecondaryText,
-  SectionLabel,
-  ServiceTitle,
-} from './styled';
+import { useAdminBookings, type AdminBookingView } from './helper';
+import { PageTitle } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 
 const statusColorMap: Record<string, string> = {
@@ -37,77 +24,88 @@ export default function AdminBookingsPage() {
 
   if (isLoading) return <LoadingState />;
 
+  const columns: ColumnsType<AdminBookingView> = [
+    {
+      title: 'Service / Event',
+      key: 'service',
+      render: (_, b) => (
+        <div>
+          <strong>{b.serviceName || b.eventType || 'Service Booking'}</strong>
+          {b.serviceCategory && (
+            <div style={{ marginTop: '0.25rem' }}>
+              <Tag color="cyan">{b.serviceCategory}</Tag>
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Customer',
+      key: 'customer',
+      render: (_, b) => (
+        <div>
+          <strong>{b.customerName || 'Customer'}</strong>
+          <div style={{ fontSize: '0.75rem', color: '#666' }}>{b.customerEmail}</div>
+          {b.customerPhone && (
+            <div style={{ fontSize: '0.75rem', color: '#888' }}>{b.customerPhone}</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: 'Event Date & Location',
+      key: 'event',
+      render: (_, b) => (
+        <div>
+          <strong>{b.eventDate}</strong>
+          <div style={{ fontSize: '0.75rem', color: '#666' }}>
+            {b.city || 'Location not specified'}
+            {b.guestCount ? ` · ${b.guestCount} guests` : ''}
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: 'Vendor Assigned',
+      key: 'vendor',
+      render: (_, b) => (
+        <div>
+          <div>{b.vendorBusinessName || b.vendorName || (b.vendorId ? `Vendor: ${b.vendorId.slice(0, 8)}...` : 'Not assigned yet')}</div>
+          {b.totalAmount ? (
+            <div style={{ fontSize: '0.75rem', color: '#666', fontWeight: 600 }}>
+              ₹{b.totalAmount}
+            </div>
+          ) : null}
+        </div>
+      ),
+    },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: string) => (
+        <Tag
+          color={statusColorMap[status] || 'default'}
+          style={{ textTransform: 'uppercase', fontWeight: 600 }}
+        >
+          {status.replace(/_/g, ' ')}
+        </Tag>
+      ),
+    },
+  ];
+
   return (
     <>
       <PageTitle $palette={palette}>{t('admin.bookings')}</PageTitle>
-      {bookings.length === 0 ? (
-        <EmptyState description="No bookings found" />
-      ) : (
-        <List>
-          {bookings.map(b => (
-            <BookingCard $palette={palette} key={b.id}>
-              <BookingCardHeader>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-                  <ServiceTitle $palette={palette}>
-                    {b.serviceName || b.eventType || 'Service Booking'}
-                  </ServiceTitle>
-                  {b.serviceCategory && <CategoryBadge>{b.serviceCategory}</CategoryBadge>}
-                </div>
-                <Tag color={statusColorMap[b.status] || 'default'} style={{ textTransform: 'uppercase', fontWeight: 600 }}>
-                  {b.status.replace(/_/g, ' ')}
-                </Tag>
-              </BookingCardHeader>
-
-              <DetailsGrid>
-                <DetailSection $palette={palette}>
-                  <SectionLabel>Customer Details</SectionLabel>
-                  <PrimaryText $palette={palette}>
-                    {b.customerName || 'Customer'}
-                  </PrimaryText>
-                  <SecondaryText $palette={palette}>
-                    {b.customerEmail || b.customerId}
-                  </SecondaryText>
-                  {b.customerPhone && (
-                    <SecondaryText $palette={palette}>{b.customerPhone}</SecondaryText>
-                  )}
-                </DetailSection>
-
-                <DetailSection $palette={palette}>
-                  <SectionLabel>Event & Location</SectionLabel>
-                  <PrimaryText $palette={palette}>
-                    {b.eventDate}
-                  </PrimaryText>
-                  <SecondaryText $palette={palette}>
-                    {b.city || 'Location not specified'}
-                  </SecondaryText>
-                  {b.guestCount ? (
-                    <SecondaryText $palette={palette}>{b.guestCount} guests</SecondaryText>
-                  ) : null}
-                </DetailSection>
-
-                <DetailSection $palette={palette}>
-                  <SectionLabel>Vendor Details</SectionLabel>
-                  <PrimaryText $palette={palette}>
-                    {b.vendorBusinessName || b.vendorName || (b.vendorId ? `Vendor: ${b.vendorId.slice(0, 8)}...` : 'Not assigned yet')}
-                  </PrimaryText>
-                  <SecondaryText $palette={palette}>
-                    {b.totalAmount ? `Total / Budget: ₹${b.totalAmount}` : 'No pricing set'}
-                  </SecondaryText>
-                </DetailSection>
-              </DetailsGrid>
-
-              {b.notes && (
-                <NotesBox $palette={palette}>
-                  <strong style={{ display: 'block', marginBottom: '0.2rem', fontSize: '0.75rem', textTransform: 'uppercase' }}>
-                    Requirements / Notes:
-                  </strong>
-                  {b.notes}
-                </NotesBox>
-              )}
-            </BookingCard>
-          ))}
-        </List>
-      )}
+      <Table
+        dataSource={bookings}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+        locale={{ emptyText: 'No bookings found' }}
+        bordered
+      />
     </>
   );
 }
+

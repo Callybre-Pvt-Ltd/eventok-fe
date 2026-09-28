@@ -13,18 +13,28 @@ import {
   Overlay,
   Section,
   SubLink,
+  MenuAction,
 } from './styled';
 
 interface MobileMenuProps {
   open: boolean;
   onClose: () => void;
   wishlistCount: number;
+  onOpenBecomeVendor?: () => void;
 }
 
-export function MobileMenu({ open, onClose, wishlistCount }: MobileMenuProps) {
+export function MobileMenu({
+  open,
+  onClose,
+  wishlistCount,
+  onOpenBecomeVendor,
+}: MobileMenuProps) {
   const { t } = useTranslation();
-  const { isSignedIn } = useAuth();
+  const { session, isSignedIn } = useAuth();
   const { groups } = useMobileMenu(open, onClose);
+
+  const role = session?.user?.role;
+  const isVendor = role === 'vendor' || Boolean(session?.user?.vendorId);
 
   return (
     <>
@@ -51,13 +61,25 @@ export function MobileMenu({ open, onClose, wishlistCount }: MobileMenuProps) {
             {t('storefront.wishlist')}
             {wishlistCount > 0 && <MenuCount>{wishlistCount}</MenuCount>}
           </MenuLink>
-          {!isSignedIn && (
+          {!isSignedIn ? (
             <MenuLink to={ROUTES.VENDOR_LOGIN}>
               <Store size={18} />
               {t('storefront.becomeVendor')}
             </MenuLink>
-          )}
+          ) : !isVendor && onOpenBecomeVendor ? (
+            <MenuAction
+              type="button"
+              onClick={() => {
+                onClose();
+                onOpenBecomeVendor();
+              }}
+            >
+              <Store size={18} />
+              {t('storefront.becomeVendor')}
+            </MenuAction>
+          ) : null}
         </Section>
+
 
         {groups.map(group => (
           <Section key={group.key}>

@@ -1,23 +1,40 @@
+import { Table, Button } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
-import { EmptyState } from '@/components/global/empty-state';
 import { useAdminCategories } from './helper';
-import {
-  ItemMeta,
-  ItemTitle,
-  List,
-  ListItem,
-  PageHeader,
-  PageTitle,
-} from './styled';
+import { PageHeader, PageTitle } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
-import { Button } from 'antd';
+import type { Category } from '@/types';
 
 export default function AdminCategoriesPage() {
   const { t } = useTranslation();
   const { palette } = usePortalPalette();
   const { categories, isLoading, ensureMutation } = useAdminCategories();
+
   if (isLoading) return <LoadingState />;
+
+  const columns: ColumnsType<Category> = [
+    {
+      title: 'Category Name',
+      dataIndex: 'name',
+      key: 'name',
+      render: (name: string) => <strong>{name}</strong>,
+    },
+    {
+      title: 'Slug',
+      dataIndex: 'slug',
+      key: 'slug',
+      render: (slug: string) => <code>{slug}</code>,
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
+      render: (desc: string) => desc || '—',
+    },
+  ];
+
   return (
     <>
       <PageHeader>
@@ -30,21 +47,15 @@ export default function AdminCategoriesPage() {
           Sync decoration categories
         </Button>
       </PageHeader>
-      {categories.length === 0 ? (
-        <EmptyState description="No categories yet — click Sync decoration categories." />
-      ) : (
-        <List>
-          {categories.map(c => (
-            <ListItem $palette={palette} key={c.id}>
-              <ItemTitle $palette={palette}>{c.name}</ItemTitle>
-              <ItemMeta $palette={palette}>
-                {c.slug}
-                {c.description ? ` · ${c.description}` : ''}
-              </ItemMeta>
-            </ListItem>
-          ))}
-        </List>
-      )}
+      <Table
+        dataSource={categories}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+        locale={{ emptyText: 'No categories yet — click Sync decoration categories.' }}
+        bordered
+      />
     </>
   );
 }
+

@@ -171,6 +171,27 @@ export const VendorLink = styled(Link)`
   }
 `;
 
+export const VendorButton = styled.button`
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: ${fontSizes.sm};
+  font-weight: 700;
+  color: ${brandColors.white};
+  white-space: nowrap;
+
+  ${media.xl} {
+    display: inline;
+  }
+
+  &:hover {
+    color: ${brandColors.pink400};
+  }
+`;
+
+
 export const MobileOnly = styled.div`
   display: inline-flex;
 

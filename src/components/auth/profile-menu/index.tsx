@@ -30,8 +30,13 @@ function resolveEmail(
   );
 }
 
+interface ProfileMenuProps {
+  tone?: 'dark' | 'light';
+  onOpenBecomeVendor?: () => void;
+}
+
 /** Compact circle — click to see email / portals / logout. */
-export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
+export function ProfileMenu({ tone = 'dark', onOpenBecomeVendor }: ProfileMenuProps) {
   const { session, isSignedIn, logout } = useAuth();
   const { user: clerkUser, isLoaded: clerkUserLoaded } = useUser();
   const [open, setOpen] = useState(false);
@@ -62,11 +67,14 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
   const letter = (email.trim()[0] || 'U').toUpperCase();
   const avatarUrl =
     clerkUserLoaded && clerkUser?.hasImage ? clerkUser.imageUrl : null;
-  const isVendor =
+  const hasVendorAccount =
     role === 'vendor' ||
-    (role === 'admin' && Boolean(user?.vendorId || user?.vendorStatus));
-  const vendorPath = isVendor
-    ? getPostAuthPath('vendor', user?.vendorStatus)
+    Boolean(user?.vendorId) ||
+    Boolean(user?.vendorStatus);
+  const isApprovedVendor =
+    role === 'vendor' || user?.vendorStatus === 'approved';
+  const vendorPath = isApprovedVendor
+    ? ROUTES.VENDOR_DASHBOARD
     : ROUTES.VENDOR_PENDING;
 
   return (
@@ -101,6 +109,8 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
             <MenuItem
               role="menuitem"
               to={ROUTES.ADMIN_DASHBOARD}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
             >
               <Shield size={16} aria-hidden />
@@ -108,37 +118,47 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
             </MenuItem>
           ) : null}
 
-          {isVendor ? (
+          {hasVendorAccount ? (
             <MenuItem
               role="menuitem"
               to={vendorPath}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
             >
               <Store size={16} aria-hidden />
-              Vendor
+              {isApprovedVendor ? 'Vendor profile' : 'Vendor profile (Pending)'}
             </MenuItem>
+          ) : onOpenBecomeVendor ? (
+            <MenuItemButton
+              role="menuitem"
+              type="button"
+              onClick={() => {
+                setOpen(false);
+                onOpenBecomeVendor();
+              }}
+            >
+              <Store size={16} aria-hidden />
+              Become a vendor
+            </MenuItemButton>
           ) : null}
 
-          {role === 'customer' ? (
-            <>
-              <MenuItem
-                role="menuitem"
-                to={ROUTES.CUSTOMER_BOOKINGS}
-                onClick={() => setOpen(false)}
-              >
-                <Package size={16} aria-hidden />
-                My bookings
-              </MenuItem>
-              <MenuItem
-                role="menuitem"
-                to={ROUTES.CUSTOMER_PROFILE}
-                onClick={() => setOpen(false)}
-              >
-                <User size={16} aria-hidden />
-                My account
-              </MenuItem>
-            </>
-          ) : null}
+          <MenuItem
+            role="menuitem"
+            to={ROUTES.CUSTOMER_BOOKINGS}
+            onClick={() => setOpen(false)}
+          >
+            <Package size={16} aria-hidden />
+            My bookings
+          </MenuItem>
+          <MenuItem
+            role="menuitem"
+            to={ROUTES.CUSTOMER_PROFILE}
+            onClick={() => setOpen(false)}
+          >
+            <User size={16} aria-hidden />
+            My account
+          </MenuItem>
 
           <MenuDivider />
           <MenuItemButton
@@ -157,3 +177,4 @@ export function ProfileMenu({ tone = 'dark' }: { tone?: 'dark' | 'light' }) {
     </MenuRoot>
   );
 }
+
