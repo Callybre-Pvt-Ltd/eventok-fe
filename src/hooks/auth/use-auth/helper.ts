@@ -113,10 +113,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       try {
         let result = await load(false);
+
+        // Retry up to 3 times for 401s — Google OAuth azp races can take
+        // longer than a single 250 ms window to resolve.
         if (result.kind === 'unauthorized') {
-          // Token/azp races after OAuth — retry once with a fresh Clerk token.
-          await new Promise(resolve => setTimeout(resolve, 250));
-          result = await load(true);
+          const delays = [500, 1000, 2000];
+          for (const delay of delays) {
+            await new Promise(resolve => setTimeout(resolve, delay));
+            result = await load(true);
+            if (result.kind !== 'unauthorized') break;
+          }
         }
 
         if (result.kind === 'signed_out') {
@@ -124,8 +130,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return null;
         }
         if (result.kind === 'onboarding') {
-          // First sign-in: create the EventOK profile silently. Profile details
-          // (phone, city…) are collected later, never as a gate on logging in.
+          // Safety-net: /me now auto-syncs, but keep this as a fallback.
           const provisioned = await authService.onboard({
             role: peekAuthIntent() === 'vendor' ? 'vendor' : 'customer',
           });
@@ -134,7 +139,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         if (result.kind === 'unauthorized') {
           setSession(null);
-          console.error('Session refresh unauthorized:', result.error.message);
+          console.error('Session refresh unauthorized after retries:', result.error.message);
           return null;
         }
 

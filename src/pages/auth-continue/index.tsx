@@ -28,7 +28,7 @@ export default function AuthContinuePage() {
 
   useEffect(() => {
     if (!isSignedIn || session || isLoading) return;
-    const timer = window.setTimeout(() => setTimedOut(true), 12_000);
+    const timer = window.setTimeout(() => setTimedOut(true), 20_000);
     return () => window.clearTimeout(timer);
   }, [isLoading, isSignedIn, session]);
 
