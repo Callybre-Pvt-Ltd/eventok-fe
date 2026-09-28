@@ -19,7 +19,6 @@ import { authService } from '@/services';
 import { ClerkSessionBridge } from '@/components/auth/clerk-session-bridge';
 import type { Session, UserRole } from '@/types';
 
-
 export interface RegisterPayload {
   email: string;
   password: string;

@@ -64,7 +64,10 @@ export function ClerkSessionBridge({ onSynced, sessionReady }: Props) {
             await new Promise(r => setTimeout(r, delay));
           } else {
             // All retries exhausted — log but don't crash the UI.
-            console.error('[ClerkSessionBridge] Sync failed after max retries:', err);
+            console.error(
+              '[ClerkSessionBridge] Sync failed after max retries:',
+              err,
+            );
           }
         }
       }

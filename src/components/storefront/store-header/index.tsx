@@ -113,7 +113,9 @@ export function StoreHeader() {
 
           <DesktopOnly>
             {isSignedIn ? (
-              <ProfileMenu onOpenBecomeVendor={() => setBecomeVendorOpen(true)} />
+              <ProfileMenu
+                onOpenBecomeVendor={() => setBecomeVendorOpen(true)}
+              />
             ) : (
               <LoginButton to={ROUTES.LOGIN}>
                 <User size={16} />
@@ -147,4 +149,3 @@ export function StoreHeader() {
     </HeaderRoot>
   );
 }
-

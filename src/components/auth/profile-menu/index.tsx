@@ -3,8 +3,8 @@ import { useUser } from '@clerk/react';
 import { LogOut, Package, Shield, Store, User } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
-import { getPostAuthPath } from '@/utils/auth/post-auth';
 import { getRoleLabel } from '@/utils/auth/roles';
+
 import {
   MenuButton,
   MenuDivider,
@@ -36,7 +36,10 @@ interface ProfileMenuProps {
 }
 
 /** Compact circle — click to see email / portals / logout. */
-export function ProfileMenu({ tone = 'dark', onOpenBecomeVendor }: ProfileMenuProps) {
+export function ProfileMenu({
+  tone = 'dark',
+  onOpenBecomeVendor,
+}: ProfileMenuProps) {
   const { session, isSignedIn, logout } = useAuth();
   const { user: clerkUser, isLoaded: clerkUserLoaded } = useUser();
   const [open, setOpen] = useState(false);
@@ -68,9 +71,7 @@ export function ProfileMenu({ tone = 'dark', onOpenBecomeVendor }: ProfileMenuPr
   const avatarUrl =
     clerkUserLoaded && clerkUser?.hasImage ? clerkUser.imageUrl : null;
   const hasVendorAccount =
-    role === 'vendor' ||
-    Boolean(user?.vendorId) ||
-    Boolean(user?.vendorStatus);
+    role === 'vendor' || Boolean(user?.vendorId) || Boolean(user?.vendorStatus);
   const isApprovedVendor =
     role === 'vendor' || user?.vendorStatus === 'approved';
   const vendorPath = isApprovedVendor
@@ -177,4 +178,3 @@ export function ProfileMenu({ tone = 'dark', onOpenBecomeVendor }: ProfileMenuPr
     </MenuRoot>
   );
 }
-

@@ -80,7 +80,6 @@ export function MobileMenu({
           ) : null}
         </Section>
 
-
         {groups.map(group => (
           <Section key={group.key}>
             <MenuLink to={group.to}>{t(group.labelKey)}</MenuLink>

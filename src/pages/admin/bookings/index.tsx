@@ -2,9 +2,11 @@ import { Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
-import { useAdminBookings, type AdminBookingView } from './helper';
+import { useAdminBookings } from './helper';
 import { PageTitle } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
+import type { Booking } from '@/types';
+
 
 const statusColorMap: Record<string, string> = {
   requested: 'blue',
@@ -24,7 +26,7 @@ export default function AdminBookingsPage() {
 
   if (isLoading) return <LoadingState />;
 
-  const columns: ColumnsType<AdminBookingView> = [
+  const columns: ColumnsType<Booking> = [
     {
       title: 'Service / Event',
       key: 'service',
@@ -45,9 +47,13 @@ export default function AdminBookingsPage() {
       render: (_, b) => (
         <div>
           <strong>{b.customerName || 'Customer'}</strong>
-          <div style={{ fontSize: '0.75rem', color: '#666' }}>{b.customerEmail}</div>
+          <div style={{ fontSize: '0.75rem', color: '#666' }}>
+            {b.customerEmail}
+          </div>
           {b.customerPhone && (
-            <div style={{ fontSize: '0.75rem', color: '#888' }}>{b.customerPhone}</div>
+            <div style={{ fontSize: '0.75rem', color: '#888' }}>
+              {b.customerPhone}
+            </div>
           )}
         </div>
       ),
@@ -70,9 +76,17 @@ export default function AdminBookingsPage() {
       key: 'vendor',
       render: (_, b) => (
         <div>
-          <div>{b.vendorBusinessName || b.vendorName || (b.vendorId ? `Vendor: ${b.vendorId.slice(0, 8)}...` : 'Not assigned yet')}</div>
+          <div>
+            {b.vendorBusinessName ||
+              b.vendorName ||
+              (b.vendorId
+                ? `Vendor: ${b.vendorId.slice(0, 8)}...`
+                : 'Not assigned yet')}
+          </div>
           {b.totalAmount ? (
-            <div style={{ fontSize: '0.75rem', color: '#666', fontWeight: 600 }}>
+            <div
+              style={{ fontSize: '0.75rem', color: '#666', fontWeight: 600 }}
+            >
               ₹{b.totalAmount}
             </div>
           ) : null}
@@ -108,4 +122,3 @@ export default function AdminBookingsPage() {
     </>
   );
 }
-

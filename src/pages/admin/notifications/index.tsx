@@ -21,7 +21,9 @@ export default function AdminNotificationsPage() {
       key: 'title',
       render: (title: string, record) => (
         <span>
-          {!record.read && <span style={{ color: '#e8006f', marginRight: '6px' }}>●</span>}
+          {!record.read && (
+            <span style={{ color: '#e8006f', marginRight: '6px' }}>●</span>
+          )}
           <strong>{title}</strong>
         </span>
       ),
@@ -69,4 +71,3 @@ export default function AdminNotificationsPage() {
     </>
   );
 }
-

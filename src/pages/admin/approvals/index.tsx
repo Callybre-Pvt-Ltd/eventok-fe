@@ -48,7 +48,11 @@ export default function AdminApprovalsPage() {
       key: 'actions',
       render: (_, record) => (
         <Space size="middle">
-          <Button type="primary" size="small" onClick={() => approve(record.id)}>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => approve(record.id)}
+          >
             {t('admin.approve')}
           </Button>
           <Button danger size="small" onClick={() => reject(record.id)}>
@@ -73,4 +77,3 @@ export default function AdminApprovalsPage() {
     </>
   );
 }
-

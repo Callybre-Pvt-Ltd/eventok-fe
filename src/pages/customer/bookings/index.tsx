@@ -50,13 +50,16 @@ export default function CustomerBookingsPage() {
         <List>
           {bookings.map(b => (
             <ListItem $palette={palette} key={b.id}>
-              <ItemTitle $palette={palette}>{b.serviceName || b.eventType}</ItemTitle>
+              <ItemTitle $palette={palette}>
+                {b.serviceName || b.eventType}
+              </ItemTitle>
               <ItemMeta $palette={palette}>
                 {b.serviceCategory ? `${b.serviceCategory} · ` : ''}
-                {b.eventDate} ·{' '}
-                {b.city ? `${b.city} · ` : ''}
+                {b.eventDate} · {b.city ? `${b.city} · ` : ''}
                 {b.guestCount ? `${b.guestCount} guests · ` : ''}
-                <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>{b.status.replace(/_/g, ' ')}</span>
+                <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>
+                  {b.status.replace(/_/g, ' ')}
+                </span>
               </ItemMeta>
               {b.status === 'payment_pending' ? (
                 <Button

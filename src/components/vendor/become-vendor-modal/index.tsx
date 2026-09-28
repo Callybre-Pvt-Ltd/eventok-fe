@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Modal, Form, Input, Checkbox, Button, message } from 'antd';
-import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { authService } from '@/services/authService';
 import { vendorService } from '@/services/vendorService';
@@ -22,8 +21,11 @@ interface FormValues {
 // Indian / international mobile phone validator: 10 to 15 digits, optional + prefix
 const PHONE_REGEX = /^\+?[0-9]{10,15}$/;
 
-export function BecomeVendorModal({ open, onClose, onSuccess }: BecomeVendorModalProps) {
-  const { t } = useTranslation();
+export function BecomeVendorModal({
+  open,
+  onClose,
+  onSuccess,
+}: BecomeVendorModalProps) {
   const { session, refreshSession } = useAuth();
   const [form] = Form.useForm<FormValues>();
   const [loading, setLoading] = useState(false);
@@ -60,13 +62,16 @@ export function BecomeVendorModal({ open, onClose, onSuccess }: BecomeVendorModa
         return;
       }
 
-      message.success('Vendor application submitted! It is now pending Super Admin review.');
+      message.success(
+        'Vendor application submitted! It is now pending Super Admin review.',
+      );
       form.resetFields();
       onClose();
       await refreshSession();
       if (onSuccess) onSuccess();
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : 'Failed to submit application';
+      const msg =
+        err instanceof Error ? err.message : 'Failed to submit application';
       message.error(msg);
     } finally {
       setLoading(false);
@@ -82,8 +87,11 @@ export function BecomeVendorModal({ open, onClose, onSuccess }: BecomeVendorModa
       destroyOnClose
       centered
     >
-      <p style={{ color: '#666', marginBottom: '1.25rem', fontSize: '0.875rem' }}>
-        Register your service or shop. Once submitted, our Super Admin team will review and approve your vendor profile.
+      <p
+        style={{ color: '#666', marginBottom: '1.25rem', fontSize: '0.875rem' }}
+      >
+        Register your service or shop. Once submitted, our Super Admin team will
+        review and approve your vendor profile.
       </p>
 
       <Form
@@ -112,7 +120,8 @@ export function BecomeVendorModal({ open, onClose, onSuccess }: BecomeVendorModa
             { required: true, message: 'Please enter your phone number' },
             {
               pattern: PHONE_REGEX,
-              message: 'Please enter a valid 10-digit phone number (e.g. 9876543210 or +919876543210)',
+              message:
+                'Please enter a valid 10-digit phone number (e.g. 9876543210 or +919876543210)',
             },
           ]}
         >
@@ -123,9 +132,18 @@ export function BecomeVendorModal({ open, onClose, onSuccess }: BecomeVendorModa
           label="Name of Shop or Service"
           name="business_name"
           rules={[
-            { required: true, message: 'Please enter your shop or service name' },
-            { min: 3, message: 'Shop or service name must be at least 3 characters' },
-            { max: 200, message: 'Shop or service name cannot exceed 200 characters' },
+            {
+              required: true,
+              message: 'Please enter your shop or service name',
+            },
+            {
+              min: 3,
+              message: 'Shop or service name must be at least 3 characters',
+            },
+            {
+              max: 200,
+              message: 'Shop or service name cannot exceed 200 characters',
+            },
           ]}
         >
           <Input placeholder="e.g. Royal Caterers & Decorators" size="large" />
@@ -145,17 +163,31 @@ export function BecomeVendorModal({ open, onClose, onSuccess }: BecomeVendorModa
           rules={[
             {
               validator: (_, value) =>
-                value ? Promise.resolve() : Promise.reject(new Error('You must accept the terms and conditions')),
+                value
+                  ? Promise.resolve()
+                  : Promise.reject(
+                      new Error('You must accept the terms and conditions'),
+                    ),
             },
           ]}
         >
           <Checkbox>
-            I agree to the <a href="/terms" target="_blank" rel="noopener noreferrer">Terms and Conditions</a> and Vendor Code of Conduct.
+            I agree to the{' '}
+            <a href="/terms" target="_blank" rel="noopener noreferrer">
+              Terms and Conditions
+            </a>{' '}
+            and Vendor Code of Conduct.
           </Checkbox>
         </Form.Item>
 
         <Form.Item style={{ marginBottom: 0, marginTop: '1.5rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '0.75rem',
+            }}
+          >
             <Button onClick={onClose} disabled={loading}>
               Cancel
             </Button>

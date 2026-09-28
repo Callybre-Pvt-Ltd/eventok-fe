@@ -52,10 +52,11 @@ export default function AdminCategoriesPage() {
         columns={columns}
         rowKey="id"
         pagination={{ pageSize: 10 }}
-        locale={{ emptyText: 'No categories yet — click Sync decoration categories.' }}
+        locale={{
+          emptyText: 'No categories yet — click Sync decoration categories.',
+        }}
         bordered
       />
     </>
   );
 }
-

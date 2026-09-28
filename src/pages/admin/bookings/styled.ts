@@ -95,4 +95,3 @@ export const NotesBox = styled.div<{ $palette: ThemePalette }>`
   white-space: pre-wrap;
   word-break: break-word;
 `;
-

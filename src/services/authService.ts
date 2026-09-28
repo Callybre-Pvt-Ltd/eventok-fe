@@ -2,7 +2,6 @@ import { ENV } from '@/config/env';
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
 import type { ServiceResponse, Session, User, UserRole } from '@/types';
 
-
 type BackendRole = 'CLIENT' | 'VENDOR' | 'ADMIN';
 
 interface BackendUser {
@@ -172,7 +171,8 @@ export const authService = {
    */
   async syncClerk(clerkToken: string, role?: UserRole): Promise<User> {
     const base = ENV.apiBaseUrl.replace(/\/$/, '');
-    const roleParam = role === 'vendor' ? 'VENDOR' : role === 'admin' ? 'ADMIN' : 'CLIENT';
+    const roleParam =
+      role === 'vendor' ? 'VENDOR' : role === 'admin' ? 'ADMIN' : 'CLIENT';
     const url = `${base}/auth/clerk/sync?role=${roleParam}`;
     const res = await fetch(url, {
       method: 'POST',
@@ -182,14 +182,16 @@ export const authService = {
       },
     });
     if (!res.ok) {
-      const body = await res.json().catch(() => ({})) as { error?: { message?: string; code?: string } };
+      const body = (await res.json().catch(() => ({}))) as {
+        error?: { message?: string; code?: string };
+      };
       throw new ApiError(
         body?.error?.message ?? 'Clerk sync failed',
         body?.error?.code ?? 'SYNC_ERROR',
         res.status,
       );
     }
-    const envelope = await res.json() as { data: BackendUser };
+    const envelope = (await res.json()) as { data: BackendUser };
     return mapUser(envelope.data, loadMeta());
   },
 

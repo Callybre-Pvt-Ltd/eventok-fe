@@ -191,7 +191,6 @@ export const VendorButton = styled.button`
   }
 `;
 
-
 export const MobileOnly = styled.div`
   display: inline-flex;
 

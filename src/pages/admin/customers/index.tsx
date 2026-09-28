@@ -37,7 +37,11 @@ export default function AdminCustomersPage() {
       dataIndex: 'role',
       key: 'role',
       render: (role: string) => (
-        <Tag color={role === 'admin' ? 'purple' : role === 'vendor' ? 'gold' : 'blue'}>
+        <Tag
+          color={
+            role === 'admin' ? 'purple' : role === 'vendor' ? 'gold' : 'blue'
+          }
+        >
           {role.toUpperCase()}
         </Tag>
       ),
@@ -64,4 +68,3 @@ export default function AdminCustomersPage() {
     </>
   );
 }
-

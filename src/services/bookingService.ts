@@ -70,7 +70,9 @@ interface CategoryBasic {
   name: string;
 }
 
-const parseRequirements = (req: string | null): { serviceName?: string; preferredVendorId?: string } => {
+const parseRequirements = (
+  req: string | null,
+): { serviceName?: string; preferredVendorId?: string } => {
   if (!req) return {};
   let serviceName: string | undefined;
   let preferredVendorId: string | undefined;
@@ -95,14 +97,23 @@ const mapEnquiryToBooking = (
   servicesById?: Map<string, ServiceBasic>,
   categoriesById?: Map<string, CategoryBasic>,
 ): Booking => {
-  const { serviceName: parsedServiceName, preferredVendorId } = parseRequirements(enquiry.requirements);
-  const matchedService = preferredVendorId ? servicesById?.get(preferredVendorId) : undefined;
-  const serviceName = matchedService?.title || parsedServiceName || enquiry.event_type;
+  const { serviceName: parsedServiceName, preferredVendorId } =
+    parseRequirements(enquiry.requirements);
+  const matchedService = preferredVendorId
+    ? servicesById?.get(preferredVendorId)
+    : undefined;
+  const serviceName =
+    matchedService?.title || parsedServiceName || enquiry.event_type;
   const categoryId = matchedService?.category_id;
-  const serviceCategory = categoryId ? categoriesById?.get(categoryId)?.name : enquiry.event_type;
+  const serviceCategory = categoryId
+    ? categoriesById?.get(categoryId)?.name
+    : enquiry.event_type;
 
   const user = usersById?.get(enquiry.client_id);
-  const vendor = preferredVendorId && matchedService?.vendor_id ? vendorsById?.get(matchedService.vendor_id) : undefined;
+  const vendor =
+    preferredVendorId && matchedService?.vendor_id
+      ? vendorsById?.get(matchedService.vendor_id)
+      : undefined;
 
   return {
     id: enquiry.id,
@@ -218,34 +229,47 @@ export const bookingService = {
     _customerId: string,
   ): Promise<ServiceResponse<Booking[]>> {
     return wrap(async () => {
-      const [enquiriesRes, bookingsRes, servicesRes, categoriesRes] = await Promise.allSettled([
-        apiRequestPaginated<ApiEnquiry>('/enquiries', {
-          query: { page: 1, page_size: 50 },
-        }),
-        apiRequestPaginated<ApiBooking>('/bookings', {
-          query: { page: 1, page_size: 50 },
-        }),
-        apiRequestPaginated<ServiceBasic>('/services', {
-          auth: false,
-          query: { page: 1, page_size: 100 },
-        }),
-        apiRequestPaginated<CategoryBasic>('/categories', {
-          auth: false,
-          query: { page: 1, page_size: 100 },
-        }),
-      ]);
+      const [enquiriesRes, bookingsRes, servicesRes, categoriesRes] =
+        await Promise.allSettled([
+          apiRequestPaginated<ApiEnquiry>('/enquiries', {
+            query: { page: 1, page_size: 50 },
+          }),
+          apiRequestPaginated<ApiBooking>('/bookings', {
+            query: { page: 1, page_size: 50 },
+          }),
+          apiRequestPaginated<ServiceBasic>('/services', {
+            auth: false,
+            query: { page: 1, page_size: 100 },
+          }),
+          apiRequestPaginated<CategoryBasic>('/categories', {
+            auth: false,
+            query: { page: 1, page_size: 100 },
+          }),
+        ]);
 
-      const enquiries = enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
-      const bookings = bookingsRes.status === 'fulfilled' ? bookingsRes.value.items : [];
-      const services = servicesRes.status === 'fulfilled' ? servicesRes.value.items : [];
-      const categories = categoriesRes.status === 'fulfilled' ? categoriesRes.value.items : [];
+      const enquiries =
+        enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
+      const bookings =
+        bookingsRes.status === 'fulfilled' ? bookingsRes.value.items : [];
+      const services =
+        servicesRes.status === 'fulfilled' ? servicesRes.value.items : [];
+      const categories =
+        categoriesRes.status === 'fulfilled' ? categoriesRes.value.items : [];
 
       const servicesById = new Map(services.map(s => [s.id, s]));
       const categoriesById = new Map(categories.map(c => [c.id, c]));
 
       return [
         ...bookings.map(b => mapApiBooking(b)),
-        ...enquiries.map(e => mapEnquiryToBooking(e, undefined, undefined, servicesById, categoriesById)),
+        ...enquiries.map(e =>
+          mapEnquiryToBooking(
+            e,
+            undefined,
+            undefined,
+            servicesById,
+            categoriesById,
+          ),
+        ),
       ];
     });
   },
@@ -263,36 +287,47 @@ export const bookingService = {
 
   async getAllBookings(): Promise<ServiceResponse<Booking[]>> {
     return wrap(async () => {
-      const [enquiriesRes, bookingsRes, usersRes, vendorsRes, servicesRes, categoriesRes] =
-        await Promise.allSettled([
-          apiRequestPaginated<ApiEnquiry>('/admin/enquiries', {
-            query: { page: 1, page_size: 100 },
-          }),
-          apiRequestPaginated<ApiBooking>('/admin/bookings', {
-            query: { page: 1, page_size: 100 },
-          }),
-          apiRequestPaginated<UserBasic>('/admin/users', {
-            query: { page: 1, page_size: 100 },
-          }),
-          apiRequestPaginated<VendorBasic>('/admin/vendors', {
-            query: { page: 1, page_size: 100 },
-          }),
-          apiRequestPaginated<ServiceBasic>('/services', {
-            auth: false,
-            query: { page: 1, page_size: 100 },
-          }),
-          apiRequestPaginated<CategoryBasic>('/categories', {
-            auth: false,
-            query: { page: 1, page_size: 100 },
-          }),
-        ]);
+      const [
+        enquiriesRes,
+        bookingsRes,
+        usersRes,
+        vendorsRes,
+        servicesRes,
+        categoriesRes,
+      ] = await Promise.allSettled([
+        apiRequestPaginated<ApiEnquiry>('/admin/enquiries', {
+          query: { page: 1, page_size: 100 },
+        }),
+        apiRequestPaginated<ApiBooking>('/admin/bookings', {
+          query: { page: 1, page_size: 100 },
+        }),
+        apiRequestPaginated<UserBasic>('/admin/users', {
+          query: { page: 1, page_size: 100 },
+        }),
+        apiRequestPaginated<VendorBasic>('/admin/vendors', {
+          query: { page: 1, page_size: 100 },
+        }),
+        apiRequestPaginated<ServiceBasic>('/services', {
+          auth: false,
+          query: { page: 1, page_size: 100 },
+        }),
+        apiRequestPaginated<CategoryBasic>('/categories', {
+          auth: false,
+          query: { page: 1, page_size: 100 },
+        }),
+      ]);
 
-      const enquiries = enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
-      const bookings = bookingsRes.status === 'fulfilled' ? bookingsRes.value.items : [];
+      const enquiries =
+        enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
+      const bookings =
+        bookingsRes.status === 'fulfilled' ? bookingsRes.value.items : [];
       const users = usersRes.status === 'fulfilled' ? usersRes.value.items : [];
-      const vendors = vendorsRes.status === 'fulfilled' ? vendorsRes.value.items : [];
-      const services = servicesRes.status === 'fulfilled' ? servicesRes.value.items : [];
-      const categories = categoriesRes.status === 'fulfilled' ? categoriesRes.value.items : [];
+      const vendors =
+        vendorsRes.status === 'fulfilled' ? vendorsRes.value.items : [];
+      const services =
+        servicesRes.status === 'fulfilled' ? servicesRes.value.items : [];
+      const categories =
+        categoriesRes.status === 'fulfilled' ? categoriesRes.value.items : [];
 
       const usersById = new Map(users.map(u => [u.id, u]));
       const vendorsById = new Map(vendors.map(v => [v.id, v]));
@@ -302,7 +337,13 @@ export const bookingService = {
       return [
         ...bookings.map(b => mapApiBooking(b, usersById, vendorsById)),
         ...enquiries.map(e =>
-          mapEnquiryToBooking(e, usersById, vendorsById, servicesById, categoriesById),
+          mapEnquiryToBooking(
+            e,
+            usersById,
+            vendorsById,
+            servicesById,
+            categoriesById,
+          ),
         ),
       ];
     });
