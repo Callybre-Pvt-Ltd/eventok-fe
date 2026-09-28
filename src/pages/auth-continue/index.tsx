@@ -28,7 +28,10 @@ export default function AuthContinuePage() {
 
   useEffect(() => {
     if (!isSignedIn || session || isLoading) return;
-    const timer = window.setTimeout(() => setTimedOut(true), 20_000);
+    // Must stay comfortably above refreshSession's 401-retry budget
+    // (~16.5s) so a slow-but-successful Google OAuth sync never flashes
+    // the "could not open your portal" error before it finishes.
+    const timer = window.setTimeout(() => setTimedOut(true), 25_000);
     return () => window.clearTimeout(timer);
   }, [isLoading, isSignedIn, session]);
 

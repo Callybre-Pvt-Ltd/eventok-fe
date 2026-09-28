@@ -114,10 +114,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         let result = await load(false);
 
-        // Retry up to 3 times for 401s — Google OAuth azp races can take
-        // longer than a single 250 ms window to resolve.
+        // Retry for 401s — Google OAuth session tokens can take a few
+        // seconds longer than a single request to become verifiable
+        // server-side. Never surface a 401 to a signed-in Clerk user;
+        // keep retrying (well under the AuthContinuePage timeout) instead.
         if (result.kind === 'unauthorized') {
-          const delays = [500, 1000, 2000];
+          const delays = [500, 1000, 1500, 2000, 2500, 3000, 3000, 3000];
           for (const delay of delays) {
             await new Promise(resolve => setTimeout(resolve, delay));
             result = await load(true);
