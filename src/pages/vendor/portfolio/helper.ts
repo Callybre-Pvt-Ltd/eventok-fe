@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { useAuth } from '@/hooks/auth/use-auth';
@@ -39,7 +39,7 @@ export function useVendorPortfolio() {
     enabled: Boolean(resolvedVendorId),
   });
 
-  const services = servicesQuery.data;
+  const services = useMemo(() => servicesQuery.data ?? [], [servicesQuery.data]);
   const [serviceId, setServiceId] = useState('');
 
   useEffect(() => {

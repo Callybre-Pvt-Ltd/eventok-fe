@@ -44,7 +44,7 @@ export function useVendorAvailability() {
     enabled: Boolean(resolvedVendorId),
   });
 
-  const services = servicesQuery.data;
+  const services = useMemo(() => servicesQuery.data ?? [], [servicesQuery.data]);
   const [serviceId, setServiceId] = useState('');
 
   useEffect(() => {
