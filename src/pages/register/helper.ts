@@ -59,8 +59,7 @@ export function useRegisterPage() {
   });
   const [verificationCode, setVerificationCode] = useState('');
 
-  // The intent decides which profile the silent post-verification provisioning
-  // creates, and it also covers Google sign-up started from this page.
+  // Google sign-up reads this selection before redirecting to Clerk.
   useEffect(() => {
     setAuthIntent(role === 'vendor' ? 'vendor' : 'customer');
   }, [role]);
@@ -91,6 +90,7 @@ export function useRegisterPage() {
       name: draft.name,
       email: draft.email,
       password: draft.password,
+      role: role === 'vendor' ? 'vendor' : 'customer',
     });
     setLoading(false);
     if (err) {
@@ -98,7 +98,7 @@ export function useRegisterPage() {
       return;
     }
     setStage('verify');
-  }, [register, draft, t]);
+  }, [register, draft, role, t]);
 
   const continueFromDetails = () => {
     const invalid = validateDraft(draft, t);

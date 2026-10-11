@@ -1,4 +1,3 @@
-import { ENV } from '@/config/env';
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
 import type { ServiceResponse, Session, User, UserRole } from '@/types';
 
@@ -19,9 +18,6 @@ const toFeRole = (role: BackendRole): UserRole => {
   if (role === 'ADMIN') return 'admin';
   return 'customer';
 };
-
-const toBackendRole = (role: UserRole): 'CLIENT' | 'VENDOR' =>
-  role === 'vendor' ? 'VENDOR' : 'CLIENT';
 
 const mapUser = (raw: BackendUser, extras?: Partial<User>): User => ({
   id: raw.id,
@@ -120,21 +116,18 @@ export const authService = {
   },
 
   /** Creates (or re-links) the EventOK profile; every detail is optional. */
-  async onboard(payload: {
-    role: UserRole;
-    fullName?: string;
-    phone?: string;
-    city?: string;
-  }): Promise<Session> {
-    if (payload.role === 'admin') {
-      throw new ApiError('Cannot self-provision an Admin', 'FORBIDDEN', 403);
-    }
+  async onboard(
+    payload: {
+      fullName?: string;
+      phone?: string;
+      city?: string;
+    } = {},
+  ): Promise<Session> {
     const raw = await apiRequest<BackendUser>('/auth/onboarding', {
       method: 'PUT',
       body: {
         full_name: payload.fullName || null,
         phone: payload.phone || null,
-        role: toBackendRole(payload.role),
       },
     });
 
@@ -160,39 +153,6 @@ export const authService = {
 
   clearLocalState(): void {
     localStorage.removeItem(SESSION_META_KEY);
-  },
-
-  /**
-   * Upsert the EventOK Supabase user record for the authenticated Clerk identity.
-   *
-   * Uses the raw Clerk JWT directly so it works even before an EventOK session
-   * exists (i.e. for brand-new users).  Called by ClerkSessionBridge on every
-   * sign-in as a background sync so the Supabase `users` table is always in sync.
-   */
-  async syncClerk(clerkToken: string, role?: UserRole): Promise<User> {
-    const base = ENV.apiBaseUrl.replace(/\/$/, '');
-    const roleParam =
-      role === 'vendor' ? 'VENDOR' : role === 'admin' ? 'ADMIN' : 'CLIENT';
-    const url = `${base}/auth/clerk/sync?role=${roleParam}`;
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${clerkToken}`,
-        'Content-Type': 'application/json',
-      },
-    });
-    if (!res.ok) {
-      const body = (await res.json().catch(() => ({}))) as {
-        error?: { message?: string; code?: string };
-      };
-      throw new ApiError(
-        body?.error?.message ?? 'Clerk sync failed',
-        body?.error?.code ?? 'SYNC_ERROR',
-        res.status,
-      );
-    }
-    const envelope = (await res.json()) as { data: BackendUser };
-    return mapUser(envelope.data, loadMeta());
   },
 
   async updateMe(payload: {

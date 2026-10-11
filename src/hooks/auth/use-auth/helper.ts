@@ -16,13 +16,13 @@ import { ROUTES } from '@/constants/routes';
 import { withNextPath } from '@/utils/auth/auth-return';
 import { peekAuthIntent } from '@/utils/auth/post-auth';
 import { authService } from '@/services';
-import { ClerkSessionBridge } from '@/components/auth/clerk-session-bridge';
-import type { Session, UserRole } from '@/types';
+import type { Session } from '@/types';
 
 export interface RegisterPayload {
   email: string;
   password: string;
   name: string;
+  role: 'customer' | 'vendor';
 }
 
 /** `needsCode`: Clerk wants an email code before it trusts this device. */
@@ -132,10 +132,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return null;
         }
         if (result.kind === 'onboarding') {
-          // Safety-net: /me now auto-syncs, but keep this as a fallback.
-          const provisioned = await authService.onboard({
-            role: peekAuthIntent() === 'vendor' ? 'vendor' : 'customer',
-          });
+          const provisioned = await authService.onboard();
           setSession(provisioned);
           return provisioned;
         }
@@ -256,6 +253,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           password: payload.password,
           firstName: firstName || undefined,
           lastName: rest.join(' ') || undefined,
+          unsafeMetadata: {
+            eventok_role: payload.role === 'vendor' ? 'VENDOR' : 'CLIENT',
+          },
         });
         await signUp.prepareEmailAddressVerification({
           strategy: 'email_code',
@@ -298,23 +298,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signInWithGoogle = useCallback(
     async (nextPath?: string | null) => {
-      if (!signInLoaded || !signIn) return 'Clerk is still loading';
+      if (!signUpLoaded || !signUp) return 'Clerk is still loading';
       try {
         // The destination rides along in the completion URL, so it survives the
         // full-page round trip out to Google and back.
-        await signIn.authenticateWithRedirect({
+        await signUp.authenticateWithRedirect({
           strategy: 'oauth_google',
           redirectUrl: absoluteUrl(withNextPath(ROUTES.SSO_CALLBACK, nextPath)),
           redirectUrlComplete: absoluteUrl(
             withNextPath(ROUTES.AUTH_CONTINUE, nextPath),
           ),
+          unsafeMetadata: {
+            eventok_role: peekAuthIntent() === 'vendor' ? 'VENDOR' : 'CLIENT',
+          },
         });
         return null;
       } catch (error) {
         return clerkError(error);
       }
     },
-    [signIn, signInLoaded],
+    [signUp, signUpLoaded],
   );
 
   const logout = useCallback(async () => {
@@ -355,22 +358,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     ],
   );
 
-  const handleBridgeSynced = useCallback(
-    (_role: UserRole) => {
-      void refreshSession();
-    },
-    [refreshSession],
-  );
-
-  return createElement(
-    AuthContext.Provider,
-    { value },
-    createElement(ClerkSessionBridge, {
-      sessionReady: session !== null,
-      onSynced: handleBridgeSynced,
-    }),
-    children,
-  );
+  return createElement(AuthContext.Provider, { value }, children);
 }
 
 export function useAuth() {
