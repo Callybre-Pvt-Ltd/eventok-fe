@@ -13,6 +13,24 @@ interface ApiVendor {
   is_verified: boolean;
   status: string;
   created_at: string;
+  owner_name?: string | null;
+  mobile_number?: string | null;
+  gstin?: string | null;
+  masked_aadhaar?: string | null;
+  masked_pan?: string | null;
+}
+
+export interface ApiVendorKyc {
+  id: string;
+  user_id: string;
+  business_name: string;
+  owner_name: string | null;
+  mobile_number: string | null;
+  aadhaar_number: string | null;
+  pan_number: string | null;
+  gstin: string | null;
+  status: string;
+  created_at: string;
 }
 
 interface ApiService {
@@ -22,11 +40,18 @@ interface ApiService {
   title: string;
   description: string | null;
   starting_price: string | number;
+  commission_amount?: string | number;
+  customer_price?: string | number;
   status: string;
   created_at: string;
   whats_included?: string[];
   good_to_know?: string[];
   cancellation_policy?: string[];
+}
+
+/** `/admin/services` rows carry the vendor behind each listing. */
+export interface AdminApiService extends ApiService {
+  vendor_name?: string | null;
 }
 
 const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
@@ -42,6 +67,7 @@ const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
 const mapStatus = (status: string): VendorPrivate['status'] => {
   if (status === 'APPROVED') return 'approved';
   if (status === 'REJECTED') return 'rejected';
+  if (status === 'UNDER_REVIEW') return 'under_review';
   return 'pending';
 };
 
@@ -63,6 +89,12 @@ const toPrivate = (v: ApiVendor): VendorPrivate => ({
   address: v.address ?? '',
   pricing: '',
   portfolio: [],
+  ownerName: v.owner_name ?? '',
+  mobileNumber: v.mobile_number ?? '',
+  gstin: v.gstin ?? '',
+  maskedAadhaar: v.masked_aadhaar ?? '',
+  maskedPan: v.masked_pan ?? '',
+  createdAt: v.created_at,
 });
 
 export const vendorService = {
@@ -109,7 +141,7 @@ export const vendorService = {
 
   async rejectVendor(
     id: string,
-    _reason: string,
+    reason: string,
   ): Promise<ServiceResponse<VendorPrivate>> {
     return wrap(async () => {
       const current = await apiRequest<ApiVendor>(`/admin/vendors/${id}`);
@@ -121,10 +153,14 @@ export const vendorService = {
       }
       const vendor = await apiRequest<ApiVendor>(`/admin/vendors/${id}`, {
         method: 'PATCH',
-        body: { status: 'REJECTED' },
+        body: { status: 'REJECTED', reason: reason || undefined },
       });
       return toPrivate(vendor);
     });
+  },
+
+  async getVendorKyc(id: string): Promise<ServiceResponse<ApiVendorKyc>> {
+    return wrap(() => apiRequest<ApiVendorKyc>(`/admin/vendors/${id}/kyc`));
   },
 
   async getVendorByUserId(
@@ -233,13 +269,33 @@ export const vendorService = {
 
   async listServiceImages(
     serviceId: string,
-  ): Promise<ServiceResponse<{ id: string; image_url: string }[]>> {
+  ): Promise<
+    ServiceResponse<{ id: string; image_url: string; display_order: number }[]>
+  > {
     return wrap(() =>
-      apiRequest<{ id: string; image_url: string }[]>(
+      apiRequest<{ id: string; image_url: string; display_order: number }[]>(
         `/services/${serviceId}/images`,
         { auth: true },
       ),
     );
+  },
+
+  async reorderServiceImages(
+    serviceId: string,
+    imageIds: string[],
+  ): Promise<
+    ServiceResponse<{ id: string; image_url: string; display_order: number }[]>
+  > {
+    return wrap(() =>
+      apiRequest<{ id: string; image_url: string; display_order: number }[]>(
+        `/services/${serviceId}/images/order`,
+        { method: 'PUT', body: { image_ids: imageIds } },
+      ),
+    );
+  },
+
+  async getService(serviceId: string): Promise<ServiceResponse<ApiService>> {
+    return wrap(() => apiRequest<ApiService>(`/services/${serviceId}`));
   },
 
   async deleteServiceImage(
@@ -263,6 +319,11 @@ export const vendorService = {
       address?: string;
       city?: string;
       state?: string;
+      owner_name?: string;
+      mobile_number?: string;
+      aadhaar_number?: string;
+      pan_number?: string;
+      gstin?: string;
     },
   ): Promise<ServiceResponse<VendorPrivate>> {
     return wrap(async () =>
@@ -275,36 +336,11 @@ export const vendorService = {
     );
   },
 
-  async getAvailability(serviceId: string): Promise<
-    ServiceResponse<
-      {
-        id: string;
-        day_of_week: number;
-        start_time: string;
-        end_time: string;
-        is_available: boolean;
-      }[]
-    >
-  > {
+  async listVerifications(
+    vendorId: string,
+  ): Promise<ServiceResponse<ApiVendorVerification[]>> {
     return wrap(() =>
-      apiRequest(`/services/${serviceId}/availability`, { auth: true }),
-    );
-  },
-
-  async setAvailability(
-    serviceId: string,
-    windows: {
-      day_of_week: number;
-      start_time: string;
-      end_time: string;
-      is_available: boolean;
-    }[],
-  ): Promise<ServiceResponse<unknown>> {
-    return wrap(() =>
-      apiRequest(`/services/${serviceId}/availability`, {
-        method: 'PUT',
-        body: { windows },
-      }),
+      apiRequest<ApiVendorVerification[]>(`/vendors/${vendorId}/verification`),
     );
   },
 
@@ -315,6 +351,9 @@ export const vendorService = {
       | 'BUSINESS_LICENSE'
       | 'ADDRESS_PROOF'
       | 'GST_CERTIFICATE'
+      | 'AADHAAR_FRONT'
+      | 'AADHAAR_BACK'
+      | 'VENDOR_PROFILE_IMAGE'
       | 'OTHER',
     file: File,
   ): Promise<ServiceResponse<{ id: string; status: string }>> {
@@ -355,6 +394,266 @@ export const vendorService = {
   getAll() {
     return [] as VendorPrivate[];
   },
+
+  async listPackages(
+    vendorId: string,
+    activeOnly = false,
+  ): Promise<ServiceResponse<ApiPackage[]>> {
+    return wrap(() =>
+      apiRequest<ApiPackage[]>(`/vendors/${vendorId}/packages`, {
+        query: { active_only: activeOnly },
+      }),
+    );
+  },
+
+  async createPackage(
+    vendorId: string,
+    payload: {
+      name: string;
+      description?: string;
+      price: number;
+      service_ids: string[];
+    },
+  ): Promise<ServiceResponse<ApiPackage>> {
+    return wrap(() =>
+      apiRequest<ApiPackage>(`/vendors/${vendorId}/packages`, {
+        method: 'POST',
+        body: payload,
+      }),
+    );
+  },
+
+  async updatePackage(
+    vendorId: string,
+    packageId: string,
+    payload: Partial<{
+      name: string;
+      description: string;
+      price: number;
+      service_ids: string[];
+      is_active: boolean;
+    }>,
+  ): Promise<ServiceResponse<ApiPackage>> {
+    return wrap(() =>
+      apiRequest<ApiPackage>(`/vendors/${vendorId}/packages/${packageId}`, {
+        method: 'PATCH',
+        body: payload,
+      }),
+    );
+  },
+
+  async listServiceAddons(
+    serviceId: string,
+  ): Promise<ServiceResponse<ApiServiceAddon[]>> {
+    return wrap(() =>
+      apiRequest<ApiServiceAddon[]>(`/services/${serviceId}/addons`, {
+        query: { active_only: false },
+      }),
+    );
+  },
+
+  async createServiceAddon(
+    serviceId: string,
+    payload: { name: string; description?: string; price: number },
+  ): Promise<ServiceResponse<ApiServiceAddon>> {
+    return wrap(() =>
+      apiRequest<ApiServiceAddon>(`/services/${serviceId}/addons`, {
+        method: 'POST',
+        body: payload,
+      }),
+    );
+  },
+
+  async updateServiceAddon(
+    serviceId: string,
+    addonId: string,
+    payload: Partial<{
+      name: string;
+      description: string;
+      price: number;
+      is_active: boolean;
+    }>,
+  ): Promise<ServiceResponse<ApiServiceAddon>> {
+    return wrap(() =>
+      apiRequest<ApiServiceAddon>(`/services/${serviceId}/addons/${addonId}`, {
+        method: 'PATCH',
+        body: payload,
+      }),
+    );
+  },
+
+  async deleteServiceAddon(
+    serviceId: string,
+    addonId: string,
+  ): Promise<ServiceResponse<null>> {
+    return wrap(async () => {
+      await apiRequest(`/services/${serviceId}/addons/${addonId}`, {
+        method: 'DELETE',
+      });
+      return null;
+    });
+  },
+
+  async listStates(): Promise<ServiceResponse<ApiState[]>> {
+    return wrap(() =>
+      apiRequest<ApiState[]>('/locations/states', { auth: false }),
+    );
+  },
+
+  async listCities(stateId: string): Promise<ServiceResponse<ApiCity[]>> {
+    return wrap(() =>
+      apiRequest<ApiCity[]>(`/locations/states/${stateId}/cities`, {
+        auth: false,
+      }),
+    );
+  },
+
+  async getVendorLocations(
+    vendorId: string,
+  ): Promise<ServiceResponse<ApiVendorLocation[]>> {
+    return wrap(() =>
+      apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`),
+    );
+  },
+
+  async replaceVendorLocations(
+    vendorId: string,
+    cityIds: string[],
+  ): Promise<ServiceResponse<ApiVendorLocation[]>> {
+    return wrap(() =>
+      apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`, {
+        method: 'PUT',
+        body: { city_ids: cityIds },
+      }),
+    );
+  },
+
+  /** Admin catalogue. `q` is matched server-side against service title/description AND the
+   *  vendor's business name, so one box searches services and vendors together. */
+  async listAdminServices(filters?: {
+    status?: string;
+    category_id?: string;
+    vendor_id?: string;
+    q?: string;
+    page?: number;
+    page_size?: number;
+  }): Promise<
+    ServiceResponse<{ items: AdminApiService[]; total: number; pages: number }>
+  > {
+    return wrap(async () => {
+      const page = await apiRequestPaginated<AdminApiService>(
+        '/admin/services',
+        {
+          query: {
+            page: filters?.page || 1,
+            page_size: filters?.page_size || 50,
+            status: filters?.status,
+            category_id: filters?.category_id,
+            vendor_id: filters?.vendor_id,
+            q: filters?.q,
+          },
+        },
+      );
+      return {
+        items: page.items,
+        total: page.total,
+        pages: page.pages,
+      };
+    });
+  },
+
+  async updateAdminServiceStatus(
+    serviceId: string,
+    status: string,
+    reason?: string,
+  ): Promise<ServiceResponse<ApiService>> {
+    return wrap(() =>
+      apiRequest<ApiService>(`/admin/services/${serviceId}/status`, {
+        method: 'PATCH',
+        body: { status, reason },
+      }),
+    );
+  },
+
+  async deleteAdminService(serviceId: string): Promise<ServiceResponse<null>> {
+    return wrap(() =>
+      apiRequest<null>(`/admin/services/${serviceId}`, {
+        method: 'DELETE',
+      }),
+    );
+  },
+
+  async listAdminLocations(): Promise<ServiceResponse<ApiStateCoverage[]>> {
+    return wrap(() => apiRequest<ApiStateCoverage[]>('/admin/locations'));
+  },
 };
+
+export interface ApiPackage {
+  id: string;
+  vendor_id: string;
+  name: string;
+  description: string | null;
+  price: string | number;
+  is_active: boolean;
+  service_ids: string[];
+  individual_total: string | number;
+  savings: string | number;
+  commission_amount: string | number;
+  customer_price: string | number;
+  created_at: string;
+}
+
+export interface ApiServiceAddon {
+  id: string;
+  service_id: string;
+  name: string;
+  description: string | null;
+  price: string | number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface ApiState {
+  id: string;
+  name: string;
+}
+
+export interface ApiCity {
+  id: string;
+  state_id: string;
+  name: string;
+}
+
+export interface ApiVendorLocation {
+  city_id: string;
+  city_name: string;
+  state_id: string;
+  state_name: string;
+}
+
+export interface ApiVendorVerification {
+  id: string;
+  vendor_id: string;
+  document_type: string;
+  file_url: string;
+  status: string;
+  verified_by: string | null;
+  verified_at: string | null;
+  created_at: string;
+}
+
+export interface ApiCityCoverage {
+  id: string;
+  state_id: string;
+  name: string;
+  vendor_count: number;
+}
+
+export interface ApiStateCoverage {
+  id: string;
+  name: string;
+  cities: ApiCityCoverage[];
+  total_vendors: number;
+}
 
 export type { ApiService as VendorApiService, ApiVendor };

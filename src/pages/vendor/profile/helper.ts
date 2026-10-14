@@ -28,6 +28,11 @@ export function useVendorProfile() {
   const [address, setAddress] = useState('');
   const [description, setDescription] = useState('');
   const [experience, setExperience] = useState('0');
+  const [ownerName, setOwnerName] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [aadhaarNumber, setAadhaarNumber] = useState('');
+  const [panNumber, setPanNumber] = useState('');
+  const [gstin, setGstin] = useState('');
 
   useEffect(() => {
     if (user?.name) setName(user.name);
@@ -41,6 +46,9 @@ export function useVendorProfile() {
     setAddress(vendor.address || '');
     setDescription(vendor.description || '');
     setExperience(String(vendor.experience ?? 0));
+    setOwnerName(vendor.ownerName || '');
+    setMobileNumber(vendor.mobileNumber || '');
+    setGstin(vendor.gstin || '');
   }, [vendor, user?.city]);
 
   const saveMutation = useMutation({
@@ -58,6 +66,11 @@ export function useVendorProfile() {
         address: address.trim() || undefined,
         description: description.trim() || undefined,
         experience_years: Number(experience) || 0,
+        owner_name: ownerName.trim() || undefined,
+        mobile_number: mobileNumber.trim() || undefined,
+        aadhaar_number: aadhaarNumber.trim() || undefined,
+        pan_number: panNumber.trim() || undefined,
+        gstin: gstin.trim() || undefined,
       });
       if (vendorRes.error || !vendorRes.data) {
         throw new Error(vendorRes.error ?? 'Failed to save vendor profile');
@@ -67,6 +80,8 @@ export function useVendorProfile() {
     onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['vendor', 'me'] });
       await refreshSession();
+      setAadhaarNumber('');
+      setPanNumber('');
       message.success('Profile saved to server');
     },
     onError: (err: Error) => message.error(err.message),
@@ -77,7 +92,12 @@ export function useVendorProfile() {
       documentType,
       file,
     }: {
-      documentType: 'ID_PROOF' | 'GST_CERTIFICATE';
+      documentType:
+        | 'ID_PROOF'
+        | 'GST_CERTIFICATE'
+        | 'AADHAAR_FRONT'
+        | 'AADHAAR_BACK'
+        | 'VENDOR_PROFILE_IMAGE';
       file: File;
     }) => {
       if (!vendor?.id) throw new Error('Vendor profile not loaded');
@@ -112,6 +132,16 @@ export function useVendorProfile() {
       setDescription,
       experience,
       setExperience,
+      ownerName,
+      setOwnerName,
+      mobileNumber,
+      setMobileNumber,
+      aadhaarNumber,
+      setAadhaarNumber,
+      panNumber,
+      setPanNumber,
+      gstin,
+      setGstin,
     },
     saveMutation,
     uploadDoc,

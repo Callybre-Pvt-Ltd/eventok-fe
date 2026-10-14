@@ -5,20 +5,20 @@ import { fontSizes, media, radii, shadows } from '@/theme';
 
 export const Layout = styled.div`
   display: grid;
-  gap: 2rem;
+  gap: 1.5rem;
   grid-template-columns: 1fr;
-  align-items: center;
+  align-items: start;
 
   ${media.lg} {
     grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 `;
 
 export const Left = styled.div``;
 
 export const ChooseLabel = styled.p`
-  margin: 1.25rem 0 0.75rem;
+  margin: 1rem 0 0.5rem;
   text-align: right;
   font-size: ${fontSizes.xs};
   font-weight: 600;
@@ -69,7 +69,7 @@ export const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 `;
 
 export const Collage = styled.div`
@@ -80,7 +80,7 @@ export const Collage = styled.div`
 
 export const CollageImage = styled.img<{ $tall?: boolean }>`
   width: 100%;
-  height: ${({ $tall }) => ($tall ? '18rem' : '12rem')};
+  height: ${({ $tall }) => ($tall ? '13rem' : '9rem')};
   object-fit: cover;
   border-radius: ${radii.lg};
 `;

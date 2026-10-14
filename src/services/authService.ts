@@ -1,3 +1,4 @@
+import { peekAuthIntent } from '@/utils/auth/post-auth';
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
 import type { ServiceResponse, Session, User, UserRole } from '@/types';
 
@@ -83,7 +84,11 @@ const ensureVendorProfile = async (input: {
 };
 
 const fetchMe = async (): Promise<User> => {
-  const raw = await apiRequest<BackendUser>('/auth/me');
+  // `/auth/me` creates the profile on first access, so the sign-up intent has to ride
+  // along — otherwise a brand-new vendor would be provisioned as a CLIENT.
+  const raw = await apiRequest<BackendUser>('/auth/me', {
+    query: { role: peekAuthIntent() === 'vendor' ? 'VENDOR' : 'CLIENT' },
+  });
   const meta = loadMeta();
   let vendorStatus = meta.vendorStatus;
   let vendorId = meta.vendorId;

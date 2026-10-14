@@ -26,4 +26,28 @@ export const customer = {
   noMessages: 'No messages yet. Chat with admin for assistance.',
   noPayments: 'No payments yet.',
   noNotifications: 'All caught up!',
+  bookingStatusRequested: 'Requested',
+  bookingStatusRequestedNote:
+    'We have your request and are lining up the vendor.',
+  bookingStatusAwaitingVendor: 'Awaiting vendor',
+  bookingStatusAwaitingVendorNote:
+    'The vendor is reviewing your date. You will see their details here as soon as they accept.',
+  bookingStatusAwaitingPayment: 'Payment due',
+  bookingStatusAwaitingPaymentNote: 'Pay the booking amount to lock your date.',
+  bookingStatusConfirmed: 'Confirmed',
+  bookingStatusConfirmedNote:
+    'Your booking is confirmed. Reach the vendor directly using the details below.',
+  bookingStatusInProgress: 'In progress',
+  bookingStatusInProgressNote: 'The vendor is setting up for your event.',
+  bookingStatusCompleted: 'Completed',
+  bookingStatusCompletedNote: 'This event is done. Thanks for booking with us.',
+  bookingStatusRejected: 'Declined',
+  bookingStatusRejectedNote:
+    'The vendor could not take this date. Any advance you paid is refunded.',
+  bookingStatusCancelled: 'Cancelled',
+  bookingStatusCancelledNote: 'This booking was cancelled.',
+  bookingVendor: 'Your vendor',
+  bookingVendorLoading: 'Loading vendor details…',
+  bookingVendorNoPhone: 'The vendor has not added a phone number yet.',
+  bookingPayNow: 'Pay now',
 };

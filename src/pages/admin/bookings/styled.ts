@@ -95,3 +95,44 @@ export const NotesBox = styled.div<{ $palette: ThemePalette }>`
   white-space: pre-wrap;
   word-break: break-word;
 `;
+
+export const FilterBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+`;
+
+export const FilterSearch = styled.div`
+  flex: 1 1 18rem;
+  max-width: 24rem;
+`;
+
+export const VendorCell = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+`;
+
+export const MutedLine = styled.span`
+  font-size: 0.75rem;
+  color: ${brandColors.gray600};
+  overflow-wrap: anywhere;
+`;
+
+export const StrongLine = styled.strong`
+  overflow-wrap: anywhere;
+`;
+
+export const PhoneLink = styled.a`
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: ${brandColors.pink500};
+  text-decoration: none;
+  white-space: nowrap;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`;

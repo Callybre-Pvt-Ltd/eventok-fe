@@ -51,6 +51,11 @@ export interface CatalogPackage {
   startingPrice: number;
   image: string;
   serviceSlugs: string[];
+  /** Business name of the vendor who curated the bundle. */
+  vendorName: string;
+  /** Sum of the component services' own prices, for the strike-through comparison. */
+  individualTotal: number;
+  savings: number;
 }
 
 export interface HeroSlide {

@@ -61,6 +61,29 @@ function ThemedApp() {
             defaultBg: palette.primaryLight,
             defaultColor: palette.primaryDark,
           },
+          Modal: {
+            borderRadiusLG: 20,
+            headerBg: 'transparent',
+            titleFontSize: 20,
+            titleLineHeight: 1.3,
+            paddingContentHorizontalLG: 28,
+            paddingMD: 20,
+          },
+          Input: {
+            borderRadius: 10,
+            paddingBlock: 9,
+            controlHeight: 42,
+            activeBorderColor: palette.primary,
+            hoverBorderColor: palette.primary,
+          },
+          InputNumber: {
+            borderRadius: 10,
+            controlHeight: 42,
+          },
+          Select: {
+            borderRadius: 10,
+            controlHeight: 42,
+          },
         },
       }}
     >

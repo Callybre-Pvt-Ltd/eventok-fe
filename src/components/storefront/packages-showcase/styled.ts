@@ -17,7 +17,7 @@ export const Grid = styled.div`
   }
 `;
 
-export const Card = styled.article`
+export const Card = styled(Link)`
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -25,16 +25,39 @@ export const Card = styled.article`
   border: 1px solid ${brandColors.tan};
   background: ${brandColors.white};
   box-shadow: ${shadows.sm};
+  text-decoration: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
     box-shadow: ${shadows.md};
+    border-color: ${brandColors.pink500};
+    transform: translateY(-2px);
   }
 `;
 
 export const Image = styled.img`
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
+  background: ${brandColors.gray100};
+`;
+
+export const ImageFallback = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: linear-gradient(
+    135deg,
+    ${brandColors.pink100},
+    ${brandColors.accent100}
+  );
+  color: ${brandColors.pink600};
+  font-family: ${fontFamily.display};
+  font-size: ${fontSizes.xxl};
+  font-weight: 800;
+  letter-spacing: 0.02em;
 `;
 
 export const Body = styled.div`
@@ -78,7 +101,7 @@ export const Price = styled.span`
   color: ${brandColors.pink500};
 `;
 
-export const GoButton = styled(Link)`
+export const GoButton = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -97,5 +120,23 @@ export const GoButton = styled(Link)`
 export const ViewAllRow = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 1.75rem;
+  margin-top: 1.25rem;
+`;
+
+export const VendorLine = styled.span`
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: ${brandColors.accent500};
+`;
+
+export const SavingsTag = styled.span`
+  justify-self: start;
+  padding: 0.15rem 0.5rem;
+  border-radius: ${radii.full};
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  color: ${brandColors.success500};
+  background: ${brandColors.success50};
 `;

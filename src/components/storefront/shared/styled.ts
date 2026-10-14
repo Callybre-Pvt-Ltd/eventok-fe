@@ -4,7 +4,7 @@ import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
 
 export const Section = styled.section<{ $tint?: boolean; $dark?: boolean }>`
   width: 100%;
-  padding: 2.5rem 1rem;
+  padding: 1.75rem 1rem;
   background: ${({ $tint, $dark }) =>
     $dark
       ? brandColors.ink900
@@ -13,11 +13,11 @@ export const Section = styled.section<{ $tint?: boolean; $dark?: boolean }>`
       : brandColors.white};
 
   ${media.md} {
-    padding: 3rem 1.5rem;
+    padding: 2rem 1.5rem;
   }
 
   ${media.lg} {
-    padding: 4rem 2.5rem;
+    padding: 2.5rem 2.5rem;
   }
 `;
 
@@ -32,7 +32,7 @@ export const SectionHead = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 `;
 
 export const Eyebrow = styled.span<{ $onDark?: boolean }>`
@@ -61,13 +61,13 @@ export const SectionTitle = styled.h2<{ $onDark?: boolean }>`
   font-size: clamp(1.625rem, 3.4vw, 2.25rem);
   font-weight: 800;
   line-height: 1.15;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   color: ${({ $onDark }) =>
     $onDark ? brandColors.white : brandColors.chocolate};
 `;
 
 export const SectionSubtitle = styled.p<{ $onDark?: boolean }>`
-  margin-top: 0.5rem;
+  margin-top: 0.35rem;
   max-width: 44rem;
   font-size: ${fontSizes.md};
   font-weight: 500;

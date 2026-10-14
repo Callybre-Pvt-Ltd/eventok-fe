@@ -6,6 +6,10 @@ export interface Category {
   slug: string;
   icon: string;
   description: string;
+  /** Admin console only — deactivated categories are hidden from the public catalogue. */
+  isActive?: boolean;
+  /** Published services currently listed in this category. */
+  serviceCount?: number;
 }
 
 export interface PortfolioMedia {
@@ -34,6 +38,12 @@ export interface VendorPrivate {
   pricing: string;
   portfolio: PortfolioMedia[];
   socialMedia?: string;
+  ownerName?: string;
+  mobileNumber?: string;
+  gstin?: string;
+  maskedAadhaar?: string;
+  maskedPan?: string;
+  createdAt?: string;
 }
 
 export interface PublicVendor {

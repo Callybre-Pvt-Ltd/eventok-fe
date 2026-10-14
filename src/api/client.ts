@@ -125,6 +125,15 @@ const execute = async (
   }
 };
 
+/** Normalize a transport failure so callers only ever have to handle `ApiError`. */
+const toTransportError = (error: unknown): ApiError => {
+  const aborted = error instanceof Error && error.name === 'AbortError';
+  return new ApiError(
+    aborted ? 'Request timed out' : 'Network unavailable',
+    aborted ? 'TIMEOUT' : 'NETWORK_ERROR',
+  );
+};
+
 export const apiRequest = async <T>(
   path: string,
   options: RequestOptions = {},
@@ -133,11 +142,7 @@ export const apiRequest = async <T>(
   try {
     response = await execute(path, options);
   } catch (error) {
-    const aborted = error instanceof Error && error.name === 'AbortError';
-    throw new ApiError(
-      aborted ? 'Request timed out' : 'Network unavailable',
-      aborted ? 'TIMEOUT' : 'NETWORK_ERROR',
-    );
+    throw toTransportError(error);
   }
   const payload = await parseBody(response);
   if (!response.ok) throw toApiError(payload, response.status);
@@ -150,7 +155,12 @@ export const apiRequestPaginated = async <T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<PaginatedEnvelope<T>> => {
-  const response = await execute(path, options);
+  let response: Response;
+  try {
+    response = await execute(path, options);
+  } catch (error) {
+    throw toTransportError(error);
+  }
   const payload = await parseBody(response);
   if (!response.ok) throw toApiError(payload, response.status);
   if (payload && typeof payload === 'object') {

@@ -239,6 +239,9 @@ export default function CheckoutPage() {
             {checkout.error && (
               <ErrorText>{t('storefront.checkoutRequired')}</ErrorText>
             )}
+            {checkout.failureMessage && (
+              <ErrorText>{checkout.failureMessage}</ErrorText>
+            )}
             <PrivacyNote>{t('storefront.checkoutPrivacyNote')}</PrivacyNote>
           </Summary>
         </Layout>
@@ -250,6 +253,7 @@ export default function CheckoutPage() {
           cancelText={t('common.back')}
           onOk={checkout.confirmOrder}
           onCancel={checkout.cancelConfirm}
+          confirmLoading={checkout.placing}
           centered
         >
           <ConfirmList>

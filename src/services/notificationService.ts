@@ -7,6 +7,7 @@ interface ApiNotification {
   title: string;
   body: string;
   is_read: boolean;
+  data: Record<string, unknown> | null;
   created_at: string;
 }
 
@@ -28,6 +29,7 @@ const mapNotification = (n: ApiNotification, userId: string): Notification => ({
   type: n.type,
   read: n.is_read,
   createdAt: n.created_at,
+  data: n.data,
 });
 
 export const notificationService = {
@@ -35,7 +37,7 @@ export const notificationService = {
     return wrap(async () => {
       const page = await apiRequestPaginated<ApiNotification>(
         '/notifications',
-        { query: { page: 1, page_size: 100 } },
+        { query: { page: 1, page_size: 50 } },
       );
       return page.items.map(n => mapNotification(n, userId));
     });

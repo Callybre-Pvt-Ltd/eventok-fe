@@ -72,6 +72,16 @@ const toCatalog = (
   };
 };
 
+/** First available cover image across a package's component services ('' when none). */
+const firstServiceImage = async (serviceIds: string[]): Promise<string> => {
+  for (const serviceId of serviceIds) {
+    const res = await marketplaceService.getService(serviceId);
+    const image = res.data?.images?.[0];
+    if (image) return image;
+  }
+  return '';
+};
+
 export const catalogService = {
   async list(
     filters: CatalogFilters = {},
@@ -238,8 +248,37 @@ export const catalogService = {
     };
   },
 
+  /**
+   * Vendor-created packages, as the public storefront shows them.
+   *
+   * A package has no image of its own, so the cover is borrowed from the first component
+   * service that has one. When none of them has a photo the cover is left empty and the card
+   * draws its own placeholder, rather than dropping in an unrelated stock photo.
+   */
   async getPackages(): Promise<ServiceResponse<CatalogPackage[]>> {
-    return { data: [], error: null };
+    return wrap(async () => {
+      const res = await marketplaceService.listPackages({ page_size: 24 });
+      if (res.error || !res.data) {
+        throw new Error(res.error ?? 'Failed to load packages');
+      }
+      return Promise.all(
+        res.data.items.map(async pkg => {
+          const image = await firstServiceImage(pkg.service_ids);
+          return {
+            id: pkg.id,
+            slug: pkg.id,
+            name: pkg.name,
+            description: pkg.description ?? '',
+            startingPrice: Number(pkg.customer_price) || Number(pkg.price) || 0,
+            image,
+            serviceSlugs: pkg.service_ids,
+            vendorName: pkg.vendor_name ?? '',
+            individualTotal: Number(pkg.individual_total) || 0,
+            savings: Number(pkg.savings) || 0,
+          };
+        }),
+      );
+    });
   },
 
   async getVenues(): Promise<ServiceResponse<VenueListing[]>> {

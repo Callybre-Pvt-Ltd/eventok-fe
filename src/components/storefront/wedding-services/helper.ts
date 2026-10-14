@@ -26,9 +26,20 @@ export function useWeddingServices() {
     staleTime: 5 * 60_000,
   });
 
-  const tiles = WEDDING_SLUGS.map(slug =>
-    (data ?? []).find(category => category.slug === slug),
+  // The curated slug list is a preference, not a requirement: a catalogue that names its
+  // categories differently still fills the grid from its own wedding categories, instead of
+  // leaving an empty block on the page.
+  const categories = data ?? [];
+  const preferred = WEDDING_SLUGS.map(slug =>
+    categories.find(category => category.slug === slug),
   ).filter((item): item is NonNullable<typeof item> => Boolean(item));
+
+  const chosen = new Set(preferred.map(category => category.slug));
+  const fallback = categories.filter(
+    category => category.eventType === 'wedding' && !chosen.has(category.slug),
+  );
+
+  const tiles = [...preferred, ...fallback].slice(0, WEDDING_SLUGS.length);
 
   return { tiles, collage: COLLAGE };
 }

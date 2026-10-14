@@ -10,6 +10,7 @@ import ShopPage from '@/pages/shop';
 import ProductPage from '@/pages/product';
 import PackagesPage from '@/pages/packages';
 import PackageBuilderPage from '@/pages/package-builder';
+import PackageDetailPage from '@/pages/package-detail';
 import CartPage from '@/pages/cart';
 import CheckoutPage from '@/pages/checkout';
 import WishlistPage from '@/pages/wishlist';
@@ -29,9 +30,9 @@ import CustomerNotificationsPage from '@/pages/customer/notifications';
 import CustomerProfilePage from '@/pages/customer/profile';
 
 import VendorDashboardPage from '@/pages/vendor/dashboard';
-import VendorPortfolioPage from '@/pages/vendor/portfolio';
 import VendorServicesPage from '@/pages/vendor/services';
-import VendorAvailabilityPage from '@/pages/vendor/availability';
+import ServiceWizardPage from '@/pages/vendor/services/wizard';
+import VendorPackagesPage from '@/pages/vendor/packages';
 import VendorBookingsPage from '@/pages/vendor/bookings';
 import VendorEarningsPage from '@/pages/vendor/earnings';
 import VendorProfilePage from '@/pages/vendor/profile';
@@ -44,9 +45,11 @@ import AdminVendorsPage from '@/pages/admin/vendors';
 import AdminCategoriesPage from '@/pages/admin/categories';
 import AdminBookingsPage from '@/pages/admin/bookings';
 import AdminPaymentsPage from '@/pages/admin/payments';
+import AdminRefundsPage from '@/pages/admin/refunds';
+import AdminServicesPage from '@/pages/admin/services';
+import AdminLocationsPage from '@/pages/admin/locations';
 import AdminReportsPage from '@/pages/admin/reports';
 import AdminAnalyticsPage from '@/pages/admin/analytics';
-import AdminNotificationsPage from '@/pages/admin/notifications';
 import AdminSettingsPage from '@/pages/admin/settings';
 
 export function AppRouter() {
@@ -61,6 +64,7 @@ export function AppRouter() {
         <Route path={ROUTES.PRODUCT} element={<ProductPage />} />
         <Route path={ROUTES.PACKAGES} element={<PackagesPage />} />
         <Route path={ROUTES.PACKAGE_BUILDER} element={<PackageBuilderPage />} />
+        <Route path={ROUTES.PACKAGE_DETAIL} element={<PackageDetailPage />} />
         <Route path={ROUTES.CART} element={<CartPage />} />
         <Route path={ROUTES.CHECKOUT} element={<CheckoutPage />} />
         <Route path={ROUTES.WISHLIST} element={<WishlistPage />} />
@@ -117,11 +121,13 @@ export function AppRouter() {
         <Route path={ROUTES.SSO_CALLBACK} element={<SsoCallbackPage />} />
         <Route path={ROUTES.VENDOR_LOGIN} element={<VendorLoginPage />} />
 
-        {/* Signed-in shopper pages — part of the website, not a portal. */}
+        {/* Signed-in shopper pages — part of the website, not a portal. Open to every
+            signed-in role, because anyone may buy on the marketplace and therefore needs
+            somewhere to see their own bookings, payments and chats. */}
         <Route
           path={ROUTES.CUSTOMER}
           element={
-            <ProtectedRoute roles={['customer']}>
+            <ProtectedRoute>
               <StoreOutlet />
             </ProtectedRoute>
           }
@@ -163,9 +169,13 @@ export function AppRouter() {
             element={<Navigate to={ROUTES.VENDOR_DASHBOARD} replace />}
           />
           <Route path="dashboard" element={<VendorDashboardPage />} />
-          <Route path="portfolio" element={<VendorPortfolioPage />} />
           <Route path="services" element={<VendorServicesPage />} />
-          <Route path="availability" element={<VendorAvailabilityPage />} />
+          <Route path="services/new" element={<ServiceWizardPage />} />
+          <Route
+            path="services/:serviceId/edit"
+            element={<ServiceWizardPage />}
+          />
+          <Route path="packages" element={<VendorPackagesPage />} />
           <Route path="bookings" element={<VendorBookingsPage />} />
           <Route path="earnings" element={<VendorEarningsPage />} />
           <Route path="profile" element={<VendorProfilePage />} />
@@ -191,9 +201,11 @@ export function AppRouter() {
           <Route path="categories" element={<AdminCategoriesPage />} />
           <Route path="bookings" element={<AdminBookingsPage />} />
           <Route path="payments" element={<AdminPaymentsPage />} />
+          <Route path="refunds" element={<AdminRefundsPage />} />
+          <Route path="services" element={<AdminServicesPage />} />
+          <Route path="locations" element={<AdminLocationsPage />} />
           <Route path="reports" element={<AdminReportsPage />} />
           <Route path="analytics" element={<AdminAnalyticsPage />} />
-          <Route path="notifications" element={<AdminNotificationsPage />} />
           <Route path="settings" element={<AdminSettingsPage />} />
         </Route>
 

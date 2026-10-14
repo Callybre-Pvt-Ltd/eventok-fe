@@ -44,15 +44,21 @@ export function WeddingServices() {
           <Left>
             <Eyebrow>{t('storefront.weddingEyebrow')}</Eyebrow>
             <SectionTitle>{t('storefront.weddingTitle')}</SectionTitle>
-            <ChooseLabel>{t('storefront.weddingChooseService')}</ChooseLabel>
-            <TileGrid>
-              {tiles.map((tile, index) => (
-                <Tile key={tile.id} to={`/category/${tile.slug}`}>
-                  <Thumb src={THUMBS[index % THUMBS.length]} alt="" />
-                  <TileLabel>{tile.name}</TileLabel>
-                </Tile>
-              ))}
-            </TileGrid>
+            {tiles.length > 0 && (
+              <>
+                <ChooseLabel>
+                  {t('storefront.weddingChooseService')}
+                </ChooseLabel>
+                <TileGrid>
+                  {tiles.map((tile, index) => (
+                    <Tile key={tile.id} to={`/category/${tile.slug}`}>
+                      <Thumb src={THUMBS[index % THUMBS.length]} alt="" />
+                      <TileLabel>{tile.name}</TileLabel>
+                    </Tile>
+                  ))}
+                </TileGrid>
+              </>
+            )}
             <Actions>
               <PillLink as="a" href={`${ROUTES.SHOP}?event=wedding`}>
                 {t('storefront.weddingExplore')}

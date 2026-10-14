@@ -18,6 +18,8 @@ export interface ApiService {
   title: string;
   description: string | null;
   starting_price: string | number;
+  commission_amount?: string | number;
+  customer_price?: string | number;
   status: string;
   created_at: string;
   vendor_id?: string;
@@ -32,6 +34,39 @@ export interface ApiServiceImage {
   display_order: number;
   image_url: string;
   created_at: string;
+}
+
+export interface ApiServiceAddon {
+  id: string;
+  service_id: string;
+  name: string;
+  description: string | null;
+  price: string | number;
+  is_active: boolean;
+  created_at: string;
+}
+
+export interface ApiPublicPackage {
+  id: string;
+  vendor_id: string;
+  name: string;
+  description: string | null;
+  price: string | number;
+  is_active: boolean;
+  service_ids: string[];
+  individual_total: string | number;
+  savings: string | number;
+  commission_amount: string | number;
+  customer_price: string | number;
+  vendor_name: string | null;
+  created_at: string;
+}
+
+export interface PackageListFilters {
+  q?: string;
+  vendor_id?: string;
+  page?: number;
+  page_size?: number;
 }
 
 export interface ServiceListFilters {
@@ -116,6 +151,9 @@ export const toDiscoveryCard = (
   };
 };
 
+/** Categories are a short list but can exceed the storefront page size; fetch them all. */
+const CATEGORY_PAGE_SIZE = 100;
+
 async function fetchCategories(): Promise<ApiCategory[]> {
   if (categoriesCache && Date.now() - categoriesCache.at < CATEGORIES_TTL_MS) {
     return categoriesCache.items;
@@ -125,7 +163,7 @@ async function fetchCategories(): Promise<ApiCategory[]> {
   categoriesInflight = (async () => {
     const page = await apiRequestPaginated<ApiCategory>('/categories', {
       auth: false,
-      query: { page: 1, page_size: DEFAULT_PAGE_SIZE },
+      query: { page: 1, page_size: CATEGORY_PAGE_SIZE },
     });
     const items = page.items.filter(c => c.is_active !== false);
     categoriesCache = { at: Date.now(), items };
@@ -185,6 +223,45 @@ export const marketplaceService = {
 
       return { items, total: page.total, pages: page.pages };
     });
+  },
+
+  /** Active packages of approved vendors — what the public storefront shows. */
+  async listPackages(
+    filters: PackageListFilters = {},
+  ): Promise<
+    ServiceResponse<{ items: ApiPublicPackage[]; total: number; pages: number }>
+  > {
+    return wrap(async () => {
+      const page = await apiRequestPaginated<ApiPublicPackage>('/packages', {
+        auth: false,
+        query: {
+          q: filters.q,
+          vendor_id: filters.vendor_id,
+          page: filters.page ?? 1,
+          page_size: filters.page_size ?? DEFAULT_PAGE_SIZE,
+        },
+      });
+      return { items: page.items, total: page.total, pages: page.pages };
+    });
+  },
+
+  /** Add-ons a shopper can request on a service. Unauthenticated and active-only — the
+   *  vendor-portal variant in `vendorService` also returns deactivated rows. */
+  async listServiceAddons(
+    serviceId: string,
+  ): Promise<ServiceResponse<ApiServiceAddon[]>> {
+    return wrap(() =>
+      apiRequest<ApiServiceAddon[]>(`/services/${serviceId}/addons`, {
+        auth: false,
+        query: { active_only: true },
+      }),
+    );
+  },
+
+  async getPackage(id: string): Promise<ServiceResponse<ApiPublicPackage>> {
+    return wrap(() =>
+      apiRequest<ApiPublicPackage>(`/packages/${id}`, { auth: false }),
+    );
   },
 
   async getService(

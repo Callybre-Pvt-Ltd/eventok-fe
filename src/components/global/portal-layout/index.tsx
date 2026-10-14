@@ -2,6 +2,7 @@ import { Menu, X } from 'lucide-react';
 import { Outlet } from 'react-router-dom';
 import type { UserRole } from '@/types';
 import { AccountAvatar } from '@/components/auth/account-avatar';
+import { NotificationBell } from '@/components/global/notification-bell';
 import { PortalSidebar } from '@/components/global/portal-sidebar';
 import { getRoleLabel } from '@/utils/auth/roles';
 import { usePortalLayout } from './helper';
@@ -65,6 +66,7 @@ export function PortalLayout({ role }: PortalLayoutProps) {
           </TopBarCopy>
           <TopBarTrailing>
             <RolePill>{getRoleLabel(role)}</RolePill>
+            <NotificationBell role={role} />
             <AccountAvatar />
           </TopBarTrailing>
         </TopBar>

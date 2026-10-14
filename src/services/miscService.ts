@@ -9,6 +9,7 @@ interface ApiCategory {
   icon: string | null;
   is_active: boolean;
   created_at: string;
+  service_count?: number;
 }
 
 interface DashboardStats {
@@ -38,7 +39,12 @@ const mapCategory = (c: ApiCategory): Category => ({
   slug: c.slug,
   icon: c.icon ?? 'sparkles',
   description: '',
+  isActive: c.is_active !== false,
+  serviceCount: c.service_count ?? 0,
 });
+
+/** The catalogue is small but can exceed the API's default page; ask for the whole thing. */
+const CATEGORY_PAGE_SIZE = 100;
 
 /** Prefer static decoration order; attach live IDs when the API has them. */
 const mergeWithStatic = (apiItems: ApiCategory[]): Category[] => {
@@ -61,6 +67,8 @@ const mergeWithStatic = (apiItems: ApiCategory[]): Category[] => {
       slug: staticCat.slug,
       icon: staticCat.icon,
       description: staticCat.blurb,
+      isActive: true,
+      serviceCount: 0,
     };
   });
 
@@ -79,9 +87,26 @@ export const categoryService = {
     return wrap(async () => {
       const page = await apiRequestPaginated<ApiCategory>('/categories', {
         auth: false,
-        query: { page: 1, page_size: 20 },
+        query: { page: 1, page_size: CATEGORY_PAGE_SIZE },
       });
       return mergeWithStatic(page.items ?? []);
+    });
+  },
+
+  /**
+   * Admin view: every category the API knows about, deactivated ones included, with no
+   * static merging — the admin manages the real rows, not the hardcoded presets.
+   */
+  async listForAdmin(): Promise<ServiceResponse<Category[]>> {
+    return wrap(async () => {
+      const page = await apiRequestPaginated<ApiCategory>('/categories', {
+        query: {
+          page: 1,
+          page_size: CATEGORY_PAGE_SIZE,
+          include_inactive: true,
+        },
+      });
+      return (page.items ?? []).map(mapCategory);
     });
   },
 
@@ -114,15 +139,38 @@ export const categoryService = {
     });
   },
 
-  async create(
-    payload: Omit<Category, 'id'>,
-  ): Promise<ServiceResponse<Category>> {
+  /** Slug is derived server-side from the name, so it is never sent. */
+  async create(payload: {
+    name: string;
+    icon?: string | null;
+  }): Promise<ServiceResponse<Category>> {
     return wrap(async () => {
       const created = await apiRequest<ApiCategory>('/admin/categories', {
         method: 'POST',
-        body: { name: payload.name, icon: payload.icon ?? null },
+        body: { name: payload.name, icon: payload.icon || null },
       });
       return mapCategory(created);
+    });
+  },
+
+  async update(
+    id: string,
+    payload: { name?: string; icon?: string | null; isActive?: boolean },
+  ): Promise<ServiceResponse<Category>> {
+    return wrap(async () => {
+      const updated = await apiRequest<ApiCategory>(`/admin/categories/${id}`, {
+        method: 'PATCH',
+        body: {
+          ...(payload.name !== undefined ? { name: payload.name } : null),
+          ...(payload.icon !== undefined
+            ? { icon: payload.icon || null }
+            : null),
+          ...(payload.isActive !== undefined
+            ? { is_active: payload.isActive }
+            : null),
+        },
+      });
+      return mapCategory(updated);
     });
   },
 

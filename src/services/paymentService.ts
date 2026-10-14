@@ -184,12 +184,58 @@ export const paymentService = {
 
   async refund(paymentId: string): Promise<ServiceResponse<Payment>> {
     return wrap(async () => {
+      const current = await apiRequest<ApiPayment>(`/payments/${paymentId}`);
       await apiRequest(`/payments/${paymentId}/refunds`, {
         method: 'POST',
-        body: { amount: null, reason: 'Admin refund' },
+        body: { amount: current.amount, reason: 'Admin refund' },
       });
       const payment = await apiRequest<ApiPayment>(`/payments/${paymentId}`);
       return mapPayment(payment);
     });
   },
+
+  async getAllRefunds(): Promise<ServiceResponse<AdminRefund[]>> {
+    return wrap(async () => {
+      const page = await apiRequestPaginated<ApiAdminRefund>('/admin/refunds', {
+        query: { page: 1, page_size: 100 },
+      });
+      return page.items.map(mapAdminRefund);
+    });
+  },
 };
+
+export interface ApiAdminRefund {
+  id: string;
+  payment_id: string;
+  booking_id: string | null;
+  client_id: string | null;
+  vendor_id: string | null;
+  amount: string | number;
+  reason: string | null;
+  status: string;
+  created_at: string;
+}
+
+export interface AdminRefund {
+  id: string;
+  paymentId: string;
+  bookingId: string | null;
+  clientId: string | null;
+  vendorId: string | null;
+  amount: number;
+  reason: string | null;
+  status: string;
+  createdAt: string;
+}
+
+const mapAdminRefund = (r: ApiAdminRefund): AdminRefund => ({
+  id: r.id,
+  paymentId: r.payment_id,
+  bookingId: r.booking_id,
+  clientId: r.client_id,
+  vendorId: r.vendor_id,
+  amount: Number(r.amount),
+  reason: r.reason,
+  status: r.status.toLowerCase(),
+  createdAt: r.created_at,
+});

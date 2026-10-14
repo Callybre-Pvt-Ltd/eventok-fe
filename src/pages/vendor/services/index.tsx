@@ -1,538 +1,594 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useMemo, useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { Button, Drawer, Dropdown, Input, Modal, message } from 'antd';
+import type { MenuProps } from 'antd';
 import {
-  Building2,
-  Camera,
-  Cake,
-  Clapperboard,
-  DoorOpen,
-  Flower,
-  Flower2,
-  Gem,
-  Heart,
-  Home,
-  ImagePlus,
-  Lightbulb,
-  Palette,
-  PartyPopper,
-  Plus,
-  Sparkles,
+  Copy,
+  ExternalLink,
+  Eye,
+  ImageIcon,
+  MoreVertical,
+  PauseCircle,
   Pencil,
-  Tent,
+  PlayCircle,
+  Plus,
+  Search,
   Trash2,
-  Baby,
-  type LucideIcon,
+  Calendar,
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { LoadingState } from '@/components/global/loading-state';
-import { brandColors } from '@/theme/brand';
-import { INDIA_STATES, SERVICE_CITIES } from '@/constants/decorationCategories';
-import { MAX_SERVICE_IMAGES } from '@/constants/servicePresets';
-import { ListBuilder } from '@/components/vendor/list-builder';
+import { ROUTES } from '@/constants/routes';
+import { vendorService } from '@/services';
+import type { VendorApiService as ApiService } from '@/services/vendorService';
 import { useVendorServices } from './helper';
 import {
-  CardActions,
-  CatBlurb,
-  CategoryGrid,
-  CategoryTile,
-  CatName,
-  ChipSection,
-  Composer,
-  CountHint,
-  CountryLock,
-  DangerBtn,
-  EmptyBlock,
-  Field,
-  FieldGrid,
-  FileLabel,
-  FormActions,
-  GhostBtn,
-  Hero,
-  HeroEyebrow,
-  HeroLead,
-  HeroTitle,
-  ImagePreview,
-  ImagePreviewGrid,
-  Meta,
+  ActionCell,
+  AreaText,
+  CategoryTag,
+  CountText,
+  DateText,
+  DrawerImageGrid,
+  DrawerSection,
+  DrawerSectionTitle,
+  DrawerThumb,
+  EmptyWorkspace,
+  FilterBar,
+  FilterLeft,
+  HeaderActions,
+  HeaderEyebrow,
+  HeaderLeft,
+  HeaderSection,
+  HeaderSubtitle,
+  HeaderTitle,
   Page,
-  Price,
-  PrimaryBtn,
-  SectionHint,
-  SectionLabel,
-  ServiceCard,
-  ServiceGrid,
-  ServiceTitle,
-  ServiceTop,
-  StatusPill,
-  Toolbar,
-  WarnBanner,
+  PriceBlock,
+  PriceCustomer,
+  PriceMain,
+  ServiceInfo,
+  ServiceRow,
+  ServiceTableHeader,
+  ServiceTableWrap,
+  ServiceTitleText,
+  ServiceSubtext,
+  StatusFilterBtn,
+  StatusIndicator,
+  StatusPillGroup,
+  Thumbnail,
 } from './styled';
-
-const ICONS: Record<string, LucideIcon> = {
-  Gem,
-  Cake,
-  Heart,
-  Flower2,
-  Baby,
-  Sparkles,
-  Building2,
-  Clapperboard,
-  Flower,
-  PartyPopper,
-  Lightbulb,
-  DoorOpen,
-  Tent,
-  Palette,
-  Camera,
-  Home,
-};
 
 export default function VendorServicesPage() {
   const {
     services,
     categories,
-    categoriesReady,
     isLoading,
-    createMutation,
-    updateMutation,
-    publishMutation,
     deleteMutation,
-    uploadMutation,
+    vendorId,
     vendorCity,
   } = useVendorServices();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  const [open, setOpen] = useState(false);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [categoryId, setCategoryId] = useState('');
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [description, setDescription] = useState('');
-  const [city, setCity] = useState('Delhi');
-  const [state, setState] = useState('Delhi');
-  const [whatsIncluded, setWhatsIncluded] = useState<string[]>([]);
-  const [goodToKnow, setGoodToKnow] = useState<string[]>([]);
-  const [cancellation, setCancellation] = useState<string[]>([]);
-  const [images, setImages] = useState<File[]>([]);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [search, setSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<
+    'ALL' | 'PUBLISHED' | 'DRAFT' | 'ARCHIVED'
+  >('ALL');
+  const [detailService, setDetailService] = useState<ApiService | null>(null);
+  const [detailImages, setDetailImages] = useState<
+    { id: string; image_url: string }[]
+  >([]);
+  const [duplicating, setDuplicating] = useState(false);
 
-  useEffect(() => {
-    if (vendorCity) setCity(vendorCity);
-  }, [vendorCity]);
+  const openDrawer = async (service: ApiService) => {
+    setDetailService(service);
+    const res = await vendorService.listServiceImages(service.id);
+    if (!res.error) setDetailImages(res.data ?? []);
+  };
 
-  useEffect(() => {
-    const urls = images.map(file => URL.createObjectURL(file));
-    setPreviews(urls);
-    return () => urls.forEach(url => URL.revokeObjectURL(url));
-  }, [images]);
+  const closeDrawer = () => {
+    setDetailService(null);
+    setDetailImages([]);
+  };
 
-  const selected = useMemo(
-    () => categories.find(c => c.id === categoryId || c.slug === categoryId),
-    [categories, categoryId],
-  );
+  const handleDuplicate = async (service: ApiService) => {
+    if (!vendorId) return;
+    setDuplicating(true);
+    const res = await vendorService.createService(vendorId, {
+      category_id: service.category_id,
+      title: `${service.title} (Copy)`,
+      description: service.description || undefined,
+      starting_price: Number(service.starting_price),
+      whats_included: service.whats_included || [],
+      good_to_know: service.good_to_know || [],
+      cancellation_policy: service.cancellation_policy || [],
+    });
+    setDuplicating(false);
+    if (res.error) {
+      message.error(res.error);
+      return;
+    }
+    message.success('Draft service duplicated');
+    navigate(`${ROUTES.VENDOR_SERVICES}/${res.data?.id}/edit`);
+  };
+
+  // The backend only knows DRAFT / PUBLISHED / ARCHIVED, so "unpublish" returns the
+  // listing to DRAFT rather than a PAUSED state that the API would reject.
+  const handleToggleStatus = async (service: ApiService) => {
+    const nextStatus = service.status === 'PUBLISHED' ? 'DRAFT' : 'PUBLISHED';
+    const res = await vendorService.updateService(service.id, {
+      status: nextStatus,
+    });
+    if (res.error) {
+      message.error(res.error);
+      return;
+    }
+    message.success(
+      nextStatus === 'PUBLISHED'
+        ? 'Service is live — customers can book it'
+        : 'Service unpublished and saved as a draft',
+    );
+    queryClient.invalidateQueries({ queryKey: ['vendor', 'services'] });
+    queryClient.invalidateQueries({ queryKey: ['storefront'] });
+  };
+
+  const handleDelete = (service: ApiService) => {
+    Modal.confirm({
+      title: `Delete “${service.title}”?`,
+      content:
+        'This service listing will be permanently removed from your catalog and will no longer be bookable by customers.',
+      okText: 'Delete service',
+      okType: 'danger',
+      cancelText: 'Cancel',
+      onOk: () => deleteMutation.mutate(service.id),
+    });
+  };
+
+  const filteredServices = useMemo(() => {
+    return services.filter(s => {
+      const cat = categories.find(c => c.id === s.category_id);
+      const matchesSearch =
+        s.title.toLowerCase().includes(search.toLowerCase()) ||
+        (cat?.name && cat.name.toLowerCase().includes(search.toLowerCase()));
+
+      if (!matchesSearch) return false;
+
+      if (statusFilter === 'ALL') return true;
+      return s.status === statusFilter;
+    });
+  }, [services, categories, search, statusFilter]);
 
   if (isLoading) return <LoadingState />;
 
-  const resetForm = () => {
-    setEditingId(null);
-    setTitle('');
-    setPrice('');
-    setDescription('');
-    setCategoryId('');
-    setWhatsIncluded([]);
-    setGoodToKnow([]);
-    setCancellation([]);
-    setImages([]);
-  };
+  const goCreate = () => navigate(`${ROUTES.VENDOR_SERVICES}/new`);
+  const goEdit = (serviceId: string) =>
+    navigate(`${ROUTES.VENDOR_SERVICES}/${serviceId}/edit`);
 
-  const startEdit = (service: (typeof services)[number]) => {
-    const raw = service.description ?? '';
-    const withoutArea = raw.split(/\n\nService area:/)[0];
-    setEditingId(service.id);
-    setCategoryId(service.category_id ?? '');
-    setTitle(service.title);
-    setPrice(String(service.starting_price ?? ''));
-    setDescription(withoutArea === raw ? '' : withoutArea);
-    setWhatsIncluded(service.whats_included ?? []);
-    setGoodToKnow(service.good_to_know ?? []);
-    setCancellation(service.cancellation_policy ?? []);
-    setImages([]);
-    setOpen(true);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const onSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    const starting_price = Number(price);
-    if (!selected?.id || !title.trim() || !starting_price || !city || !state) {
-      return;
-    }
-    if (editingId) {
-      updateMutation.mutate(
-        {
-          serviceId: editingId,
-          category_id: selected.id,
-          title: title.trim(),
-          description: description.trim() || undefined,
-          starting_price,
-          city,
-          state,
-          whats_included: whatsIncluded,
-          good_to_know: goodToKnow,
-          cancellation_policy: cancellation,
-          images,
-        },
-        {
-          onSuccess: () => {
-            resetForm();
-            setOpen(false);
-          },
-        },
-      );
-      return;
-    }
-    if (!images.length) return;
-    createMutation.mutate(
-      {
-        category_id: selected.id,
-        title: title.trim(),
-        description: description.trim() || undefined,
-        starting_price,
-        city,
-        state,
-        whats_included: whatsIncluded,
-        good_to_know: goodToKnow,
-        cancellation_policy: cancellation,
-        images,
-      },
-      {
-        onSuccess: () => {
-          resetForm();
-          setOpen(false);
-        },
-      },
-    );
-  };
+  const getActionMenu = (service: ApiService): MenuProps['items'] => [
+    {
+      key: 'view',
+      icon: <Eye size={14} />,
+      label: 'View details',
+      onClick: () => openDrawer(service),
+    },
+    {
+      key: 'edit',
+      icon: <Pencil size={14} />,
+      label: 'Edit in wizard',
+      onClick: () => goEdit(service.id),
+    },
+    {
+      key: 'duplicate',
+      icon: <Copy size={14} />,
+      label: 'Duplicate as draft',
+      disabled: duplicating,
+      onClick: () => handleDuplicate(service),
+    },
+    {
+      key: 'toggle-status',
+      icon:
+        service.status === 'PUBLISHED' ? (
+          <PauseCircle size={14} />
+        ) : (
+          <PlayCircle size={14} />
+        ),
+      label: service.status === 'PUBLISHED' ? 'Unpublish' : 'Publish now',
+      onClick: () => handleToggleStatus(service),
+    },
+    {
+      key: 'bookings',
+      icon: <Calendar size={14} />,
+      label: 'View bookings',
+      onClick: () => navigate(ROUTES.VENDOR_BOOKINGS),
+    },
+    {
+      type: 'divider',
+    },
+    {
+      key: 'delete',
+      icon: <Trash2 size={14} />,
+      danger: true,
+      label: 'Delete service',
+      onClick: () => handleDelete(service),
+    },
+  ];
 
   return (
     <Page>
-      <Hero>
-        <HeroEyebrow>Vendor workspace</HeroEyebrow>
-        <HeroTitle>Your decoration services</HeroTitle>
-        <HeroLead>
-          Tap common options, add your own notes, and upload real photos of the
-          setup. New services publish automatically so customers can book them
-          on the shop.
-        </HeroLead>
-      </Hero>
+      <HeaderSection>
+        <HeaderLeft>
+          <HeaderEyebrow>Vendor workspace</HeaderEyebrow>
+          <HeaderTitle>Services</HeaderTitle>
+          <HeaderSubtitle>
+            Manage the decoration services customers can discover and book from
+            your shop.
+          </HeaderSubtitle>
+        </HeaderLeft>
+        <HeaderActions>
+          <Button
+            icon={<ExternalLink size={14} />}
+            onClick={() => navigate(ROUTES.VENDOR_PROFILE)}
+          >
+            View public profile
+          </Button>
+          <Button
+            type="primary"
+            icon={<Plus size={16} strokeWidth={2.4} />}
+            onClick={goCreate}
+          >
+            Create service
+          </Button>
+        </HeaderActions>
+      </HeaderSection>
 
-      <Toolbar>
-        <CountHint>
-          {services.length === 0
-            ? 'No services yet'
-            : `${services.length} service${services.length === 1 ? '' : 's'}`}
-        </CountHint>
-        <PrimaryBtn
-          type="button"
-          onClick={() => {
-            if (open) resetForm();
-            setOpen(v => !v);
-          }}
-        >
-          <Plus size={16} strokeWidth={2.4} />
-          {open ? 'Close form' : 'Add service'}
-        </PrimaryBtn>
-      </Toolbar>
-
-      {open ? (
-        <Composer>
-          <SectionLabel>
-            {editingId ? 'Edit service' : 'New service'}
-          </SectionLabel>
-          <SectionHint>
-            {editingId
-              ? `Change any detail and save. Existing photos stay; anything you add here is appended (up to ${MAX_SERVICE_IMAGES}).`
-              : `Pick a category, price, service area, then customise inclusions and upload photos (up to ${MAX_SERVICE_IMAGES}).`}
-          </SectionHint>
-
-          {!categoriesReady ? (
-            <WarnBanner>
-              Decoration categories are not synced from the API yet. Ask an
-              admin to open Admin → Categories once (that creates them), or run{' '}
-              <code>just seed-demo</code> on the backend.
-            </WarnBanner>
-          ) : null}
-
-          <CategoryGrid>
-            {categories.map(cat => {
-              const Icon = ICONS[cat.icon] ?? Sparkles;
-              const active =
-                categoryId === cat.id ||
-                (categoryId === cat.slug && !cat.id) ||
-                selected?.slug === cat.slug;
-              return (
-                <CategoryTile
-                  key={cat.slug || cat.id}
-                  type="button"
-                  $active={Boolean(active)}
-                  onClick={() => setCategoryId(cat.id || cat.slug)}
-                >
-                  <Icon size={18} strokeWidth={1.75} color={brandColors.gold} />
-                  <CatName>{cat.name}</CatName>
-                  <CatBlurb>{cat.description || 'Decoration service'}</CatBlurb>
-                </CategoryTile>
-              );
-            })}
-          </CategoryGrid>
-
-          <form onSubmit={onSubmit}>
-            <FieldGrid>
-              <Field className="span-2">
-                Service title
-                <input
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  placeholder="e.g. Mandap & stage floral package"
-                  required
-                />
-              </Field>
-              <Field>
-                Starting price (₹)
-                <input
-                  type="number"
-                  min={1}
-                  value={price}
-                  onChange={e => setPrice(e.target.value)}
-                  placeholder="25000"
-                  required
-                />
-              </Field>
-              <Field>
-                City
-                <select
-                  value={city}
-                  onChange={e => setCity(e.target.value)}
-                  required
-                >
-                  {SERVICE_CITIES.map(c => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field>
-                State
-                <select
-                  value={state}
-                  onChange={e => setState(e.target.value)}
-                  required
-                >
-                  {INDIA_STATES.map(s => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field>
-                Country
-                <CountryLock>India</CountryLock>
-              </Field>
-              <Field className="span-2">
-                About this experience
-                <textarea
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  placeholder="Short pitch customers read on the product page…"
-                />
-              </Field>
-            </FieldGrid>
-
-            <ListBuilder
-              label="What's included"
-              hint="One line per inclusion. These appear under What's Included on your listing."
-              placeholder="e.g. Complete theme & colour setup"
-              emptyText="Nothing added yet — type an inclusion above and press +."
-              items={whatsIncluded}
-              onChange={setWhatsIncluded}
-            />
-            <ListBuilder
-              label="Good to know"
-              hint="Practical notes the customer should read before booking."
-              placeholder="e.g. Setup needs 3 hours before the event"
-              emptyText="Nothing added yet — type a note above and press +."
-              items={goodToKnow}
-              onChange={setGoodToKnow}
-            />
-            <ListBuilder
-              label="Cancellation policy"
-              hint="State your terms plainly, one rule per line."
-              placeholder="e.g. Free cancellation up to 48 hours before"
-              emptyText="Nothing added yet — type a rule above and press +."
-              items={cancellation}
-              onChange={setCancellation}
-            />
-
-            <ChipSection>
-              <SectionLabel>Photos</SectionLabel>
-              <SectionHint>
-                Real photos only — no stock placeholders on the shop. Upload up
-                to {MAX_SERVICE_IMAGES} images (JPEG / PNG / WebP).
-              </SectionHint>
-              <FileLabel>
-                <ImagePlus size={14} />
-                {images.length
-                  ? `Add more (${images.length}/${MAX_SERVICE_IMAGES})`
-                  : 'Upload photos'}
-                <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  multiple
-                  onChange={e => {
-                    const next = Array.from(e.target.files ?? []);
-                    setImages(prev =>
-                      [...prev, ...next].slice(0, MAX_SERVICE_IMAGES),
-                    );
-                    e.target.value = '';
-                  }}
-                />
-              </FileLabel>
-              {previews.length ? (
-                <ImagePreviewGrid>
-                  {previews.map((src, index) => (
-                    <ImagePreview key={`${src}-${index}`}>
-                      <img src={src} alt="" />
-                      <button
-                        type="button"
-                        aria-label="Remove photo"
-                        onClick={() =>
-                          setImages(prev => prev.filter((_, i) => i !== index))
-                        }
-                      >
-                        ×
-                      </button>
-                    </ImagePreview>
-                  ))}
-                </ImagePreviewGrid>
-              ) : (
-                <SectionHint>At least one photo is required.</SectionHint>
-              )}
-            </ChipSection>
-
-            <FormActions>
-              <PrimaryBtn
-                type="submit"
-                disabled={
-                  createMutation.isPending ||
-                  updateMutation.isPending ||
-                  !categoriesReady ||
-                  (!editingId && !images.length)
-                }
-              >
-                {editingId
-                  ? updateMutation.isPending
-                    ? 'Saving…'
-                    : 'Save changes'
-                  : createMutation.isPending
-                  ? 'Publishing…'
-                  : 'Create & publish'}
-              </PrimaryBtn>
-              <GhostBtn
-                type="button"
-                onClick={() => {
-                  resetForm();
-                  setOpen(false);
-                }}
-              >
-                Cancel
-              </GhostBtn>
-            </FormActions>
-          </form>
-        </Composer>
-      ) : null}
+      <FilterBar>
+        <FilterLeft>
+          <Input
+            placeholder="Search by service name or category…"
+            prefix={<Search size={14} color="#94a3b8" />}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            allowClear
+            style={{ maxWidth: 320 }}
+          />
+          <StatusPillGroup>
+            <StatusFilterBtn
+              type="button"
+              $active={statusFilter === 'ALL'}
+              onClick={() => setStatusFilter('ALL')}
+            >
+              All ({services.length})
+            </StatusFilterBtn>
+            <StatusFilterBtn
+              type="button"
+              $active={statusFilter === 'PUBLISHED'}
+              onClick={() => setStatusFilter('PUBLISHED')}
+            >
+              Live ({services.filter(s => s.status === 'PUBLISHED').length})
+            </StatusFilterBtn>
+            <StatusFilterBtn
+              type="button"
+              $active={statusFilter === 'DRAFT'}
+              onClick={() => setStatusFilter('DRAFT')}
+            >
+              Draft ({services.filter(s => s.status === 'DRAFT').length})
+            </StatusFilterBtn>
+            <StatusFilterBtn
+              type="button"
+              $active={statusFilter === 'ARCHIVED'}
+              onClick={() => setStatusFilter('ARCHIVED')}
+            >
+              Archived ({services.filter(s => s.status === 'ARCHIVED').length})
+            </StatusFilterBtn>
+          </StatusPillGroup>
+        </FilterLeft>
+        <CountText>
+          Showing {filteredServices.length} of {services.length} services
+        </CountText>
+      </FilterBar>
 
       {services.length === 0 ? (
-        <EmptyBlock>
+        <EmptyWorkspace>
           <h3>List your first decoration service</h3>
           <p>
-            Customers discover it under Shop and book for their event date —
-            with your real photos and clear packaging.
+            Create services in our step-by-step wizard, set your price, upload
+            photos of your work, and publish when you're ready.
           </p>
-          <PrimaryBtn type="button" onClick={() => setOpen(true)}>
-            <Plus size={16} /> Add service
-          </PrimaryBtn>
-        </EmptyBlock>
+          <Button
+            type="primary"
+            size="large"
+            icon={<Plus size={16} />}
+            onClick={goCreate}
+          >
+            Create service
+          </Button>
+        </EmptyWorkspace>
+      ) : filteredServices.length === 0 ? (
+        <EmptyWorkspace>
+          <h3>No services match your filters</h3>
+          <p>Try clearing your search query or switching the status filter.</p>
+          <Button
+            onClick={() => {
+              setSearch('');
+              setStatusFilter('ALL');
+            }}
+          >
+            Reset filters
+          </Button>
+        </EmptyWorkspace>
       ) : (
-        <ServiceGrid>
-          {services.map(s => {
+        <ServiceTableWrap>
+          <ServiceTableHeader>
+            <div>Photo</div>
+            <div>Service</div>
+            <div>Category</div>
+            <div>Price & Customer Total</div>
+            <div className="hide-tablet">Coverage</div>
+            <div>Status</div>
+            <div className="hide-tablet">Updated</div>
+            <div style={{ textAlign: 'right' }}>Actions</div>
+          </ServiceTableHeader>
+
+          {filteredServices.map(s => {
             const cat = categories.find(c => c.id === s.category_id);
-            const live = s.status === 'PUBLISHED';
+            const customerTotal = s.customer_price ?? s.starting_price;
+            const updatedDate = s.created_at
+              ? new Date(s.created_at).toLocaleDateString('en-IN', {
+                  month: 'short',
+                  day: 'numeric',
+                })
+              : 'Recent';
+
             return (
-              <ServiceCard key={s.id}>
-                <ServiceTop>
-                  <ServiceTitle>{s.title}</ServiceTitle>
-                  <StatusPill $live={live}>
-                    {live ? 'Live' : s.status.replace(/_/g, ' ')}
-                  </StatusPill>
-                </ServiceTop>
-                <Price>
-                  ₹{Number(s.starting_price).toLocaleString('en-IN')}
-                  <span style={{ fontSize: '0.75rem', fontWeight: 500 }}>
-                    {' '}
-                    starting
-                  </span>
-                </Price>
-                <Meta>
-                  {cat?.name ? `${cat.name}\n` : ''}
-                  {(s.whats_included?.length
-                    ? `${s.whats_included.length} inclusions · `
-                    : '') + (s.description || 'No about text yet')}
-                </Meta>
-                <CardActions>
-                  <GhostBtn type="button" onClick={() => startEdit(s)}>
-                    <Pencil size={14} />
-                    Edit
-                  </GhostBtn>
-                  {!live ? (
-                    <PrimaryBtn
-                      type="button"
-                      onClick={() => publishMutation.mutate(s.id)}
-                      disabled={publishMutation.isPending}
-                    >
-                      Publish
-                    </PrimaryBtn>
-                  ) : null}
-                  <FileLabel>
-                    <ImagePlus size={14} />
-                    Add photos
-                    <input
-                      type="file"
-                      accept="image/jpeg,image/png,image/webp"
-                      multiple
-                      onChange={e => {
-                        const files = Array.from(e.target.files ?? []);
-                        if (files.length) {
-                          uploadMutation.mutate({ serviceId: s.id, files });
-                        }
-                        e.target.value = '';
-                      }}
-                    />
-                  </FileLabel>
-                  <DangerBtn
-                    type="button"
-                    onClick={() => {
-                      if (window.confirm(`Delete “${s.title}”?`)) {
-                        deleteMutation.mutate(s.id);
-                      }
-                    }}
+              <ServiceRow key={s.id} onClick={() => openDrawer(s)}>
+                <Thumbnail>
+                  <ImageIcon size={20} />
+                </Thumbnail>
+
+                <ServiceInfo>
+                  <ServiceTitleText title={s.title}>{s.title}</ServiceTitleText>
+                  <ServiceSubtext>
+                    {s.whats_included?.length
+                      ? `${s.whats_included.length} inclusions · `
+                      : ''}
+                    {s.description || 'No description provided'}
+                  </ServiceSubtext>
+                </ServiceInfo>
+
+                <div>
+                  <CategoryTag>{cat?.name || 'Decor'}</CategoryTag>
+                </div>
+
+                <PriceBlock>
+                  <PriceMain>
+                    ₹{Number(s.starting_price).toLocaleString('en-IN')}
+                  </PriceMain>
+                  <PriceCustomer>
+                    Customer ₹{Number(customerTotal).toLocaleString('en-IN')}
+                  </PriceCustomer>
+                </PriceBlock>
+
+                <div className="hide-tablet">
+                  <AreaText>{vendorCity || 'Regional coverage'}</AreaText>
+                </div>
+
+                <div>
+                  <StatusIndicator $status={s.status}>
+                    {s.status === 'PUBLISHED'
+                      ? 'Live'
+                      : s.status.replace(/_/g, ' ')}
+                  </StatusIndicator>
+                </div>
+
+                <div className="hide-tablet">
+                  <DateText>{updatedDate}</DateText>
+                </div>
+
+                <ActionCell onClick={e => e.stopPropagation()}>
+                  <Dropdown
+                    menu={{ items: getActionMenu(s) }}
+                    trigger={['click']}
+                    placement="bottomRight"
                   >
-                    <Trash2 size={14} />
-                    Delete
-                  </DangerBtn>
-                </CardActions>
-              </ServiceCard>
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<MoreVertical size={16} />}
+                      aria-label="Service options"
+                    />
+                  </Dropdown>
+                </ActionCell>
+              </ServiceRow>
             );
           })}
-        </ServiceGrid>
+        </ServiceTableWrap>
       )}
+
+      {/* Service Details Drawer */}
+      <Drawer
+        title={detailService?.title || 'Service details'}
+        open={!!detailService}
+        onClose={closeDrawer}
+        width={520}
+        extra={
+          detailService && (
+            <Button
+              type="primary"
+              size="small"
+              icon={<Pencil size={13} />}
+              onClick={() => {
+                const id = detailService.id;
+                closeDrawer();
+                goEdit(id);
+              }}
+            >
+              Edit service
+            </Button>
+          )
+        }
+      >
+        {detailService && (
+          <div>
+            <DrawerSection>
+              <DrawerSectionTitle>Listing Status</DrawerSectionTitle>
+              <div>
+                <StatusIndicator $status={detailService.status}>
+                  {detailService.status === 'PUBLISHED'
+                    ? 'Live on marketplace'
+                    : detailService.status.replace(/_/g, ' ')}
+                </StatusIndicator>
+              </div>
+            </DrawerSection>
+
+            {detailImages.length > 0 && (
+              <DrawerSection>
+                <DrawerSectionTitle>
+                  Photos ({detailImages.length})
+                </DrawerSectionTitle>
+                <DrawerImageGrid>
+                  {detailImages.map(img => (
+                    <DrawerThumb key={img.id} src={img.image_url} alt="" />
+                  ))}
+                </DrawerImageGrid>
+              </DrawerSection>
+            )}
+
+            <DrawerSection>
+              <DrawerSectionTitle>Pricing & Commission</DrawerSectionTitle>
+              <div
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.35rem',
+                  fontSize: '0.875rem',
+                }}
+              >
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <span style={{ color: '#64748b' }}>Your service price:</span>
+                  <strong>
+                    ₹
+                    {Number(detailService.starting_price).toLocaleString(
+                      'en-IN',
+                    )}
+                  </strong>
+                </div>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <span style={{ color: '#64748b' }}>
+                    Platform commission (3%):
+                  </span>
+                  <span>
+                    + ₹
+                    {Number(
+                      detailService.commission_amount ??
+                        Math.round(Number(detailService.starting_price) * 0.03),
+                    ).toLocaleString('en-IN')}
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    borderTop: '1px solid #f1f5f9',
+                    paddingTop: '0.35rem',
+                  }}
+                >
+                  <span style={{ fontWeight: 600 }}>Customer pays:</span>
+                  <strong style={{ color: '#16a34a' }}>
+                    ₹
+                    {Number(
+                      detailService.customer_price ??
+                        detailService.starting_price,
+                    ).toLocaleString('en-IN')}
+                  </strong>
+                </div>
+                <div
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                >
+                  <span style={{ color: '#64748b' }}>
+                    Advance payment (20%):
+                  </span>
+                  <span>
+                    ₹
+                    {Math.round(
+                      Number(
+                        detailService.customer_price ??
+                          detailService.starting_price,
+                      ) * 0.2,
+                    ).toLocaleString('en-IN')}
+                  </span>
+                </div>
+              </div>
+            </DrawerSection>
+
+            <DrawerSection>
+              <DrawerSectionTitle>Description</DrawerSectionTitle>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: '0.875rem',
+                  color: '#334155',
+                  whiteSpace: 'pre-line',
+                }}
+              >
+                {detailService.description || 'No description provided.'}
+              </p>
+            </DrawerSection>
+
+            <DrawerSection>
+              <DrawerSectionTitle>What's Included</DrawerSectionTitle>
+              {detailService.whats_included &&
+              detailService.whats_included.length > 0 ? (
+                <ul
+                  style={{
+                    margin: 0,
+                    paddingLeft: '1.25rem',
+                    fontSize: '0.875rem',
+                    color: '#334155',
+                  }}
+                >
+                  {detailService.whats_included.map((item, i) => (
+                    <li key={i} style={{ marginBottom: '0.25rem' }}>
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span style={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                  None specified
+                </span>
+              )}
+            </DrawerSection>
+
+            <DrawerSection>
+              <DrawerSectionTitle>Policies</DrawerSectionTitle>
+              {detailService.cancellation_policy &&
+              detailService.cancellation_policy.length > 0 ? (
+                <ul
+                  style={{
+                    margin: 0,
+                    paddingLeft: '1.25rem',
+                    fontSize: '0.875rem',
+                    color: '#334155',
+                  }}
+                >
+                  {detailService.cancellation_policy.map((p, i) => (
+                    <li key={i} style={{ marginBottom: '0.25rem' }}>
+                      {p}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <span style={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                  Standard platform policy
+                </span>
+              )}
+            </DrawerSection>
+          </div>
+        )}
+      </Drawer>
     </Page>
   );
 }

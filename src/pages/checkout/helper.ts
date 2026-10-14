@@ -37,8 +37,9 @@ const EMPTY_FORM: CheckoutForm = {
   agreed: false,
 };
 
-function createBookingId(): string {
-  return `EO${Date.now().toString(36).toUpperCase().slice(-8)}`;
+/** Short, human-quotable reference derived from the real booking id. */
+function bookingReference(bookingId: string): string {
+  return `EO${bookingId.replace(/-/g, '').slice(0, 8).toUpperCase()}`;
 }
 
 export function useCheckoutPage() {
@@ -53,6 +54,8 @@ export function useCheckoutPage() {
   const [error, setError] = useState(false);
   const [bookingId, setBookingId] = useState<string | null>(null);
   const [confirming, setConfirming] = useState(false);
+  const [placing, setPlacing] = useState(false);
+  const [failureMessage, setFailureMessage] = useState<string | null>(null);
 
   // Prefill contact details from the signed-in account, without clobbering edits.
   useEffect(() => {
@@ -108,39 +111,49 @@ export function useCheckoutPage() {
     [form, isValid, navigate, session],
   );
 
-  /** Step 2: the visitor confirmed the review modal — place the order. */
+  /** Step 2: the visitor confirmed the review modal — place the order.
+   *
+   * Each cart line becomes a real direct booking, which is what puts the job in the
+   * vendor's Bookings queue and notifies them (and the Admins). A line that the API
+   * rejects is reported instead of being swallowed, so nobody leaves the page believing
+   * a booking exists when it does not.
+   */
   const confirmOrder = useCallback(async () => {
+    if (!session?.user?.id || lines.length === 0) return;
     setConfirming(false);
-    setBookingId(createBookingId());
+    setPlacing(true);
+    setFailureMessage(null);
 
-    if (session?.user?.id && lines.length > 0) {
-      for (const line of lines) {
-        try {
-          await bookingService.createRequest({
-            customerId: session.user.id,
-            vendorId: line.service.id,
-            eventDate: form.eventDate,
-            eventType: line.service.categorySlug || 'Service',
-            guestCount: 1,
-            city: form.city || form.venue,
-            notes: [
-              `Service: ${line.service.title}`,
-              form.venue ? `Venue: ${form.venue}` : '',
-              form.eventTime ? `Time: ${form.eventTime}` : '',
-              form.notes ? `Notes: ${form.notes}` : '',
-            ]
-              .filter(Boolean)
-              .join('\n'),
-          });
-        } catch {
-          // Non-blocking for checkout display
-        }
+    const createdIds: string[] = [];
+    const failures: string[] = [];
+    for (const line of lines) {
+      const res = await bookingService.createDirectBooking({
+        service_id: line.service.id,
+        booking_date: form.eventDate,
+      });
+      if (res.error || !res.data) {
+        failures.push(
+          `${line.service.title}: ${res.error ?? 'Request failed'}`,
+        );
+      } else {
+        createdIds.push(res.data.id);
       }
     }
 
+    setPlacing(false);
+
+    if (createdIds.length === 0) {
+      setFailureMessage(
+        failures.join('\n') || 'We could not place this booking.',
+      );
+      return;
+    }
+
+    setFailureMessage(failures.length ? failures.join('\n') : null);
+    setBookingId(bookingReference(createdIds[0]));
     clearCheckoutDraft();
     basket.clearCart();
-  }, [basket, form, lines, session]);
+  }, [basket, form.eventDate, lines, session]);
 
   return {
     lines,
@@ -155,6 +168,8 @@ export function useCheckoutPage() {
     authLoading,
     confirming,
     confirmOrder,
+    placing,
+    failureMessage,
     cancelConfirm: () => setConfirming(false),
   };
 }

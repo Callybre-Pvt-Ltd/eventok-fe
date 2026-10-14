@@ -76,6 +76,18 @@ export const storefront = {
   packagesTitle: 'Packages',
   packagesSubtitle: 'Curated bundles that cover the whole celebration.',
   packagesViewAll: 'View All Packages',
+  packagesSaving: 'Save {{amount}}',
+  packagesBack: 'All packages',
+  packageIncludes: "What's in this package ({{count}})",
+  packagePriceLabel: 'Package price',
+  packageIndividualTotal: 'Booked separately',
+  packageEventDate: 'Event date',
+  packageBook: 'Book this package',
+  packageBookNote:
+    'The vendor confirms your date before any payment is collected.',
+  addonsTitle: 'Optional add-ons',
+  addonsSubtitle: 'Extras you can request from this vendor when you book.',
+  packagesEmpty: 'No packages are published yet — check back soon.',
   packagesIncludes: 'Includes',
 
   previousWorkEyebrow: 'Our recent celebrations',

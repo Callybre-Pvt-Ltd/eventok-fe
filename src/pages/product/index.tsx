@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
 import { BookingCard } from '@/components/storefront/booking-card';
 import { PdpGallery } from '@/components/storefront/pdp-gallery';
+import { PdpAddons } from '@/components/storefront/pdp-addons';
 import { PdpTabs } from '@/components/storefront/pdp-tabs';
 import { StoreLayout } from '@/components/storefront/store-layout';
 import { formatPrice } from '@/utils/storefront/pricing';
@@ -62,6 +63,8 @@ export default function ProductPage() {
             </DescriptionCard>
 
             <PdpTabs service={service} />
+
+            <PdpAddons serviceId={service.id} />
 
             <RelatedSection>
               <RelatedTitle>{t('storefront.pdpRelated')}</RelatedTitle>

@@ -1,20 +1,40 @@
 import { Button, message } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { LoadingState } from '@/components/global/loading-state';
-import { ErrorState } from '@/components/global/error-state';
-import { EmptyState } from '@/components/global/empty-state';
-import { useCustomerBookings } from './helper';
-import { ItemMeta, ItemTitle, List, ListItem, PageTitle } from './styled';
-import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
-import { paymentService } from '@/services';
-import { useAuth } from '@/hooks/auth/use-auth';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { EmptyState } from '@/components/global/empty-state';
+import { ErrorState } from '@/components/global/error-state';
+import { LoadingState } from '@/components/global/loading-state';
+import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
+import { useAuth } from '@/hooks/auth/use-auth';
+import { paymentService } from '@/services';
+import {
+  bookingLabelKey,
+  bookingTone,
+  isContactVisible,
+} from '@/utils/booking-status';
+import { useCustomerBookings } from './helper';
+import {
+  BookingHead,
+  ItemMeta,
+  ItemTitle,
+  List,
+  ListItem,
+  PageTitle,
+  PayRow,
+  StatusBadge,
+  StatusNote,
+  VendorCard,
+  VendorLabel,
+  VendorName,
+  VendorPhone,
+} from './styled';
 
 export default function CustomerBookingsPage() {
   const { t } = useTranslation();
   const { palette } = usePortalPalette();
   const { session } = useAuth();
-  const { bookings, isLoading, error, refetch } = useCustomerBookings();
+  const { bookings, vendorContacts, isLoading, error, refetch } =
+    useCustomerBookings();
   const [payingId, setPayingId] = useState<string | null>(null);
 
   if (isLoading) return <LoadingState />;
@@ -48,32 +68,66 @@ export default function CustomerBookingsPage() {
         <EmptyState description={t('customer.noBookings')} />
       ) : (
         <List>
-          {bookings.map(b => (
-            <ListItem $palette={palette} key={b.id}>
-              <ItemTitle $palette={palette}>
-                {b.serviceName || b.eventType}
-              </ItemTitle>
-              <ItemMeta $palette={palette}>
-                {b.serviceCategory ? `${b.serviceCategory} · ` : ''}
-                {b.eventDate} · {b.city ? `${b.city} · ` : ''}
-                {b.guestCount ? `${b.guestCount} guests · ` : ''}
-                <span style={{ textTransform: 'capitalize', fontWeight: 600 }}>
-                  {b.status.replace(/_/g, ' ')}
-                </span>
-              </ItemMeta>
-              {b.status === 'payment_pending' ? (
-                <Button
-                  type="primary"
-                  size="small"
-                  style={{ marginTop: 8 }}
-                  loading={payingId === b.id}
-                  onClick={() => pay(b.id)}
-                >
-                  Pay now
-                </Button>
-              ) : null}
-            </ListItem>
-          ))}
+          {bookings.map(booking => {
+            const contact = vendorContacts.get(booking.id);
+            return (
+              <ListItem $palette={palette} key={booking.id}>
+                <BookingHead>
+                  <ItemTitle $palette={palette}>
+                    {booking.serviceName || booking.eventType}
+                  </ItemTitle>
+                  <StatusBadge $tone={bookingTone(booking.status)}>
+                    {t(bookingLabelKey(booking.status))}
+                  </StatusBadge>
+                </BookingHead>
+
+                <ItemMeta $palette={palette}>
+                  {booking.serviceCategory
+                    ? `${booking.serviceCategory} · `
+                    : ''}
+                  {booking.eventDate}
+                  {booking.city ? ` · ${booking.city}` : ''}
+                </ItemMeta>
+
+                <StatusNote>
+                  {t(`${bookingLabelKey(booking.status)}Note`)}
+                </StatusNote>
+
+                {isContactVisible(booking.status) && (
+                  <VendorCard>
+                    <VendorLabel>{t('customer.bookingVendor')}</VendorLabel>
+                    <VendorName>
+                      {contact?.name ?? t('customer.bookingVendorLoading')}
+                    </VendorName>
+                    {contact?.mobileNumber ? (
+                      <VendorPhone href={`tel:${contact.mobileNumber}`}>
+                        {contact.mobileNumber}
+                      </VendorPhone>
+                    ) : (
+                      contact && (
+                        <StatusNote>
+                          {t('customer.bookingVendorNoPhone')}
+                        </StatusNote>
+                      )
+                    )}
+                  </VendorCard>
+                )}
+
+                {booking.status === 'payment_pending' && (
+                  <PayRow>
+                    <Button
+                      type="primary"
+                      size="small"
+                      loading={payingId === booking.id}
+                      onClick={() => pay(booking.id)}
+                    >
+                      {t('customer.bookingPayNow')}
+                    </Button>
+                  </PayRow>
+                )}
+              </ListItem>
+            );
+          })}
         </List>
       )}
     </>

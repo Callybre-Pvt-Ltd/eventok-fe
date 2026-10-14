@@ -57,6 +57,9 @@ export const mockPackages: CatalogPackage[] = [
       'reception-stage-grand-theme',
       'haldi-marigold-decoration',
     ],
+    vendorName: 'EventOK Studio',
+    individualTotal: 0,
+    savings: 0,
   },
   {
     id: 'pk-2',
@@ -70,6 +73,9 @@ export const mockPackages: CatalogPackage[] = [
       'first-birthday-jungle-theme',
       'barbie-theme-birthday-decor',
     ],
+    vendorName: 'EventOK Studio',
+    individualTotal: 0,
+    savings: 0,
   },
   {
     id: 'pk-3',
@@ -82,6 +88,9 @@ export const mockPackages: CatalogPackage[] = [
       'romantic-candlelight-room-decor',
       'candle-light-dinner-terrace',
     ],
+    vendorName: 'EventOK Studio',
+    individualTotal: 0,
+    savings: 0,
   },
   {
     id: 'pk-4',
@@ -91,6 +100,9 @@ export const mockPackages: CatalogPackage[] = [
     startingPrice: 11999,
     image: IMG('1515488042361-ee00e0ddd4e4'),
     serviceSlugs: ['pastel-baby-shower-setup', 'welcome-baby-boy-decor'],
+    vendorName: 'EventOK Studio',
+    individualTotal: 0,
+    savings: 0,
   },
 ];
 

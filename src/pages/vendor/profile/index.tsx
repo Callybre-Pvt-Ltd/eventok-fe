@@ -1,8 +1,10 @@
 import { Button, Input, InputNumber, Upload } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
+import { LocationPicker } from '@/components/vendor/location-picker';
 import { useVendorProfile } from './helper';
 import {
+  Banner,
   Card,
   FieldLabel,
   FormField,
@@ -11,13 +13,22 @@ import {
   PageHeader,
   PageLead,
   PageTitle,
+  SectionSpacer,
 } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
+
+const STATUS_BANNER: Record<string, string> = {
+  pending: 'vendor.verificationPending',
+  under_review: 'vendor.verificationPending',
+  approved: 'vendor.verificationApproved',
+  rejected: 'vendor.verificationRejected',
+};
 
 export default function VendorProfilePage() {
   const { t } = useTranslation();
   const { palette } = usePortalPalette();
-  const { user, isLoading, form, saveMutation, uploadDoc } = useVendorProfile();
+  const { user, vendor, isLoading, form, saveMutation, uploadDoc } =
+    useVendorProfile();
 
   if (isLoading) return <LoadingState />;
 
@@ -32,6 +43,13 @@ export default function VendorProfilePage() {
           </PageLead>
         </div>
       </PageHeader>
+
+      {vendor?.status ? (
+        <Banner $palette={palette}>
+          {t(STATUS_BANNER[vendor.status] ?? 'vendor.verificationPending')}
+        </Banner>
+      ) : null}
+
       <Card $palette={palette}>
         <FormGrid>
           <FormField>
@@ -53,6 +71,67 @@ export default function VendorProfilePage() {
               value={form.businessName}
               onChange={e => form.setBusinessName(e.target.value)}
               placeholder="Business name"
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>{t('admin.ownerName')}</FieldLabel>
+            <Input
+              value={form.ownerName}
+              onChange={e => form.setOwnerName(e.target.value)}
+              placeholder={t('admin.ownerName')}
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>{t('admin.mobileNumber')}</FieldLabel>
+            <Input
+              value={form.mobileNumber}
+              onChange={e => form.setMobileNumber(e.target.value)}
+              placeholder="10-digit mobile number"
+              size="large"
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>
+              {t('admin.aadhaar')}
+              {vendor?.maskedAadhaar
+                ? ` — current: ${vendor.maskedAadhaar}`
+                : ''}
+            </FieldLabel>
+            <Input
+              value={form.aadhaarNumber}
+              onChange={e => form.setAadhaarNumber(e.target.value)}
+              placeholder={
+                vendor?.maskedAadhaar
+                  ? 'Enter to replace'
+                  : '12-digit Aadhaar number'
+              }
+              size="large"
+              maxLength={12}
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>
+              {t('admin.pan')}
+              {vendor?.maskedPan ? ` — current: ${vendor.maskedPan}` : ''}
+            </FieldLabel>
+            <Input
+              value={form.panNumber}
+              onChange={e => form.setPanNumber(e.target.value.toUpperCase())}
+              placeholder={
+                vendor?.maskedPan ? 'Enter to replace' : 'ABCDE1234F'
+              }
+              size="large"
+              maxLength={10}
+            />
+          </FormField>
+          <FormField>
+            <FieldLabel>{t('admin.gstin')} (optional)</FieldLabel>
+            <Input
+              value={form.gstin}
+              onChange={e => form.setGstin(e.target.value.toUpperCase())}
+              placeholder="15-character GSTIN"
               size="large"
             />
           </FormField>
@@ -107,13 +186,23 @@ export default function VendorProfilePage() {
             accept="image/*,.pdf"
             showUploadList={false}
             beforeUpload={file => {
-              uploadDoc.mutate({ documentType: 'ID_PROOF', file });
+              uploadDoc.mutate({ documentType: 'AADHAAR_FRONT', file });
               return false;
             }}
           >
             <Button loading={uploadDoc.isPending}>
-              {t('vendor.kycUpload')}
+              Upload Aadhaar (front)
             </Button>
+          </Upload>
+          <Upload
+            accept="image/*,.pdf"
+            showUploadList={false}
+            beforeUpload={file => {
+              uploadDoc.mutate({ documentType: 'AADHAAR_BACK', file });
+              return false;
+            }}
+          >
+            <Button loading={uploadDoc.isPending}>Upload Aadhaar (back)</Button>
           </Upload>
           <Upload
             accept="image/*,.pdf"
@@ -136,6 +225,15 @@ export default function VendorProfilePage() {
           </Button>
         </FormGrid>
       </Card>
+
+      {vendor?.id ? (
+        <SectionSpacer>
+          <Card $palette={palette}>
+            <FieldLabel>Service locations</FieldLabel>
+            <LocationPicker vendorId={vendor.id} />
+          </Card>
+        </SectionSpacer>
+      ) : null}
     </>
   );
 }
