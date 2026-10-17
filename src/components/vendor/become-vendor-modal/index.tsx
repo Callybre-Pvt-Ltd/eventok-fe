@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Modal, Form, Input, InputNumber, Checkbox, Button, Upload, message } from 'antd';
+import {
+  Modal,
+  Form,
+  Input,
+  InputNumber,
+  Checkbox,
+  Button,
+  Upload,
+  message,
+} from 'antd';
 import type { UploadFile } from 'antd';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { authService } from '@/services/authService';
@@ -111,7 +120,9 @@ export function BecomeVendorModal({
         );
         if (uploaded.error) {
           message.warning(
-            `Profile saved, but ${upload.type.replaceAll('_', ' ').toLowerCase()} failed to upload.`,
+            `Profile saved, but ${upload.type
+              .replaceAll('_', ' ')
+              .toLowerCase()} failed to upload.`,
           );
         }
       }
@@ -234,7 +245,12 @@ export function BecomeVendorModal({
         </Form.Item>
 
         <Form.Item label="Years of experience" name="experience_years">
-          <InputNumber min={0} max={80} size="large" style={{ width: '100%' }} />
+          <InputNumber
+            min={0}
+            max={80}
+            size="large"
+            style={{ width: '100%' }}
+          />
         </Form.Item>
 
         <Form.Item
@@ -245,7 +261,11 @@ export function BecomeVendorModal({
             { pattern: /^\d{12}$/, message: 'Enter a 12-digit Aadhaar number' },
           ]}
         >
-          <Input placeholder="12-digit Aadhaar number" size="large" maxLength={12} />
+          <Input
+            placeholder="12-digit Aadhaar number"
+            size="large"
+            maxLength={12}
+          />
         </Form.Item>
 
         <Form.Item
