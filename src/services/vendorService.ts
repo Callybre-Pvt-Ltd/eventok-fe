@@ -180,8 +180,15 @@ export const vendorService = {
   async createProfile(payload: {
     business_name: string;
     description?: string;
+    experience_years?: number;
+    address?: string;
     city?: string;
     state?: string;
+    owner_name?: string;
+    mobile_number?: string;
+    aadhaar_number?: string;
+    pan_number?: string;
+    gstin?: string;
   }): Promise<ServiceResponse<VendorPrivate>> {
     return wrap(async () =>
       toPrivate(

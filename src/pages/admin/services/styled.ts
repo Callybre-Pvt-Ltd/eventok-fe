@@ -104,7 +104,8 @@ export const TableWrapper = styled.div`
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  overflow: hidden;
+  overflow-x: auto;
+  max-width: 100%;
 
   .ant-table-thead > tr > th {
     background: #f8fafc;

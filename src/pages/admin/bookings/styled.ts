@@ -107,6 +107,12 @@ export const FilterBar = styled.div`
 export const FilterSearch = styled.div`
   flex: 1 1 18rem;
   max-width: 24rem;
+  min-width: 0;
+
+  @media (max-width: 767px) {
+    flex-basis: 100%;
+    max-width: none;
+  }
 `;
 
 export const VendorCell = styled.div`

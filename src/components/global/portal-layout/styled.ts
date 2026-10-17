@@ -23,10 +23,38 @@ export const Content = styled.div`
   padding: ${spacing.xl};
   max-width: 1200px;
   width: 100%;
+  min-width: 0;
   margin: 0 auto;
+
+  .ant-table-wrapper,
+  .ant-table,
+  .ant-table-container {
+    max-width: 100%;
+  }
+
+  .ant-table-content,
+  .ant-table-body {
+    overflow-x: auto !important;
+  }
+
+  .ant-table-content > table,
+  .ant-table-body > table {
+    min-width: 720px;
+  }
+
+  .ant-pagination {
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
 
   ${media.belowMd} {
     padding: ${spacing.md};
+
+    .ant-select,
+    .ant-picker,
+    .ant-input-affix-wrapper {
+      max-width: 100%;
+    }
   }
 `;
 
