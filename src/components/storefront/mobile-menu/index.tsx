@@ -61,12 +61,7 @@ export function MobileMenu({
             {t('storefront.wishlist')}
             {wishlistCount > 0 && <MenuCount>{wishlistCount}</MenuCount>}
           </MenuLink>
-          {!isSignedIn ? (
-            <MenuLink to={ROUTES.VENDOR_LOGIN}>
-              <Store size={18} />
-              {t('storefront.becomeVendor')}
-            </MenuLink>
-          ) : !isVendor && onOpenBecomeVendor ? (
+          {!isVendor && onOpenBecomeVendor ? (
             <MenuAction
               type="button"
               onClick={() => {

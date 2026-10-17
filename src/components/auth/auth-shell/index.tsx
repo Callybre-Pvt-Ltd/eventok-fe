@@ -62,7 +62,7 @@ interface AuthShellProps {
   showVendorCta?: boolean;
 }
 
-export function AuthShell({ children, showVendorCta = true }: AuthShellProps) {
+export function AuthShell({ children, showVendorCta = false }: AuthShellProps) {
   const { t } = useTranslation();
   const { palette, benefits } = useAuthShell();
 

@@ -12,7 +12,7 @@ export function useStoreFooter() {
       links: [
         { label: 'About Us', to: ROUTES.ABOUT },
         { label: 'Contact Us', to: ROUTES.CONTACT },
-        { label: 'Become a Vendor', to: ROUTES.VENDOR_LOGIN },
+        { label: 'Become a Vendor', to: '/?applyVendor=1' },
       ],
     },
     {

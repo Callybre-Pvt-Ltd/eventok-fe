@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Heart,
   MapPin,
@@ -36,17 +37,43 @@ import {
   SearchInput,
   SearchSubmit,
   VendorButton,
-  VendorLink,
 } from './styled';
+
+const APPLY_VENDOR_KEY = 'eventok_open_vendor_modal';
 
 export function StoreHeader() {
   const { t } = useTranslation();
   const header = useStoreHeader();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { session, isSignedIn } = useAuth();
   const [becomeVendorOpen, setBecomeVendorOpen] = useState(false);
 
   const role = session?.user?.role;
   const isVendor = role === 'vendor' || Boolean(session?.user?.vendorId);
+
+  const openVendorApplication = () => {
+    if (!isSignedIn) {
+      sessionStorage.setItem(APPLY_VENDOR_KEY, '1');
+      navigate(ROUTES.LOGIN);
+      return;
+    }
+    if (!isVendor) setBecomeVendorOpen(true);
+  };
+
+  useEffect(() => {
+    const requested =
+      searchParams.get('applyVendor') === '1' ||
+      sessionStorage.getItem(APPLY_VENDOR_KEY) === '1';
+    if (!requested || !isSignedIn || isVendor) return;
+    sessionStorage.removeItem(APPLY_VENDOR_KEY);
+    setBecomeVendorOpen(true);
+    if (searchParams.get('applyVendor') === '1') {
+      const next = new URLSearchParams(searchParams);
+      next.delete('applyVendor');
+      setSearchParams(next, { replace: true });
+    }
+  }, [isSignedIn, isVendor, searchParams, setSearchParams]);
 
   return (
     <HeaderRoot>
@@ -83,15 +110,8 @@ export function StoreHeader() {
 
         <Actions>
           <DesktopOnly>
-            {!isSignedIn ? (
-              <VendorLink to={ROUTES.VENDOR_LOGIN}>
-                {t('storefront.becomeVendor')}
-              </VendorLink>
-            ) : !isVendor ? (
-              <VendorButton
-                type="button"
-                onClick={() => setBecomeVendorOpen(true)}
-              >
+            {!isSignedIn || !isVendor ? (
+              <VendorButton type="button" onClick={openVendorApplication}>
                 {t('storefront.becomeVendor')}
               </VendorButton>
             ) : null}
@@ -113,9 +133,7 @@ export function StoreHeader() {
 
           <DesktopOnly>
             {isSignedIn ? (
-              <ProfileMenu
-                onOpenBecomeVendor={() => setBecomeVendorOpen(true)}
-              />
+              <ProfileMenu onOpenBecomeVendor={openVendorApplication} />
             ) : (
               <LoginButton to={ROUTES.LOGIN}>
                 <User size={16} />
@@ -140,7 +158,7 @@ export function StoreHeader() {
         open={header.menuOpen}
         onClose={header.closeMenu}
         wishlistCount={header.wishlistCount}
-        onOpenBecomeVendor={() => setBecomeVendorOpen(true)}
+        onOpenBecomeVendor={openVendorApplication}
       />
       <BecomeVendorModal
         open={becomeVendorOpen}

@@ -21,7 +21,6 @@ import RegisterPage from '@/pages/register';
 import AuthContinuePage from '@/pages/auth-continue';
 import SsoCallbackPage from '@/pages/sso-callback';
 import ForgotPasswordPage from '@/pages/forgot-password';
-import VendorLoginPage from '@/pages/vendor-login';
 
 import CustomerBookingsPage from '@/pages/customer/bookings';
 import CustomerChatPage from '@/pages/customer/chat';
@@ -119,7 +118,10 @@ export function AppRouter() {
         <Route path={ROUTES.AUTH_CONTINUE} element={<AuthContinuePage />} />
         <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
         <Route path={ROUTES.SSO_CALLBACK} element={<SsoCallbackPage />} />
-        <Route path={ROUTES.VENDOR_LOGIN} element={<VendorLoginPage />} />
+        <Route
+          path={ROUTES.VENDOR_LOGIN}
+          element={<Navigate to={ROUTES.LOGIN} replace />}
+        />
 
         {/* Signed-in shopper pages — part of the website, not a portal. Open to every
             signed-in role, because anyone may buy on the marketplace and therefore needs

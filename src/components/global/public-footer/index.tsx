@@ -124,7 +124,7 @@ export function PublicFooter() {
             <FooterLink to={`${ROUTES.HOME}#process`}>
               {t('landing.wedluxFooterHowItWorks')}
             </FooterLink>
-            <FooterLink to={ROUTES.CONTACT}>
+            <FooterLink to="/?applyVendor=1">
               {t('landing.wedluxFooterBecomeVendor')}
             </FooterLink>
           </FooterCol>
