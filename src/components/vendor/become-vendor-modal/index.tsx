@@ -1,18 +1,18 @@
-import { useState } from 'react';
+import { Alert, Modal, Form, Input, Checkbox, Button, Upload } from 'antd';
 import {
-  Modal,
-  Form,
-  Input,
-  InputNumber,
-  Checkbox,
-  Button,
-  Upload,
-  message,
-} from 'antd';
-import type { UploadFile } from 'antd';
-import { useAuth } from '@/hooks/auth/use-auth';
-import { authService } from '@/services/authService';
-import { vendorService } from '@/services/vendorService';
+  PHONE_REGEX,
+  useBecomeVendorModal,
+  type DocumentKind,
+  type FormValues,
+} from './helper';
+import {
+  Actions,
+  ActionsItem,
+  FailedNotice,
+  FullWidthNumber,
+  Intro,
+  ScrollBody,
+} from './styled';
 
 interface BecomeVendorModalProps {
   open: boolean;
@@ -20,376 +20,282 @@ interface BecomeVendorModalProps {
   onSuccess?: () => void;
 }
 
-interface FormValues {
-  full_name: string;
-  phone: string;
-  business_name: string;
-  owner_name?: string;
-  city?: string;
-  state?: string;
-  address?: string;
-  description?: string;
-  experience_years?: number;
-  aadhaar_number: string;
-  pan_number: string;
-  gstin?: string;
-  agree: boolean;
-}
-
-// Indian / international mobile phone validator: 10 to 15 digits, optional + prefix
-const PHONE_REGEX = /^\+?[0-9]{10,15}$/;
+const UPLOAD_FIELDS: { kind: DocumentKind; required: boolean }[] = [
+  { kind: 'AADHAAR_FRONT', required: true },
+  { kind: 'AADHAAR_BACK', required: true },
+  { kind: 'VENDOR_PROFILE_IMAGE', required: false },
+  { kind: 'GST_CERTIFICATE', required: false },
+];
 
 export function BecomeVendorModal({
   open,
   onClose,
   onSuccess,
 }: BecomeVendorModalProps) {
-  const { session, refreshSession } = useAuth();
-  const [form] = Form.useForm<FormValues>();
-  const [loading, setLoading] = useState(false);
-  const [aadhaarFront, setAadhaarFront] = useState<UploadFile[]>([]);
-  const [aadhaarBack, setAadhaarBack] = useState<UploadFile[]>([]);
-  const [profileImage, setProfileImage] = useState<UploadFile[]>([]);
-  const [gstFile, setGstFile] = useState<UploadFile[]>([]);
-
-  const initialValues: Partial<FormValues> = {
-    full_name: session?.user?.name || '',
-    phone: session?.user?.phone || '',
-    business_name: '',
-    city: session?.user?.city || '',
-    agree: false,
-  };
-
-  const handleFinish = async (values: FormValues) => {
-    try {
-      setLoading(true);
-
-      if (!aadhaarFront[0]?.originFileObj || !aadhaarBack[0]?.originFileObj) {
-        message.error('Upload both sides of your Aadhaar.');
-        return;
-      }
-
-      // 1. Update user profile phone & name if changed
-      if (values.full_name || values.phone) {
-        await authService.updateMe({
-          full_name: values.full_name.trim(),
-          phone: values.phone.trim(),
-        });
-      }
-
-      // 2. Create vendor profile
-      const res = await vendorService.createProfile({
-        business_name: values.business_name.trim(),
-        owner_name: values.owner_name?.trim() || values.full_name.trim(),
-        mobile_number: values.phone.trim(),
-        city: values.city?.trim() || undefined,
-        state: values.state?.trim() || undefined,
-        address: values.address?.trim() || undefined,
-        description: values.description?.trim() || undefined,
-        experience_years: values.experience_years,
-        aadhaar_number: values.aadhaar_number.trim(),
-        pan_number: values.pan_number.trim().toUpperCase(),
-        gstin: values.gstin?.trim().toUpperCase() || undefined,
-      });
-
-      if (res.error || !res.data) {
-        message.error(res.error || 'Failed to submit application');
-        return;
-      }
-
-      const uploads: Array<{
-        type:
-          | 'AADHAAR_FRONT'
-          | 'AADHAAR_BACK'
-          | 'VENDOR_PROFILE_IMAGE'
-          | 'GST_CERTIFICATE';
-        file?: UploadFile;
-      }> = [
-        { type: 'AADHAAR_FRONT', file: aadhaarFront[0] },
-        { type: 'AADHAAR_BACK', file: aadhaarBack[0] },
-        { type: 'VENDOR_PROFILE_IMAGE', file: profileImage[0] },
-        { type: 'GST_CERTIFICATE', file: gstFile[0] },
-      ];
-      for (const upload of uploads) {
-        const raw = upload.file?.originFileObj;
-        if (!raw) continue;
-        const uploaded = await vendorService.submitVerification(
-          res.data.id,
-          upload.type,
-          raw,
-        );
-        if (uploaded.error) {
-          message.warning(
-            `Profile saved, but ${upload.type
-              .replaceAll('_', ' ')
-              .toLowerCase()} failed to upload.`,
-          );
-        }
-      }
-
-      message.success(
-        'Vendor application submitted! It is now pending Super Admin review.',
-      );
-      form.resetFields();
-      setAadhaarFront([]);
-      setAadhaarBack([]);
-      setProfileImage([]);
-      setGstFile([]);
-      onClose();
-      await refreshSession();
-      if (onSuccess) onSuccess();
-    } catch (err: unknown) {
-      const msg =
-        err instanceof Error ? err.message : 'Failed to submit application';
-      message.error(msg);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    t,
+    form,
+    loading,
+    initialValues,
+    failedKinds,
+    profileCreated,
+    uploadProps,
+    handleFinish,
+    handleClose,
+  } = useBecomeVendorModal({ onClose, onSuccess });
 
   return (
     <Modal
-      title="Become an EventOK Vendor"
+      title={t('vendor.becomeVendorTitle')}
       open={open}
-      onCancel={onClose}
+      onCancel={handleClose}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
       centered
       width={640}
-      styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
     >
-      <p
-        style={{ color: '#666', marginBottom: '1.25rem', fontSize: '0.875rem' }}
-      >
-        Register your service or shop. Once submitted, our Super Admin team will
-        review and approve your vendor profile.
-      </p>
+      <ScrollBody>
+        <Intro>{t('vendor.becomeVendorIntro')}</Intro>
 
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={initialValues}
-        onFinish={handleFinish}
-        requiredMark="optional"
-      >
-        <Form.Item
-          label="Your Full Name"
-          name="full_name"
-          rules={[
-            { required: true, message: 'Please enter your name' },
-            { min: 2, message: 'Name must be at least 2 characters' },
-            { max: 100, message: 'Name cannot exceed 100 characters' },
-          ]}
+        <Form<FormValues>
+          form={form}
+          layout="vertical"
+          initialValues={initialValues}
+          onFinish={handleFinish}
+          requiredMark="optional"
+          disabled={loading}
         >
-          <Input placeholder="e.g. John Doe" size="large" />
-        </Form.Item>
-
-        <Form.Item
-          label="Phone Number"
-          name="phone"
-          rules={[
-            { required: true, message: 'Please enter your phone number' },
-            {
-              pattern: PHONE_REGEX,
-              message:
-                'Please enter a valid 10-digit phone number (e.g. 9876543210 or +919876543210)',
-            },
-          ]}
-        >
-          <Input placeholder="e.g. 9876543210" size="large" />
-        </Form.Item>
-
-        <Form.Item
-          label="Name of Shop or Service"
-          name="business_name"
-          rules={[
-            {
-              required: true,
-              message: 'Please enter your shop or service name',
-            },
-            {
-              min: 3,
-              message: 'Shop or service name must be at least 3 characters',
-            },
-            {
-              max: 200,
-              message: 'Shop or service name cannot exceed 200 characters',
-            },
-          ]}
-        >
-          <Input placeholder="e.g. Royal Caterers & Decorators" size="large" />
-        </Form.Item>
-
-        <Form.Item label="Owner name" name="owner_name">
-          <Input placeholder="Name on Aadhaar / PAN" size="large" />
-        </Form.Item>
-
-        <Form.Item
-          label="City / Location"
-          name="city"
-          rules={[{ max: 100, message: 'City cannot exceed 100 characters' }]}
-        >
-          <Input placeholder="e.g. Mumbai" size="large" />
-        </Form.Item>
-
-        <Form.Item label="State" name="state">
-          <Input placeholder="e.g. Maharashtra" size="large" />
-        </Form.Item>
-
-        <Form.Item label="Address" name="address">
-          <Input placeholder="Shop or studio address" size="large" />
-        </Form.Item>
-
-        <Form.Item label="About your business" name="description">
-          <Input.TextArea rows={3} placeholder="What you offer" />
-        </Form.Item>
-
-        <Form.Item label="Years of experience" name="experience_years">
-          <InputNumber
-            min={0}
-            max={80}
-            size="large"
-            style={{ width: '100%' }}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Aadhaar number"
-          name="aadhaar_number"
-          rules={[
-            { required: true, message: 'Aadhaar number is required' },
-            { pattern: /^\d{12}$/, message: 'Enter a 12-digit Aadhaar number' },
-          ]}
-        >
-          <Input
-            placeholder="12-digit Aadhaar number"
-            size="large"
-            maxLength={12}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="PAN"
-          name="pan_number"
-          rules={[
-            { required: true, message: 'PAN is required' },
-            {
-              pattern: /^[A-Z]{5}[0-9]{4}[A-Z]$/i,
-              message: 'Enter a valid PAN, e.g. ABCDE1234F',
-            },
-          ]}
-        >
-          <Input
-            placeholder="ABCDE1234F"
-            size="large"
-            maxLength={10}
-            onChange={e =>
-              form.setFieldValue('pan_number', e.target.value.toUpperCase())
-            }
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="GSTIN (optional)"
-          name="gstin"
-          rules={[
-            {
-              pattern: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/i,
-              message: 'Enter a valid 15-character GSTIN',
-            },
-          ]}
-        >
-          <Input placeholder="15-character GSTIN" size="large" maxLength={15} />
-        </Form.Item>
-
-        <Form.Item label="Aadhaar front" required>
-          <Upload
-            accept="image/*,.pdf"
-            maxCount={1}
-            fileList={aadhaarFront}
-            beforeUpload={() => false}
-            onChange={({ fileList }) => setAadhaarFront(fileList.slice(-1))}
+          <Form.Item
+            label={t('vendor.becomeVendorFullName')}
+            name="full_name"
+            rules={[
+              {
+                required: true,
+                message: t('vendor.becomeVendorFullNameRequired'),
+              },
+              { min: 2, message: t('vendor.becomeVendorFullNameMin') },
+              { max: 100, message: t('vendor.becomeVendorFullNameMax') },
+            ]}
           >
-            <Button>Upload Aadhaar (front)</Button>
-          </Upload>
-        </Form.Item>
+            <Input
+              placeholder={t('vendor.becomeVendorFullNamePlaceholder')}
+              size="large"
+            />
+          </Form.Item>
 
-        <Form.Item label="Aadhaar back" required>
-          <Upload
-            accept="image/*,.pdf"
-            maxCount={1}
-            fileList={aadhaarBack}
-            beforeUpload={() => false}
-            onChange={({ fileList }) => setAadhaarBack(fileList.slice(-1))}
+          <Form.Item
+            label={t('vendor.becomeVendorPhone')}
+            name="phone"
+            rules={[
+              {
+                required: true,
+                message: t('vendor.becomeVendorPhoneRequired'),
+              },
+              {
+                pattern: PHONE_REGEX,
+                message: t('vendor.becomeVendorPhoneInvalid'),
+              },
+            ]}
           >
-            <Button>Upload Aadhaar (back)</Button>
-          </Upload>
-        </Form.Item>
+            <Input
+              placeholder={t('vendor.becomeVendorPhonePlaceholder')}
+              size="large"
+            />
+          </Form.Item>
 
-        <Form.Item label="Profile image">
-          <Upload
-            accept="image/*"
-            maxCount={1}
-            fileList={profileImage}
-            beforeUpload={() => false}
-            onChange={({ fileList }) => setProfileImage(fileList.slice(-1))}
+          <Form.Item
+            label={t('vendor.becomeVendorBusinessName')}
+            name="business_name"
+            rules={[
+              {
+                required: true,
+                message: t('vendor.becomeVendorBusinessNameRequired'),
+              },
+              { min: 3, message: t('vendor.becomeVendorBusinessNameMin') },
+              { max: 200, message: t('vendor.becomeVendorBusinessNameMax') },
+            ]}
           >
-            <Button>Upload profile image</Button>
-          </Upload>
-        </Form.Item>
+            <Input
+              placeholder={t('vendor.becomeVendorBusinessNamePlaceholder')}
+              size="large"
+            />
+          </Form.Item>
 
-        <Form.Item label="GST certificate (optional)">
-          <Upload
-            accept="image/*,.pdf"
-            maxCount={1}
-            fileList={gstFile}
-            beforeUpload={() => false}
-            onChange={({ fileList }) => setGstFile(fileList.slice(-1))}
+          <Form.Item
+            label={t('vendor.becomeVendorOwnerName')}
+            name="owner_name"
           >
-            <Button>Upload GST certificate</Button>
-          </Upload>
-        </Form.Item>
+            <Input
+              placeholder={t('vendor.becomeVendorOwnerNamePlaceholder')}
+              size="large"
+            />
+          </Form.Item>
 
-        <Form.Item
-          name="agree"
-          valuePropName="checked"
-          rules={[
-            {
-              validator: (_, value) =>
-                value
-                  ? Promise.resolve()
-                  : Promise.reject(
-                      new Error('You must accept the terms and conditions'),
-                    ),
-            },
-          ]}
-        >
-          <Checkbox>
-            I agree to the{' '}
-            <a href="/terms" target="_blank" rel="noopener noreferrer">
-              Terms and Conditions
-            </a>{' '}
-            and Vendor Code of Conduct.
-          </Checkbox>
-        </Form.Item>
-
-        <Form.Item style={{ marginBottom: 0, marginTop: '1.5rem' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'flex-end',
-              gap: '0.75rem',
-            }}
+          <Form.Item
+            label={t('vendor.becomeVendorCity')}
+            name="city"
+            rules={[{ max: 100, message: t('vendor.becomeVendorCityMax') }]}
           >
-            <Button onClick={onClose} disabled={loading}>
-              Cancel
-            </Button>
-            <Button type="primary" htmlType="submit" loading={loading}>
-              Submit Application
-            </Button>
-          </div>
-        </Form.Item>
-      </Form>
+            <Input
+              placeholder={t('vendor.becomeVendorCityPlaceholder')}
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item label={t('vendor.becomeVendorState')} name="state">
+            <Input
+              placeholder={t('vendor.becomeVendorStatePlaceholder')}
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item label={t('vendor.becomeVendorAddress')} name="address">
+            <Input
+              placeholder={t('vendor.becomeVendorAddressPlaceholder')}
+              size="large"
+            />
+          </Form.Item>
+
+          <Form.Item label={t('vendor.becomeVendorAbout')} name="description">
+            <Input.TextArea
+              rows={3}
+              placeholder={t('vendor.becomeVendorAboutPlaceholder')}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={t('vendor.becomeVendorExperience')}
+            name="experience_years"
+          >
+            <FullWidthNumber min={0} max={80} size="large" />
+          </Form.Item>
+
+          <Form.Item
+            label={t('vendor.becomeVendorAadhaar')}
+            name="aadhaar_number"
+            rules={[
+              {
+                required: true,
+                message: t('vendor.becomeVendorAadhaarNumberRequired'),
+              },
+              {
+                pattern: /^\d{12}$/,
+                message: t('vendor.becomeVendorAadhaarInvalid'),
+              },
+            ]}
+          >
+            <Input
+              placeholder={t('vendor.becomeVendorAadhaarPlaceholder')}
+              size="large"
+              maxLength={12}
+            />
+          </Form.Item>
+
+          <Form.Item
+            label={t('vendor.becomeVendorPan')}
+            name="pan_number"
+            rules={[
+              { required: true, message: t('vendor.becomeVendorPanRequired') },
+              {
+                pattern: /^[A-Z]{5}[0-9]{4}[A-Z]$/i,
+                message: t('vendor.becomeVendorPanInvalid'),
+              },
+            ]}
+            normalize={(value: string) => value?.toUpperCase()}
+          >
+            <Input placeholder="ABCDE1234F" size="large" maxLength={10} />
+          </Form.Item>
+
+          <Form.Item
+            label={t('vendor.becomeVendorGstin')}
+            name="gstin"
+            rules={[
+              {
+                pattern: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/i,
+                message: t('vendor.becomeVendorGstinInvalid'),
+              },
+            ]}
+          >
+            <Input
+              placeholder={t('vendor.becomeVendorGstinPlaceholder')}
+              size="large"
+              maxLength={15}
+            />
+          </Form.Item>
+
+          {UPLOAD_FIELDS.map(({ kind, required }) => (
+            <Form.Item
+              key={kind}
+              label={t(`vendor.becomeVendorDoc_${kind}`)}
+              required={required}
+              extra={t(
+                kind === 'VENDOR_PROFILE_IMAGE'
+                  ? 'vendor.becomeVendorImageHint'
+                  : 'vendor.becomeVendorDocumentHint',
+              )}
+            >
+              <Upload {...uploadProps(kind)}>
+                <Button>
+                  {t('vendor.becomeVendorChooseFile', {
+                    document: t(`vendor.becomeVendorDoc_${kind}`),
+                  })}
+                </Button>
+              </Upload>
+            </Form.Item>
+          ))}
+
+          <Form.Item
+            name="agree"
+            valuePropName="checked"
+            rules={[
+              {
+                validator: (_, value) =>
+                  value
+                    ? Promise.resolve()
+                    : Promise.reject(
+                        new Error(t('vendor.becomeVendorTermsRequired')),
+                      ),
+              },
+            ]}
+          >
+            <Checkbox>
+              {t('vendor.becomeVendorTermsPrefix')}{' '}
+              <a href="/terms" target="_blank" rel="noopener noreferrer">
+                {t('vendor.becomeVendorTermsLink')}
+              </a>{' '}
+              {t('vendor.becomeVendorTermsSuffix')}
+            </Checkbox>
+          </Form.Item>
+
+          {failedKinds.length > 0 && (
+            <FailedNotice role="alert">
+              <Alert
+                type="error"
+                showIcon
+                message={t('vendor.becomeVendorRetryTitle')}
+                description={t('vendor.becomeVendorRetryBody', {
+                  documents: failedKinds
+                    .map(kind => t(`vendor.becomeVendorDoc_${kind}`))
+                    .join(', '),
+                })}
+              />
+            </FailedNotice>
+          )}
+
+          <ActionsItem>
+            <Actions>
+              <Button onClick={handleClose} disabled={loading}>
+                {t('vendor.becomeVendorCancel')}
+              </Button>
+              <Button type="primary" htmlType="submit" loading={loading}>
+                {profileCreated
+                  ? t('vendor.becomeVendorRetry')
+                  : t('vendor.becomeVendorSubmit')}
+              </Button>
+            </Actions>
+          </ActionsItem>
+        </Form>
+      </ScrollBody>
     </Modal>
   );
 }

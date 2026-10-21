@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { useAuth } from '@/hooks/auth/use-auth';
+import i18n from '@/i18n';
 import { categoryService, vendorService } from '@/services';
-import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 import { MAX_SERVICE_IMAGES } from '@/constants/servicePresets';
 
 export type UpdateServiceInput = {
@@ -42,7 +42,6 @@ export function useVendorServices() {
   const { session } = useAuth();
   const queryClient = useQueryClient();
   const vendorId = session?.user.vendorId;
-  const isAdmin = session?.user.role === 'admin';
 
   const meQuery = useQuery({
     queryKey: ['vendor', 'me'],
@@ -67,34 +66,18 @@ export function useVendorServices() {
   });
 
   const categoriesQuery = useQuery({
-    queryKey: ['categories', 'decoration'],
+    queryKey: ['categories', 'active'],
     queryFn: async () => {
-      if (isAdmin) {
-        await categoryService.ensureDecorationCategories();
-      }
       const res = await categoryService.getAll();
       if (res.error) throw new Error(res.error);
-      const live = (res.data ?? []).filter(c => c.id);
-      if (live.length) return live;
-      return DECORATION_CATEGORIES.map(c => ({
-        id: '',
-        name: c.name,
-        slug: c.slug,
-        icon: c.icon,
-        description: c.blurb,
-      }));
+      return res.data ?? [];
     },
   });
 
   const createMutation = useMutation({
     mutationFn: async (values: CreateServiceInput) => {
       if (!values.category_id) {
-        throw new Error(
-          'Categories are not loaded from the server yet. Ask admin to open Categories once, or run seed-demo.',
-        );
-      }
-      if (!values.images.length) {
-        throw new Error('Add at least one real photo of this setup.');
+        throw new Error(i18n.t('vendor.pickCategory'));
       }
       if (values.images.length > MAX_SERVICE_IMAGES) {
         throw new Error(`You can upload at most ${MAX_SERVICE_IMAGES} images.`);

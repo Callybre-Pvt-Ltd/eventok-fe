@@ -1,4 +1,3 @@
-import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 import { photography } from '@/design-system/tokens/photography';
 import {
   DEFAULT_PAGE_SIZE,
@@ -207,40 +206,18 @@ export const catalogService = {
   async getCategories(): Promise<ServiceResponse<CatalogCategory[]>> {
     return wrap(async () => {
       const res = await marketplaceService.listCategories();
-      const api = res.data ?? [];
-      const bySlug = new Map(api.map(c => [c.slug, c]));
-      const byName = new Map(api.map(c => [c.name.toLowerCase(), c]));
-
-      const merged: CatalogCategory[] = DECORATION_CATEGORIES.map(staticCat => {
-        const hit =
-          bySlug.get(staticCat.slug) ??
-          byName.get(staticCat.name.toLowerCase());
-        return {
-          id: hit?.id ?? staticCat.slug,
-          name: staticCat.name,
-          slug: hit?.slug ?? staticCat.slug,
-          eventType: EVENT_FROM_SLUG[staticCat.slug] ?? 'wedding',
-          icon: staticCat.icon,
-          serviceCount: hit?.service_count ?? 0,
+      if (res.error) throw new Error(res.error);
+      return (res.data ?? [])
+        .filter(c => c.is_active !== false)
+        .map(c => ({
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          eventType: EVENT_FROM_SLUG[c.slug] ?? 'wedding',
+          icon: c.icon ?? 'Sparkles',
+          serviceCount: c.service_count ?? 0,
           featuredOnHome: true,
-        };
-      });
-
-      const known = new Set(merged.map(c => c.slug));
-      for (const c of api) {
-        if (!known.has(c.slug) && c.is_active !== false) {
-          merged.push({
-            id: c.id,
-            name: c.name,
-            slug: c.slug,
-            eventType: EVENT_FROM_SLUG[c.slug] ?? 'wedding',
-            icon: c.icon ?? 'Sparkles',
-            serviceCount: c.service_count ?? 0,
-            featuredOnHome: false,
-          });
-        }
-      }
-      return merged;
+        }));
     });
   },
 

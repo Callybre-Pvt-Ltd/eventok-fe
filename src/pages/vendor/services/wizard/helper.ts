@@ -6,8 +6,8 @@ import { useAuth } from '@/hooks/auth/use-auth';
 import { categoryService, vendorService } from '@/services';
 import type { VendorApiService as ApiService } from '@/services/vendorService';
 import { ROUTES } from '@/constants/routes';
+import type { Category } from '@/types';
 import { MAX_SERVICE_IMAGES } from '@/constants/servicePresets';
-import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 
 export const STEP_LABELS = [
   'Basics',
@@ -60,21 +60,10 @@ export function useServiceWizard() {
   const [cancelWindow, setCancelWindow] = useState('48 hours');
   const [refundType, setRefundType] = useState('100% full refund');
 
-  const [categories, setCategories] = useState(
-    DECORATION_CATEGORIES.map(c => ({
-      id: '',
-      name: c.name,
-      slug: c.slug,
-      icon: c.icon,
-      description: c.blurb,
-    })),
-  );
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
-    categoryService.getAll().then(res => {
-      const live = (res.data ?? []).filter(c => c.id);
-      if (live.length) setCategories(live);
-    });
+    categoryService.getAll().then(res => setCategories(res.data ?? []));
   }, []);
 
   // Load existing service if editing
