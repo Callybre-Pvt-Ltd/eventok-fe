@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useState } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme';
@@ -28,6 +29,7 @@ export function usePremiumSearch() {
   const { palette } = useTheme();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  useBodyScrollLock(open);
   const [fields, setFields] = useState({
     eventType: '',
     city: '',

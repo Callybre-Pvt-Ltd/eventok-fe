@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState, type FormEvent } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
@@ -56,6 +57,8 @@ export function useCheckoutPage() {
   const [confirming, setConfirming] = useState(false);
   const [placing, setPlacing] = useState(false);
   const [failureMessage, setFailureMessage] = useState<string | null>(null);
+
+  useBodyScrollLock(confirming);
 
   // Prefill contact details from the signed-in account, without clobbering edits.
   useEffect(() => {

@@ -17,9 +17,24 @@ html {
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  html {
+  html:not(.modal-open):not(.ant-scrolling-effect-root) {
     scroll-behavior: smooth;
   }
+}
+
+/* Universal scroll lock: ensure background cannot scroll when any modal or overlay is open */
+html.modal-open,
+body.modal-open,
+html.ant-scrolling-effect-root,
+html:has(body.ant-scrolling-effect),
+body.ant-scrolling-effect {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
+
+.ant-modal-wrap,
+.ant-modal-mask {
+  overscroll-behavior: contain !important;
 }
 
 body {

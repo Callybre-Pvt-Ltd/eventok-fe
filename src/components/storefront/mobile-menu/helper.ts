@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { useLocation } from 'react-router-dom';
 import { useCategoryNav } from '@/components/storefront/category-nav/helper';
 
@@ -13,14 +14,7 @@ export function useMobileMenu(open: boolean, onClose: () => void) {
   }, [pathname, search]);
 
   // The page behind a full-height drawer must not scroll with it.
-  useEffect(() => {
-    if (!open) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    return () => {
-      document.body.style.overflow = previous;
-    };
-  }, [open]);
+  useBodyScrollLock(open);
 
   useEffect(() => {
     if (!open) return;

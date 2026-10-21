@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import {
   LayoutDashboard,
   Calendar,
@@ -86,6 +87,7 @@ export function usePortalSidebar(role: UserRole) {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  useBodyScrollLock(mobileOpen);
 
   const navItems = useMemo(() => getNavItems(role), [role]);
 
@@ -105,13 +107,6 @@ export function usePortalSidebar(role: UserRole) {
   const closeMobile = useCallback(() => {
     setMobileOpen(false);
   }, []);
-
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? 'hidden' : '';
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [mobileOpen]);
 
   useEffect(() => {
     if (!mobileOpen) return;

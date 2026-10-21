@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -43,6 +44,7 @@ export function MemoryLightbox({
     null,
   );
   const dragStartX = useRef<number | null>(null);
+  useBodyScrollLock(true);
 
   useEffect(() => {
     setScale(1);

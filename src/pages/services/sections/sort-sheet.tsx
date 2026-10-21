@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -30,16 +31,15 @@ export function DiscoverySortSheet({
 }: SortSheetProps) {
   const { t } = useTranslation();
 
+  useBodyScrollLock(open);
+
   useEffect(() => {
     if (!open) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
   }, [open, onClose]);

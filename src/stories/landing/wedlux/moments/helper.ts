@@ -57,11 +57,8 @@ export function useWedluxMoments() {
       if (event.key === 'ArrowLeft') goPrev();
     };
     window.addEventListener('keydown', onKey);
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
     };
   }, [lightboxIndex, closeLightbox, goNext, goPrev]);
 

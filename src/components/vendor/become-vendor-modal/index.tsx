@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import {
   Modal,
   Form,
@@ -51,6 +52,8 @@ export function BecomeVendorModal({
   const [aadhaarBack, setAadhaarBack] = useState<UploadFile[]>([]);
   const [profileImage, setProfileImage] = useState<UploadFile[]>([]);
   const [gstFile, setGstFile] = useState<UploadFile[]>([]);
+
+  useBodyScrollLock(open);
 
   const initialValues: Partial<FormValues> = {
     full_name: session?.user?.name || '',

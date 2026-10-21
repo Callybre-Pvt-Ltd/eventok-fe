@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { CATALOG_MAX_PRICE } from '@/constants/catalog';
 import { catalogService } from '@/services';
 import type { CatalogEventType } from '@/types/catalog';
@@ -86,6 +87,7 @@ export function useShopPage() {
 
   // Phones get the filters in a bottom sheet instead of a column above the results.
   const [filtersOpen, setFiltersOpen] = useState(false);
+  useBodyScrollLock(filtersOpen);
   const activeFilterCount =
     selectedTags.length + (maxPrice < CATALOG_MAX_PRICE ? 1 : 0);
 

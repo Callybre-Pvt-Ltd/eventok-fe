@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from 'react';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import type { DiscoveryVendor } from '@/pages/services/filters';
@@ -59,6 +60,8 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  useBodyScrollLock(open);
+
   useEffect(() => {
     if (!open) {
       setSent(false);
@@ -66,14 +69,11 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
       setLoading(false);
       return;
     }
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
   }, [open, onClose]);

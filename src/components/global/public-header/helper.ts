@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
+import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { gsap } from '@/hooks/gsap/setup';
 
 function prefersReducedMotion() {
@@ -14,6 +15,8 @@ export function usePublicHeader(overlay = false) {
   const menuRef = useRef<HTMLDivElement>(null);
   const menuBtnRef = useRef<HTMLButtonElement>(null);
   const menuId = useId();
+
+  useBodyScrollLock(menuOpen);
 
   useEffect(() => {
     const onScroll = () => {
@@ -91,8 +94,6 @@ export function usePublicHeader(overlay = false) {
 
   useEffect(() => {
     if (!menuOpen) return;
-    const prev = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
 
     if (menuRef.current && !prefersReducedMotion()) {
       const items = menuRef.current.querySelectorAll('[data-nav-item]');
@@ -117,7 +118,6 @@ export function usePublicHeader(overlay = false) {
     };
     window.addEventListener('keydown', onKey);
     return () => {
-      document.body.style.overflow = prev;
       window.removeEventListener('keydown', onKey);
     };
   }, [menuOpen]);
