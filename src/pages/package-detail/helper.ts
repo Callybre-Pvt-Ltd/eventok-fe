@@ -55,7 +55,12 @@ export function usePackageDetailPage() {
   });
 
   useEffect(() => {
-    if (data) document.title = data.name;
+    if (!data) return;
+    const previous = document.title;
+    document.title = data.name;
+    return () => {
+      document.title = previous;
+    };
   }, [data]);
 
   const bookMutation = useMutation({

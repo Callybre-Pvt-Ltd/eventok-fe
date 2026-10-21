@@ -124,19 +124,27 @@ export function useCheckoutPage() {
     setPlacing(true);
     setFailureMessage(null);
 
+    // Lines are independent bookings, so they are placed together.
+    const results = await Promise.all(
+      lines.map(async line => ({
+        line,
+        res: await bookingService.createDirectBooking({
+          service_id: line.service.id,
+          booking_date: form.eventDate,
+        }),
+      })),
+    );
     const createdIds: string[] = [];
+    const bookedSlugs: string[] = [];
     const failures: string[] = [];
-    for (const line of lines) {
-      const res = await bookingService.createDirectBooking({
-        service_id: line.service.id,
-        booking_date: form.eventDate,
-      });
+    for (const { line, res } of results) {
       if (res.error || !res.data) {
         failures.push(
           `${line.service.title}: ${res.error ?? 'Request failed'}`,
         );
       } else {
         createdIds.push(res.data.id);
+        bookedSlugs.push(line.serviceSlug);
       }
     }
 
@@ -151,8 +159,13 @@ export function useCheckoutPage() {
 
     setFailureMessage(failures.length ? failures.join('\n') : null);
     setBookingId(bookingReference(createdIds[0]));
-    clearCheckoutDraft();
-    basket.clearCart();
+    // Lines that failed stay in the cart so they can be retried.
+    if (failures.length) {
+      bookedSlugs.forEach(slug => basket.removeFromCart(slug));
+    } else {
+      clearCheckoutDraft();
+      basket.clearCart();
+    }
   }, [basket, form.eventDate, lines, session]);
 
   return {

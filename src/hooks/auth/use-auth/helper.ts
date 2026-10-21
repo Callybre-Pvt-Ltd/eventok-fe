@@ -11,7 +11,12 @@ import {
   useState,
   type ReactNode,
 } from 'react';
-import { ApiError, setAuthTokenProvider } from '@/api/client';
+import {
+  ApiError,
+  isTransientError,
+  setAuthTokenProvider,
+  warmUpApi,
+} from '@/api/client';
 import { ROUTES } from '@/constants/routes';
 import { withNextPath } from '@/utils/auth/auth-return';
 import { peekAuthIntent } from '@/utils/auth/post-auth';
@@ -35,6 +40,8 @@ interface AuthContextValue {
   session: Session | null;
   isLoading: boolean;
   isSignedIn: boolean;
+  /** Clerk is signed in but the EventOK profile could not be loaded. */
+  sessionFailed: boolean;
   login: (email: string, password: string) => Promise<LoginResult>;
   verifyLoginCode: (code: string) => Promise<string | null>;
   logout: () => Promise<void>;
@@ -48,6 +55,16 @@ interface AuthContextValue {
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
+
+// Google OAuth tokens can take a few seconds to verify server-side.
+const UNAUTHORIZED_RETRY_DELAYS = [
+  500, 1000, 1500, 2000, 2500, 3000, 3000, 3000,
+];
+// A sleeping backend (Render free tier) needs up to about a minute to boot.
+const TRANSIENT_RETRY_BUDGET_MS = 90_000;
+const TRANSIENT_RETRY_DELAY_MS = 3000;
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const absoluteUrl = (path: string) => {
   if (typeof window === 'undefined') return path;
@@ -75,6 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { isLoaded: signUpLoaded, signUp } = useSignUp();
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sessionFailed, setSessionFailed] = useState(false);
   const sessionInflight = useRef<Promise<Session | null> | null>(null);
   const clerkLoaded = clerk.isLoaded;
   const clerkSignedIn = Boolean(clerk.isSignedIn);
@@ -83,6 +101,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     setAuthTokenProvider(async () => getToken());
   }, [getToken]);
+
+  useEffect(() => {
+    void warmUpApi();
+  }, []);
 
   const refreshSession = useCallback(async (): Promise<Session | null> => {
     if (!clerkLoaded) return null;
@@ -107,24 +129,34 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (error instanceof ApiError && error.status === 401) {
             return { kind: 'unauthorized' as const, error };
           }
+          if (isTransientError(error)) {
+            return { kind: 'transient' as const, error: error as ApiError };
+          }
           throw error;
         }
       };
 
+      setSessionFailed(false);
+      const startedAt = Date.now();
       try {
         let result = await load(false);
+        let unauthorizedRetries = 0;
 
-        // Retry for 401s — Google OAuth session tokens can take a few
-        // seconds longer than a single request to become verifiable
-        // server-side. Never surface a 401 to a signed-in Clerk user;
-        // keep retrying (well under the AuthContinuePage timeout) instead.
-        if (result.kind === 'unauthorized') {
-          const delays = [500, 1000, 1500, 2000, 2500, 3000, 3000, 3000];
-          for (const delay of delays) {
-            await new Promise(resolve => setTimeout(resolve, delay));
-            result = await load(true);
-            if (result.kind !== 'unauthorized') break;
-          }
+        // Never surface a 401 or a cold-start timeout to a signed-in Clerk user
+        // while a retry can still succeed.
+        while (
+          (result.kind === 'unauthorized' &&
+            unauthorizedRetries < UNAUTHORIZED_RETRY_DELAYS.length) ||
+          (result.kind === 'transient' &&
+            Date.now() - startedAt < TRANSIENT_RETRY_BUDGET_MS)
+        ) {
+          const unauthorized = result.kind === 'unauthorized';
+          await sleep(
+            unauthorized
+              ? UNAUTHORIZED_RETRY_DELAYS[unauthorizedRetries++]
+              : TRANSIENT_RETRY_DELAY_MS,
+          );
+          result = await load(unauthorized);
         }
 
         if (result.kind === 'signed_out') {
@@ -138,10 +170,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         if (result.kind === 'unauthorized') {
           setSession(null);
+          setSessionFailed(true);
           console.error(
             'Session refresh unauthorized after retries:',
             result.error.message,
           );
+          return null;
+        }
+        if (result.kind === 'transient') {
+          // Keep any session already loaded: the backend is unreachable, not the user.
+          setSessionFailed(true);
+          console.error('Session refresh failed:', result.error);
           return null;
         }
 
@@ -149,7 +188,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return result.next;
       } catch (error) {
         console.error('Session refresh failed:', error);
-        setSession(null);
+        if (!isTransientError(error)) setSession(null);
+        setSessionFailed(true);
         return null;
       }
     };
@@ -331,6 +371,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       isLoading: isLoading || !clerkLoaded,
       isSignedIn: clerkSignedIn,
+      sessionFailed,
       login,
       verifyLoginCode,
       logout,
@@ -352,6 +393,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       resendRegistrationCode,
       session,
+      sessionFailed,
       signInWithGoogle,
       verifyLoginCode,
       verifyRegistration,

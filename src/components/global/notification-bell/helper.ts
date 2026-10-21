@@ -1,8 +1,11 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
-import { useAuth } from '@/hooks/auth/use-auth';
+import {
+  notificationsQueryKey,
+  useNotifications,
+} from '@/hooks/notifications/use-notifications';
 import { notificationService } from '@/services';
 import type { Notification, UserRole } from '@/types';
 
@@ -32,28 +35,30 @@ export function notificationTarget(
 const POLL_INTERVAL_MS = 60_000;
 
 export function useNotificationBell(role: UserRole) {
-  const { session } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const userId = session?.user.id ?? '';
   const [open, setOpen] = useState(false);
+  const query = useNotifications({ refetchInterval: POLL_INTERVAL_MS });
+  const { userId } = query;
 
-  const query = useQuery({
-    queryKey: ['notifications', userId],
-    queryFn: async () => {
-      const res = await notificationService.list(userId);
-      if (res.error) throw new Error(res.error);
-      return res.data ?? [];
-    },
-    enabled: Boolean(userId),
-    refetchInterval: POLL_INTERVAL_MS,
-  });
+  const invalidate = useCallback(
+    () =>
+      queryClient.invalidateQueries({
+        queryKey: notificationsQueryKey(userId),
+      }),
+    [queryClient, userId],
+  );
 
   const markRead = useMutation({
     mutationFn: (id: string) => notificationService.markRead(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['notifications', userId] });
-    },
+    onSuccess: invalidate,
+  });
+
+  // One refetch for the whole batch instead of one per notification.
+  const markAll = useMutation({
+    mutationFn: (ids: string[]) =>
+      Promise.all(ids.map(id => notificationService.markRead(id))),
+    onSettled: invalidate,
   });
 
   const notifications = useMemo(() => query.data ?? [], [query.data]);
@@ -70,10 +75,11 @@ export function useNotificationBell(role: UserRole) {
   );
 
   const markAllRead = useCallback(() => {
-    notifications
+    const unread = notifications
       .filter(item => !item.read)
-      .forEach(item => markRead.mutate(item.id));
-  }, [markRead, notifications]);
+      .map(item => item.id);
+    if (unread.length) markAll.mutate(unread);
+  }, [markAll, notifications]);
 
   return {
     notifications,

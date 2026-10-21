@@ -25,11 +25,13 @@ export function useVendorDashboard() {
     enabled: !!userId,
   });
   const vendor = vendorQuery.data?.data;
+  // The session already knows the vendor id, so the lists need not wait for the profile.
+  const vendorId = session?.user.vendorId ?? vendor?.id;
 
   const bookingsQuery = useQuery({
-    queryKey: ['vendor-bookings', vendor?.id],
-    queryFn: () => bookingService.getVendorBookings(vendor!.id),
-    enabled: !!vendor?.id,
+    queryKey: ['vendor-bookings', vendorId],
+    queryFn: () => bookingService.getVendorBookings(vendorId!),
+    enabled: !!vendorId,
   });
   const bookings = useMemo(
     () => bookingsQuery.data?.data ?? [],
@@ -37,15 +39,15 @@ export function useVendorDashboard() {
   );
 
   const packagesQuery = useQuery({
-    queryKey: ['vendor-packages', vendor?.id],
-    queryFn: () => vendorService.listPackages(vendor!.id),
-    enabled: !!vendor?.id,
+    queryKey: ['vendor-packages', vendorId],
+    queryFn: () => vendorService.listPackages(vendorId!),
+    enabled: !!vendorId,
   });
 
   const servicesQuery = useQuery({
-    queryKey: ['vendor-services-count', vendor?.id],
-    queryFn: () => vendorService.listMyServices(vendor!.id),
-    enabled: !!vendor?.id,
+    queryKey: ['vendor-services-count', vendorId],
+    queryFn: () => vendorService.listMyServices(vendorId!),
+    enabled: !!vendorId,
   });
 
   const pendingRequests = useMemo(

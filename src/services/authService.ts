@@ -71,7 +71,9 @@ const ensureVendorProfile = async (input: {
 }): Promise<{ id: string; status: string }> => {
   try {
     return await apiRequest<{ id: string; status: string }>('/vendors/me');
-  } catch {
+  } catch (error) {
+    // Only a missing profile may be created; a timeout must not POST a duplicate.
+    if (!(error instanceof ApiError && error.status === 404)) throw error;
     return apiRequest<{ id: string; status: string }>('/vendors', {
       method: 'POST',
       body: {
@@ -94,17 +96,10 @@ const fetchMe = async (): Promise<User> => {
   let vendorId = meta.vendorId;
   if (raw.role === 'VENDOR') {
     try {
-      let vendor: { id: string; status: string };
-      try {
-        vendor = await apiRequest<{ id: string; status: string }>(
-          '/vendors/me',
-        );
-      } catch {
-        vendor = await ensureVendorProfile({
-          businessName: raw.full_name,
-          city: meta.city,
-        });
-      }
+      const vendor = await ensureVendorProfile({
+        businessName: raw.full_name,
+        city: meta.city,
+      });
       vendorId = vendor.id;
       vendorStatus = mapVendorStatus(vendor.status);
       saveMeta({ ...meta, vendorStatus, vendorId, city: meta.city });

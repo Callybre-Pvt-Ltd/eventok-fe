@@ -1,13 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@/hooks/auth/use-auth';
-import { notificationService } from '@/services';
+import { useNotifications } from '@/hooks/notifications/use-notifications';
+
 export function useCustomerNotifications() {
-  const { session } = useAuth();
-  const userId = session?.user.id ?? '';
-  const query = useQuery({
-    queryKey: ['notifications', userId],
-    queryFn: () => notificationService.getAll(userId),
-    enabled: !!userId,
-  });
-  return { notifications: query.data?.data ?? [], isLoading: query.isLoading };
+  const query = useNotifications();
+  return { notifications: query.data ?? [], isLoading: query.isLoading };
 }

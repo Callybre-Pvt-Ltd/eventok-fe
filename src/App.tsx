@@ -1,6 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider, theme as antTheme } from 'antd';
+import { ApiError } from '@/api/client';
 import { AuthProvider } from '@/hooks/auth/use-auth';
+import { useQueryCacheReset } from '@/hooks/auth/use-query-cache-reset';
 import { BasketProvider } from '@/hooks/storefront/use-basket';
 import { ThemeProvider, useTheme, fontFamily } from '@/theme';
 import { AppRouter } from '@/routes/AppRouter';
@@ -9,7 +11,13 @@ import '@/i18n';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      // A 4xx will not fix itself on retry; transient failures get two more tries.
+      retry: (failureCount, error) =>
+        !(
+          error instanceof ApiError &&
+          error.status >= 400 &&
+          error.status < 500
+        ) && failureCount < 2,
       staleTime: 60_000,
       refetchOnWindowFocus: false,
     },
@@ -18,6 +26,7 @@ const queryClient = new QueryClient({
 
 function ThemedApp() {
   const { palette, mode } = useTheme();
+  useQueryCacheReset();
 
   return (
     <ConfigProvider

@@ -43,10 +43,6 @@ export const notificationService = {
     });
   },
 
-  async getAll(userId: string): Promise<ServiceResponse<Notification[]>> {
-    return notificationService.list(userId);
-  },
-
   async markRead(id: string): Promise<ServiceResponse<null>> {
     return wrap(async () => {
       await apiRequest(`/notifications/${id}`, {
