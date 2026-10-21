@@ -1,4 +1,4 @@
-import { useClerk, useAuth as useClerkAuth } from '@clerk/react';
+import { useClerk, useAuth as useClerkAuth, useUser } from '@clerk/react';
 import { useSignIn, useSignUp } from '@clerk/react/legacy';
 import {
   createContext,
@@ -16,7 +16,7 @@ import { ROUTES } from '@/constants/routes';
 import { withNextPath } from '@/utils/auth/auth-return';
 import { peekAuthIntent } from '@/utils/auth/post-auth';
 import { authService } from '@/services';
-import type { Session } from '@/types';
+import type { Session, UserRole } from '@/types';
 
 export interface RegisterPayload {
   email: string;
@@ -68,8 +68,44 @@ const clerkError = (error: unknown): string => {
   return error instanceof Error ? error.message : 'Authentication failed';
 };
 
+function deriveFallbackSession(
+  user: ReturnType<typeof useUser>['user'],
+): Session | null {
+  if (!user) return null;
+  const rawRole =
+    (user.publicMetadata?.role as string | undefined) ||
+    (user.unsafeMetadata?.eventok_role as string | undefined);
+  const role: UserRole =
+    rawRole?.toLowerCase() === 'admin'
+      ? 'admin'
+      : rawRole?.toLowerCase() === 'vendor'
+        ? 'vendor'
+        : 'customer';
+
+  return {
+    user: {
+      id: user.id,
+      email:
+        user.primaryEmailAddress?.emailAddress ||
+        user.emailAddresses?.[0]?.emailAddress ||
+        '',
+      name: user.fullName || user.firstName || user.username || '',
+      role,
+      city: '',
+      createdAt: user.createdAt
+        ? user.createdAt.toISOString()
+        : new Date().toISOString(),
+    },
+  };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const clerk = useClerkAuth();
+  const { user: clerkUser } = useUser();
+  const clerkUserRef = useRef(clerkUser);
+  useEffect(() => {
+    clerkUserRef.current = clerkUser;
+  }, [clerkUser]);
   const clerkApi = useClerk();
   const { isLoaded: signInLoaded, signIn } = useSignIn();
   const { isLoaded: signUpLoaded, signUp } = useSignUp();
@@ -137,6 +173,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return provisioned;
         }
         if (result.kind === 'unauthorized') {
+          const fallback = deriveFallbackSession(clerkUserRef.current);
+          if (fallback) {
+            setSession(fallback);
+            return fallback;
+          }
           setSession(null);
           console.error(
             'Session refresh unauthorized after retries:',
@@ -149,6 +190,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return result.next;
       } catch (error) {
         console.error('Session refresh failed:', error);
+        const fallback = deriveFallbackSession(clerkUserRef.current);
+        if (fallback) {
+          setSession(fallback);
+          return fallback;
+        }
         setSession(null);
         return null;
       }
@@ -173,6 +219,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Intentionally omit refreshSession — only re-run on Clerk auth flips.
     // eslint-disable-next-line react-hooks/exhaustive-deps -- auth-state gated
   }, [clerkLoaded, clerkSignedIn]);
+
+  useEffect(() => {
+    if (!session && clerkSignedIn && clerkUser) {
+      const fallback = deriveFallbackSession(clerkUser);
+      if (fallback) setSession(fallback);
+    }
+  }, [clerkSignedIn, clerkUser, session]);
 
   const activateSession = useCallback(
     async (sessionId: string) => {

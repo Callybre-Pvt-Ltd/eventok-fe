@@ -3,6 +3,7 @@ import { useUser } from '@clerk/react';
 import { LogOut, Package, Shield, Store, User } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
+import type { UserRole } from '@/types';
 import { getRoleLabel } from '@/utils/auth/roles';
 
 import {
@@ -65,7 +66,10 @@ export function ProfileMenu({
   if (!isSignedIn) return null;
 
   const user = session?.user;
-  const role = user?.role;
+  const clerkRole =
+    (clerkUser?.publicMetadata?.role as UserRole | undefined) ??
+    (clerkUser?.unsafeMetadata?.eventok_role === 'VENDOR' ? 'vendor' : undefined);
+  const role: UserRole | undefined = user?.role ?? clerkRole;
   const email = resolveEmail(user?.email, clerkUser);
   const letter = (email.trim()[0] || 'U').toUpperCase();
   const avatarUrl =
