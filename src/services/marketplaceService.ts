@@ -175,7 +175,15 @@ async function fetchCategories(): Promise<ApiCategory[]> {
   return categoriesInflight;
 }
 
+/** Image URLs of one service; a failed lookup just means no photos. */
+const fetchServiceImages = (id: string): Promise<string[]> =>
+  apiRequest<ApiServiceImage[]>(`/services/${id}/images`, { auth: false })
+    .then(imgs => imgs.map(i => i.image_url))
+    .catch(() => []);
+
 export const marketplaceService = {
+  listServiceImages: fetchServiceImages,
+
   async listCategories(): Promise<ServiceResponse<ApiCategory[]>> {
     return wrap(async () => fetchCategories());
   },
@@ -186,37 +194,29 @@ export const marketplaceService = {
     ServiceResponse<{ items: DiscoveryVendor[]; total: number; pages: number }>
   > {
     return wrap(async () => {
-      const categories = await fetchCategories();
+      const [categories, page] = await Promise.all([
+        fetchCategories(),
+        apiRequestPaginated<ApiService>('/services', {
+          auth: false,
+          query: {
+            q: filters.q,
+            category_id: filters.category_id,
+            vendor_id: filters.vendor_id,
+            min_price: filters.min_price,
+            max_price: filters.max_price,
+            city: filters.city,
+            sort: filters.sort,
+            page: filters.page ?? 1,
+            page_size: filters.page_size ?? DEFAULT_PAGE_SIZE,
+          },
+        }),
+      ]);
       const byId = new Map(categories.map(c => [c.id, c]));
-
-      const page = await apiRequestPaginated<ApiService>('/services', {
-        auth: false,
-        query: {
-          q: filters.q,
-          category_id: filters.category_id,
-          vendor_id: filters.vendor_id,
-          min_price: filters.min_price,
-          max_price: filters.max_price,
-          city: filters.city,
-          sort: filters.sort,
-          page: filters.page ?? 1,
-          page_size: filters.page_size ?? DEFAULT_PAGE_SIZE,
-        },
-      });
 
       const items = await Promise.all(
         page.items.map(async service => {
           const cat = byId.get(service.category_id);
-          let images: string[] = [];
-          try {
-            const imgs = await apiRequest<ApiServiceImage[]>(
-              `/services/${service.id}/images`,
-              { auth: false },
-            );
-            images = imgs.map(i => i.image_url);
-          } catch {
-            images = [];
-          }
+          const images = await fetchServiceImages(service.id);
           return toDiscoveryCard(service, cat ?? null, images);
         }),
       );
@@ -268,21 +268,13 @@ export const marketplaceService = {
     id: string,
   ): Promise<ServiceResponse<DiscoveryVendor & { raw: ApiService }>> {
     return wrap(async () => {
-      const service = await apiRequest<ApiService>(`/services/${id}`, {
-        auth: false,
-      });
-      const categories = await fetchCategories();
+      // Independent requests: fetch them together instead of one after another.
+      const [service, categories, images] = await Promise.all([
+        apiRequest<ApiService>(`/services/${id}`, { auth: false }),
+        fetchCategories(),
+        fetchServiceImages(id),
+      ]);
       const cat = categories.find(c => c.id === service.category_id);
-      let images: string[] = [];
-      try {
-        const imgs = await apiRequest<ApiServiceImage[]>(
-          `/services/${id}/images`,
-          { auth: false },
-        );
-        images = imgs.map(i => i.image_url);
-      } catch {
-        images = [];
-      }
       return {
         ...toDiscoveryCard(service, cat ?? null, images),
         raw: service,

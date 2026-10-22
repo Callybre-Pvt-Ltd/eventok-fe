@@ -327,6 +327,14 @@ export const bookingService = {
           }),
         ]);
 
+      // Catalogue lookups are cosmetic, but losing both booking sources must surface as
+      // an error instead of an empty "No bookings" list.
+      if (
+        enquiriesRes.status === 'rejected' &&
+        bookingsRes.status === 'rejected'
+      ) {
+        throw bookingsRes.reason;
+      }
       const enquiries =
         enquiriesRes.status === 'fulfilled' ? enquiriesRes.value.items : [];
       const bookings =

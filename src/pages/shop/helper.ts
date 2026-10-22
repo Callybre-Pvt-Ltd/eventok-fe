@@ -1,8 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { useParams, useSearchParams } from 'react-router-dom';
 import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import { CATALOG_MAX_PRICE } from '@/constants/catalog';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { catalogService } from '@/services';
 import type { CatalogEventType } from '@/types/catalog';
 
@@ -24,23 +25,37 @@ export function useShopPage() {
     staleTime: 5 * 60_000,
   });
 
-  const { data: services, isLoading } = useQuery({
+  // Only server-side filters belong in the key; the slider and search settle first so a
+  // drag does not fire a request per step.
+  const debouncedSearch = useDebouncedValue(search);
+  const debouncedMaxPrice = useDebouncedValue(maxPrice);
+  const { data: fetched, isLoading } = useQuery({
     queryKey: [
       'storefront',
       'shop',
-      { search, eventType, categorySlug, maxPrice, selectedTags },
+      { search: debouncedSearch, categorySlug, maxPrice: debouncedMaxPrice },
     ],
     queryFn: async () =>
       (
         await catalogService.list({
-          search,
-          eventType,
+          search: debouncedSearch,
           categorySlug,
-          maxPrice,
-          tags: selectedTags,
+          maxPrice: debouncedMaxPrice,
         })
       ).data ?? [],
+    placeholderData: keepPreviousData,
   });
+
+  const services = useMemo(
+    () =>
+      (fetched ?? []).filter(
+        item =>
+          (eventType === 'all' || item.eventType === eventType) &&
+          (!selectedTags.length ||
+            selectedTags.some(tag => item.tags.includes(tag))),
+      ),
+    [eventType, fetched, selectedTags],
+  );
 
   const update = useCallback(
     (mutate: (next: URLSearchParams) => void) => {
@@ -92,7 +107,7 @@ export function useShopPage() {
     selectedTags.length + (maxPrice < CATALOG_MAX_PRICE ? 1 : 0);
 
   return {
-    services: services ?? [],
+    services,
     isLoading,
     filtersOpen,
     openFilters: () => setFiltersOpen(true),

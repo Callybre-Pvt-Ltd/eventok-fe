@@ -112,13 +112,13 @@ export function BasicsStep({ wizard }: { wizard: ServiceWizard }) {
         <CategoryGrid>
           {wizard.categories.map(cat => {
             const IconComponent = (cat.icon && ICON_MAP[cat.icon]) || Layers;
-            const active = wizard.categoryId === (cat.id || cat.slug);
+            const active = wizard.categoryId === cat.id;
             return (
               <CategoryTile
-                key={cat.slug || cat.id}
+                key={cat.id}
                 type="button"
                 $active={active}
-                onClick={() => wizard.setCategoryId(cat.id || cat.slug)}
+                onClick={() => wizard.setCategoryId(cat.id)}
               >
                 <CatIconWrap $active={active}>
                   <IconComponent size={18} />
@@ -514,7 +514,7 @@ export function ReviewStep({
   }
 
   const selectedCategory = wizard.categories.find(
-    c => c.id === wizard.categoryId || c.slug === wizard.categoryId,
+    c => c.id === wizard.categoryId,
   );
 
   return (

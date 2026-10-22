@@ -121,7 +121,6 @@ export default function ServiceWizardPage() {
     if (wizard.step === 1)
       return wizard.categoryId.trim() && wizard.title.trim();
     if (wizard.step === 2) return Number(wizard.price) > 0;
-    if (wizard.step === 6) return images.length > 0;
     return true;
   };
 

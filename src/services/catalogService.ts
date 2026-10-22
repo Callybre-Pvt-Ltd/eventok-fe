@@ -1,4 +1,3 @@
-import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 import { photography } from '@/design-system/tokens/photography';
 import {
   DEFAULT_PAGE_SIZE,
@@ -72,14 +71,26 @@ const toCatalog = (
   };
 };
 
-/** First available cover image across a package's component services ('' when none). */
-const firstServiceImage = async (serviceIds: string[]): Promise<string> => {
-  for (const serviceId of serviceIds) {
-    const res = await marketplaceService.getService(serviceId);
-    const image = res.data?.images?.[0];
-    if (image) return image;
-  }
-  return '';
+/**
+ * First available cover image across a package's component services ('' when none).
+ * Lookups run in parallel and are shared through `cache`, since packages often reuse
+ * the same services.
+ */
+const firstServiceImage = async (
+  serviceIds: string[],
+  cache: Map<string, Promise<string[]>>,
+): Promise<string> => {
+  const lists = await Promise.all(
+    serviceIds.map(serviceId => {
+      let images = cache.get(serviceId);
+      if (!images) {
+        images = marketplaceService.listServiceImages(serviceId);
+        cache.set(serviceId, images);
+      }
+      return images;
+    }),
+  );
+  return lists.find(images => images.length)?.[0] ?? '';
 };
 
 export const catalogService = {
@@ -176,12 +187,15 @@ export const catalogService = {
     return results.filter((item): item is CatalogService => Boolean(item));
   },
 
-  async getRelated(slug: string): Promise<ServiceResponse<CatalogService[]>> {
-    const current = await catalogService.getBySlug(slug);
+  /** Pass the already-loaded `categorySlug` to skip re-fetching the product itself. */
+  async getRelated(
+    slug: string,
+    categorySlug?: string,
+  ): Promise<ServiceResponse<CatalogService[]>> {
+    const category =
+      categorySlug ?? (await catalogService.getBySlug(slug)).data?.categorySlug;
     const list = await catalogService.list(
-      current.data?.categorySlug
-        ? { categorySlug: current.data.categorySlug }
-        : {},
+      category ? { categorySlug: category } : {},
     );
     return {
       data: (list.data ?? []).filter(item => item.slug !== slug).slice(0, 5),
@@ -192,40 +206,18 @@ export const catalogService = {
   async getCategories(): Promise<ServiceResponse<CatalogCategory[]>> {
     return wrap(async () => {
       const res = await marketplaceService.listCategories();
-      const api = res.data ?? [];
-      const bySlug = new Map(api.map(c => [c.slug, c]));
-      const byName = new Map(api.map(c => [c.name.toLowerCase(), c]));
-
-      const merged: CatalogCategory[] = DECORATION_CATEGORIES.map(staticCat => {
-        const hit =
-          bySlug.get(staticCat.slug) ??
-          byName.get(staticCat.name.toLowerCase());
-        return {
-          id: hit?.id ?? staticCat.slug,
-          name: staticCat.name,
-          slug: hit?.slug ?? staticCat.slug,
-          eventType: EVENT_FROM_SLUG[staticCat.slug] ?? 'wedding',
-          icon: staticCat.icon,
-          serviceCount: hit?.service_count ?? 0,
+      if (res.error) throw new Error(res.error);
+      return (res.data ?? [])
+        .filter(c => c.is_active !== false)
+        .map(c => ({
+          id: c.id,
+          name: c.name,
+          slug: c.slug,
+          eventType: EVENT_FROM_SLUG[c.slug] ?? 'wedding',
+          icon: c.icon ?? 'Sparkles',
+          serviceCount: c.service_count ?? 0,
           featuredOnHome: true,
-        };
-      });
-
-      const known = new Set(merged.map(c => c.slug));
-      for (const c of api) {
-        if (!known.has(c.slug) && c.is_active !== false) {
-          merged.push({
-            id: c.id,
-            name: c.name,
-            slug: c.slug,
-            eventType: EVENT_FROM_SLUG[c.slug] ?? 'wedding',
-            icon: c.icon ?? 'Sparkles',
-            serviceCount: c.service_count ?? 0,
-            featuredOnHome: false,
-          });
-        }
-      }
-      return merged;
+        }));
     });
   },
 
@@ -261,9 +253,10 @@ export const catalogService = {
       if (res.error || !res.data) {
         throw new Error(res.error ?? 'Failed to load packages');
       }
+      const imageCache = new Map<string, Promise<string[]>>();
       return Promise.all(
         res.data.items.map(async pkg => {
-          const image = await firstServiceImage(pkg.service_ids);
+          const image = await firstServiceImage(pkg.service_ids, imageCache);
           return {
             id: pkg.id,
             slug: pkg.id,

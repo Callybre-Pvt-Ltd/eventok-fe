@@ -72,23 +72,13 @@ const loadRazorpayScript = () =>
   });
 
 export const paymentService = {
+  /**
+   * The backend has no customer-scoped payment list yet. `/admin/payments` must not be
+   * used here: customers only get a 403, and an admin would see every platform payment
+   * listed as their own.
+   */
   async getHistory(_customerId: string): Promise<ServiceResponse<Payment[]>> {
-    return wrap(async () => {
-      const page = await apiRequestPaginated<ApiPayment>('/admin/payments', {
-        query: { page: 1, page_size: 50 },
-      }).catch(async () => {
-        // clients may not have admin access — return empty gracefully
-        return {
-          success: true,
-          items: [] as ApiPayment[],
-          total: 0,
-          page: 1,
-          page_size: 50,
-          pages: 0,
-        };
-      });
-      return page.items.map(p => mapPayment(p, _customerId));
-    });
+    return { data: [], error: null };
   },
 
   async getAllPayments(): Promise<ServiceResponse<Payment[]>> {

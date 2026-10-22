@@ -134,6 +134,25 @@ const toTransportError = (error: unknown): ApiError => {
   );
 };
 
+/** Cold starts (Render free tier) surface as timeouts, network errors or 502/503/504. */
+export const isTransientError = (error: unknown): boolean =>
+  error instanceof ApiError &&
+  (error.code === 'TIMEOUT' ||
+    error.code === 'NETWORK_ERROR' ||
+    [502, 503, 504].includes(error.status));
+
+let warmUp: Promise<void> | null = null;
+
+/** Fire-and-forget ping that wakes a sleeping backend before the first real request. */
+export const warmUpApi = (): Promise<void> => {
+  warmUp ??= fetch(buildUrl('/health'))
+    .then(() => undefined)
+    .catch(() => {
+      warmUp = null;
+    });
+  return warmUp;
+};
+
 export const apiRequest = async <T>(
   path: string,
   options: RequestOptions = {},

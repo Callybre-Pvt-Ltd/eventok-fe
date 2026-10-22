@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { bookingService } from '@/services';
@@ -14,11 +15,15 @@ export function useCustomerBookings() {
 
   const query = useQuery({
     queryKey: ['customer-bookings', userId],
-    queryFn: () => bookingService.getCustomerBookings(userId),
+    queryFn: async () => {
+      const res = await bookingService.getCustomerBookings(userId);
+      if (res.error) throw new Error(res.error);
+      return res.data ?? [];
+    },
     enabled: Boolean(userId),
   });
 
-  const bookings = query.data?.data ?? [];
+  const bookings = useMemo(() => query.data ?? [], [query.data]);
 
   // The API only releases the vendor's details once the booking is accepted, so the lookup
   // is limited to those rows rather than attempted (and refused) for every booking.

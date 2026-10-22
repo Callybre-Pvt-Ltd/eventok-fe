@@ -1,5 +1,4 @@
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
-import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
 import type { Category, Review, ServiceResponse } from '@/types';
 
 interface ApiCategory {
@@ -46,42 +45,6 @@ const mapCategory = (c: ApiCategory): Category => ({
 /** The catalogue is small but can exceed the API's default page; ask for the whole thing. */
 const CATEGORY_PAGE_SIZE = 100;
 
-/** Prefer static decoration order; attach live IDs when the API has them. */
-const mergeWithStatic = (apiItems: ApiCategory[]): Category[] => {
-  const bySlug = new Map(apiItems.map(c => [c.slug, c]));
-  const byName = new Map(apiItems.map(c => [c.name.trim().toLowerCase(), c]));
-
-  const merged: Category[] = DECORATION_CATEGORIES.map(staticCat => {
-    const hit =
-      bySlug.get(staticCat.slug) ?? byName.get(staticCat.name.toLowerCase());
-    if (hit) {
-      return {
-        ...mapCategory(hit),
-        icon: staticCat.icon,
-        description: staticCat.blurb,
-      };
-    }
-    return {
-      id: '',
-      name: staticCat.name,
-      slug: staticCat.slug,
-      icon: staticCat.icon,
-      description: staticCat.blurb,
-      isActive: true,
-      serviceCount: 0,
-    };
-  });
-
-  // Keep any extra API categories (legacy seed) at the end
-  const known = new Set(merged.map(c => c.slug));
-  for (const item of apiItems) {
-    if (!known.has(item.slug) && item.is_active !== false) {
-      merged.push(mapCategory(item));
-    }
-  }
-  return merged;
-};
-
 export const categoryService = {
   async getAll(): Promise<ServiceResponse<Category[]>> {
     return wrap(async () => {
@@ -89,14 +52,13 @@ export const categoryService = {
         auth: false,
         query: { page: 1, page_size: CATEGORY_PAGE_SIZE },
       });
-      return mergeWithStatic(page.items ?? []);
+      return (page.items ?? [])
+        .filter(c => c.is_active !== false)
+        .map(mapCategory);
     });
   },
 
-  /**
-   * Admin view: every category the API knows about, deactivated ones included, with no
-   * static merging — the admin manages the real rows, not the hardcoded presets.
-   */
+  /** Admin view: every category, deactivated ones included. */
   async listForAdmin(): Promise<ServiceResponse<Category[]>> {
     return wrap(async () => {
       const page = await apiRequestPaginated<ApiCategory>('/categories', {
@@ -107,35 +69,6 @@ export const categoryService = {
         },
       });
       return (page.items ?? []).map(mapCategory);
-    });
-  },
-
-  /** Admin-only: create any static decoration category missing from the API. */
-  async ensureDecorationCategories(): Promise<ServiceResponse<Category[]>> {
-    return wrap(async () => {
-      const current = await categoryService.getAll();
-      const existing = current.data ?? [];
-      const haveSlug = new Set(existing.filter(c => c.id).map(c => c.slug));
-      const haveName = new Set(
-        existing.filter(c => c.id).map(c => c.name.toLowerCase()),
-      );
-
-      for (const cat of DECORATION_CATEGORIES) {
-        if (haveSlug.has(cat.slug) || haveName.has(cat.name.toLowerCase())) {
-          continue;
-        }
-        try {
-          await apiRequest<ApiCategory>('/admin/categories', {
-            method: 'POST',
-            body: { name: cat.name, icon: cat.icon },
-          });
-        } catch {
-          // may already exist under a slightly different slug
-        }
-      }
-
-      const refreshed = await categoryService.getAll();
-      return refreshed.data ?? [];
     });
   },
 

@@ -53,4 +53,6 @@ export const auth = {
   resetSuccessSubtitle: 'Your password has been reset and you are signed in.',
   backToLogin: 'Back to login',
   signingIn: 'Signing you in…',
+  portalUnavailable:
+    'We could not reach EventOK right now. Please try again in a moment.',
 };

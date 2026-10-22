@@ -100,12 +100,8 @@ export const defaultFilters: DiscoveryFilters = {
   quick: [],
 };
 
-import { DECORATION_CATEGORIES } from '@/constants/decorationCategories';
-
-export const categoryOptions = DECORATION_CATEGORIES.map(c => ({
-  value: c.slug,
-  label: c.name,
-}));
+/** Categories are admin-managed API rows; this unrouted discovery page has no live list. */
+export const categoryOptions: { value: string; label: string }[] = [];
 
 export function getResultsContext(filters: DiscoveryFilters) {
   const parts: string[] = [];
