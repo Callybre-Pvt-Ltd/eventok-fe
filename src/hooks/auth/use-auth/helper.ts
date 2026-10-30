@@ -35,6 +35,8 @@ interface AuthContextValue {
   session: Session | null;
   isLoading: boolean;
   isSignedIn: boolean;
+  /** Clerk is signed in but the EventOK profile could not be loaded. */
+  sessionFailed: boolean;
   login: (email: string, password: string) => Promise<LoginResult>;
   verifyLoginCode: (code: string) => Promise<string | null>;
   logout: () => Promise<void>;
@@ -79,8 +81,8 @@ function deriveFallbackSession(
     rawRole?.toLowerCase() === 'admin'
       ? 'admin'
       : rawRole?.toLowerCase() === 'vendor'
-        ? 'vendor'
-        : 'customer';
+      ? 'vendor'
+      : 'customer';
 
   return {
     user: {
@@ -111,6 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { isLoaded: signUpLoaded, signUp } = useSignUp();
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [sessionFailed, setSessionFailed] = useState(false);
   const sessionInflight = useRef<Promise<Session | null> | null>(null);
   const clerkLoaded = clerk.isLoaded;
   const clerkSignedIn = Boolean(clerk.isSignedIn);
@@ -125,6 +128,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (sessionInflight.current) return sessionInflight.current;
 
     const run = async (): Promise<Session | null> => {
+      setSessionFailed(false);
       const load = async (skipCache = false) => {
         const token = await getToken(
           skipCache ? { skipCache: true } : undefined,
@@ -179,6 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             return fallback;
           }
           setSession(null);
+          setSessionFailed(true);
           console.error(
             'Session refresh unauthorized after retries:',
             result.error.message,
@@ -196,6 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           return fallback;
         }
         setSession(null);
+        setSessionFailed(true);
         return null;
       }
     };
@@ -384,6 +390,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       isLoading: isLoading || !clerkLoaded,
       isSignedIn: clerkSignedIn,
+      sessionFailed,
       login,
       verifyLoginCode,
       logout,
@@ -405,6 +412,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       register,
       resendRegistrationCode,
       session,
+      sessionFailed,
       signInWithGoogle,
       verifyLoginCode,
       verifyRegistration,

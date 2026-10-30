@@ -68,7 +68,9 @@ export function ProfileMenu({
   const user = session?.user;
   const clerkRole =
     (clerkUser?.publicMetadata?.role as UserRole | undefined) ??
-    (clerkUser?.unsafeMetadata?.eventok_role === 'VENDOR' ? 'vendor' : undefined);
+    (clerkUser?.unsafeMetadata?.eventok_role === 'VENDOR'
+      ? 'vendor'
+      : undefined);
   const role: UserRole | undefined = user?.role ?? clerkRole;
   const email = resolveEmail(user?.email, clerkUser);
   const letter = (email.trim()[0] || 'U').toUpperCase();

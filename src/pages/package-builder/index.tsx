@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { StoreLayout } from '@/components/storefront/store-layout';
 import { formatPrice } from '@/utils/storefront/pricing';
+import { scrollToTop } from '@/utils/scroll';
 import { usePackageBuilder } from './helper';
 import {
   BarActions,
@@ -39,6 +41,10 @@ const STEP_KEYS = [
 export default function PackageBuilderPage() {
   const { t } = useTranslation();
   const builder = usePackageBuilder();
+
+  useEffect(() => {
+    scrollToTop();
+  }, [builder.step]);
 
   return (
     <StoreLayout>

@@ -51,6 +51,7 @@ export function BecomeVendorModal({
   const [aadhaarFront, setAadhaarFront] = useState<UploadFile[]>([]);
   const [aadhaarBack, setAadhaarBack] = useState<UploadFile[]>([]);
   const [profileImage, setProfileImage] = useState<UploadFile[]>([]);
+  const [shopProof, setShopProof] = useState<UploadFile[]>([]);
   const [gstFile, setGstFile] = useState<UploadFile[]>([]);
 
   useBodyScrollLock(open);
@@ -69,6 +70,11 @@ export function BecomeVendorModal({
 
       if (!aadhaarFront[0]?.originFileObj || !aadhaarBack[0]?.originFileObj) {
         message.error('Upload both sides of your Aadhaar.');
+        return;
+      }
+
+      if (!shopProof[0]?.originFileObj) {
+        message.error('Please upload a photo of your shop or store.');
         return;
       }
 
@@ -95,7 +101,19 @@ export function BecomeVendorModal({
         gstin: values.gstin?.trim().toUpperCase() || undefined,
       });
 
-      if (res.error || !res.data) {
+      let vendorId = res.data?.id;
+      if (
+        !vendorId &&
+        res.error &&
+        res.error.toLowerCase().includes('already exists')
+      ) {
+        const myProfile = await vendorService.getMe();
+        if (myProfile.data?.id) {
+          vendorId = myProfile.data.id;
+        }
+      }
+
+      if (!vendorId) {
         message.error(res.error || 'Failed to submit application');
         return;
       }
@@ -105,19 +123,21 @@ export function BecomeVendorModal({
           | 'AADHAAR_FRONT'
           | 'AADHAAR_BACK'
           | 'VENDOR_PROFILE_IMAGE'
+          | 'SHOP_PROOF'
           | 'GST_CERTIFICATE';
         file?: UploadFile;
       }> = [
         { type: 'AADHAAR_FRONT', file: aadhaarFront[0] },
         { type: 'AADHAAR_BACK', file: aadhaarBack[0] },
         { type: 'VENDOR_PROFILE_IMAGE', file: profileImage[0] },
+        { type: 'SHOP_PROOF', file: shopProof[0] },
         { type: 'GST_CERTIFICATE', file: gstFile[0] },
       ];
       for (const upload of uploads) {
         const raw = upload.file?.originFileObj;
         if (!raw) continue;
         const uploaded = await vendorService.submitVerification(
-          res.data.id,
+          vendorId,
           upload.type,
           raw,
         );
@@ -137,6 +157,7 @@ export function BecomeVendorModal({
       setAadhaarFront([]);
       setAadhaarBack([]);
       setProfileImage([]);
+      setShopProof([]);
       setGstFile([]);
       onClose();
       await refreshSession();
@@ -338,6 +359,23 @@ export function BecomeVendorModal({
             onChange={({ fileList }) => setProfileImage(fileList.slice(-1))}
           >
             <Button>Upload profile image</Button>
+          </Upload>
+        </Form.Item>
+
+        <Form.Item
+          label="Shop / Store proof photo"
+          required
+          extra="Upload a clear photo of your shop, store-front, or workspace. This helps us verify your business."
+        >
+          <Upload
+            accept="image/*"
+            maxCount={1}
+            fileList={shopProof}
+            beforeUpload={() => false}
+            onChange={({ fileList }) => setShopProof(fileList.slice(-1))}
+            listType="picture"
+          >
+            <Button>Upload shop / store photo</Button>
           </Upload>
         </Form.Item>
 

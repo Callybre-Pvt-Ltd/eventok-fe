@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { message } from 'antd';
 import { vendorService } from '@/services';
+import { findCity } from '@/constants/indiaLocations';
 
 export interface GroupedStateCoverage {
   stateId: string;
@@ -70,8 +71,12 @@ export function useLocationPicker(vendorId: string) {
         }
         return next;
       });
+      // Optionally focus on the first saved state if none selected
+      if (!selectedStateId && savedLocations[0]?.state_id) {
+        setSelectedStateId(savedLocations[0].state_id);
+      }
     }
-  }, [savedLocations]);
+  }, [savedLocations, selectedStateId]);
 
   // Sync freshly loaded cities for active state into registry
   useEffect(() => {
@@ -93,12 +98,6 @@ export function useLocationPicker(vendorId: string) {
     }
   }, [cities, selectedStateId, states]);
 
-  useEffect(() => {
-    if (states.length > 0 && !selectedStateId) {
-      setSelectedStateId(states[0].id);
-    }
-  }, [states, selectedStateId]);
-
   const toggleCity = (cityId: string) => {
     setSelectedCityIds(prev =>
       prev.includes(cityId)
@@ -112,6 +111,21 @@ export function useLocationPicker(vendorId: string) {
   };
 
   const currentStateCities = cities;
+
+  const selectedStateCityIds = useMemo(() => {
+    if (!selectedStateId || !currentStateCities.length) return [];
+    const set = new Set(currentStateCities.map(c => c.id));
+    return selectedCityIds.filter(id => set.has(id));
+  }, [selectedStateId, currentStateCities, selectedCityIds]);
+
+  const setSelectedStateCityIds = (newCityIdsForCurrentState: string[]) => {
+    const currentStateCityIds = new Set(currentStateCities.map(c => c.id));
+    setSelectedCityIds(prev => {
+      const otherStateCityIds = prev.filter(id => !currentStateCityIds.has(id));
+      return [...otherStateCityIds, ...newCityIdsForCurrentState];
+    });
+  };
+
   const filteredCurrentCities = useMemo(() => {
     if (!citySearch.trim()) return currentStateCities;
     const q = citySearch.toLowerCase();
@@ -145,7 +159,18 @@ export function useLocationPicker(vendorId: string) {
       { stateName: string; cities: { cityId: string; cityName: string }[] }
     >();
     for (const cityId of selectedCityIds) {
-      const meta = knownCities.get(cityId);
+      let meta = knownCities.get(cityId);
+      if (!meta) {
+        const found = findCity(cityId);
+        if (found) {
+          meta = {
+            cityId: found.city.id,
+            cityName: found.city.name,
+            stateId: found.state.id,
+            stateName: found.state.name,
+          };
+        }
+      }
       if (!meta) continue;
       const existing = map.get(meta.stateId) || {
         stateName: meta.stateName,
@@ -184,6 +209,8 @@ export function useLocationPicker(vendorId: string) {
     cities: filteredCurrentCities,
     allCitiesInCurrentState: currentStateCities,
     selectedCityIds,
+    selectedStateCityIds,
+    setSelectedStateCityIds,
     toggleCity,
     removeCity,
     citySearch,
