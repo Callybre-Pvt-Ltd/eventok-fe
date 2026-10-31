@@ -6,6 +6,7 @@ import { LoadingState } from '@/components/global/loading-state';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import { ROUTES } from '@/constants/routes';
 import { vendorService } from '@/services';
+import { scrollToTop } from '@/utils/scroll';
 import {
   STEP_LABELS,
   TOTAL_STEPS,
@@ -50,6 +51,10 @@ export default function ServiceWizardPage() {
   const wizard = useServiceWizard();
   const [images, setImages] = useState<ServiceImage[]>([]);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    scrollToTop();
+  }, [wizard.step]);
 
   const refreshImages = async (serviceId: string) => {
     const res = await vendorService.listServiceImages(serviceId);

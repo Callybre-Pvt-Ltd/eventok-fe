@@ -1,4 +1,4 @@
-import { Input, InputNumber, message } from 'antd';
+import { Input, InputNumber, Select, message } from 'antd';
 import {
   Baby,
   Building2,
@@ -31,11 +31,6 @@ import { LocationPicker } from '@/components/vendor/location-picker';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import type { ServiceWizard } from './helper';
 import {
-  CatBlurb,
-  CategoryGrid,
-  CategoryTile,
-  CatIconWrap,
-  CatName,
   CharCount,
   DeletePhotoBtn,
   EstimateNote,
@@ -109,26 +104,57 @@ export function BasicsStep({ wizard }: { wizard: ServiceWizard }) {
 
       <Field>
         <FieldLabel>Service category</FieldLabel>
-        <CategoryGrid>
-          {wizard.categories.map(cat => {
+        <Select
+          size="large"
+          showSearch
+          placeholder="Select a service category…"
+          style={{ width: '100%' }}
+          value={wizard.categoryId || undefined}
+          onChange={val => wizard.setCategoryId(val)}
+          filterOption={(input, opt) =>
+            ((opt?.label as string) ?? '')
+              .toLowerCase()
+              .includes(input.toLowerCase())
+          }
+          options={wizard.categories.map(cat => {
             const IconComponent = (cat.icon && ICON_MAP[cat.icon]) || Layers;
-            const active = wizard.categoryId === cat.id;
-            return (
-              <CategoryTile
-                key={cat.id}
-                type="button"
-                $active={active}
-                onClick={() => wizard.setCategoryId(cat.id)}
-              >
-                <CatIconWrap $active={active}>
-                  <IconComponent size={18} />
-                </CatIconWrap>
-                <CatName>{cat.name}</CatName>
-                <CatBlurb>{cat.description || 'Decoration service'}</CatBlurb>
-              </CategoryTile>
-            );
+            return {
+              value: cat.id,
+              label: cat.name,
+              desc: cat.description || 'Decoration service',
+              IconComponent,
+            };
           })}
-        </CategoryGrid>
+          optionRender={option => {
+            const IconComponent: React.ComponentType<{ size?: number }> =
+              (
+                option.data as {
+                  IconComponent?: React.ComponentType<{ size?: number }>;
+                }
+              ).IconComponent || Layers;
+            return (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                <span style={{ color: '#e91e8c', flexShrink: 0 }}>
+                  <IconComponent size={16} />
+                </span>
+                <div>
+                  <div style={{ fontWeight: 500, lineHeight: 1.3 }}>
+                    {option.label}
+                  </div>
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: '#94a3b8',
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {(option.data as { desc?: string }).desc}
+                  </div>
+                </div>
+              </div>
+            );
+          }}
+        />
       </Field>
 
       <Field>

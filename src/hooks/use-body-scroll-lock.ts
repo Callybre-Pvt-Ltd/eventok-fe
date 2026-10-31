@@ -54,7 +54,9 @@ export function releaseScrollLock(): void {
 if (typeof document !== 'undefined') {
   let antdLocked = false;
   const observer = new MutationObserver(() => {
-    const hasAntdEffect = document.body.classList.contains('ant-scrolling-effect');
+    const hasAntdEffect = document.body.classList.contains(
+      'ant-scrolling-effect',
+    );
     if (hasAntdEffect && !antdLocked) {
       antdLocked = true;
       document.documentElement.classList.add('ant-scrolling-effect-root');
@@ -72,10 +74,16 @@ if (typeof document !== 'undefined') {
 
   // Observe once DOM is ready
   if (document.body) {
-    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
   } else {
     document.addEventListener('DOMContentLoaded', () => {
-      observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+      observer.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
     });
   }
 }

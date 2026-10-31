@@ -3,7 +3,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Button, Drawer, Dropdown, Input, Modal, message } from 'antd';
 import type { MenuProps } from 'antd';
 import {
-  Copy,
   ExternalLink,
   Eye,
   ImageIcon,
@@ -58,14 +57,8 @@ import {
 } from './styled';
 
 export default function VendorServicesPage() {
-  const {
-    services,
-    categories,
-    isLoading,
-    deleteMutation,
-    vendorId,
-    vendorCity,
-  } = useVendorServices();
+  const { services, categories, isLoading, deleteMutation, vendorCity } =
+    useVendorServices();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -77,7 +70,6 @@ export default function VendorServicesPage() {
   const [detailImages, setDetailImages] = useState<
     { id: string; image_url: string }[]
   >([]);
-  const [duplicating, setDuplicating] = useState(false);
 
   const openDrawer = async (service: ApiService) => {
     setDetailService(service);
@@ -88,27 +80,6 @@ export default function VendorServicesPage() {
   const closeDrawer = () => {
     setDetailService(null);
     setDetailImages([]);
-  };
-
-  const handleDuplicate = async (service: ApiService) => {
-    if (!vendorId) return;
-    setDuplicating(true);
-    const res = await vendorService.createService(vendorId, {
-      category_id: service.category_id,
-      title: `${service.title} (Copy)`,
-      description: service.description || undefined,
-      starting_price: Number(service.starting_price),
-      whats_included: service.whats_included || [],
-      good_to_know: service.good_to_know || [],
-      cancellation_policy: service.cancellation_policy || [],
-    });
-    setDuplicating(false);
-    if (res.error) {
-      message.error(res.error);
-      return;
-    }
-    message.success('Draft service duplicated');
-    navigate(`${ROUTES.VENDOR_SERVICES}/${res.data?.id}/edit`);
   };
 
   // The backend only knows DRAFT / PUBLISHED / ARCHIVED, so "unpublish" returns the
@@ -175,13 +146,6 @@ export default function VendorServicesPage() {
       icon: <Pencil size={14} />,
       label: 'Edit in wizard',
       onClick: () => goEdit(service.id),
-    },
-    {
-      key: 'duplicate',
-      icon: <Copy size={14} />,
-      label: 'Duplicate as draft',
-      disabled: duplicating,
-      onClick: () => handleDuplicate(service),
     },
     {
       key: 'toggle-status',

@@ -67,6 +67,12 @@ export const FilterBar = styled.div`
   gap: 1rem;
   flex-wrap: wrap;
   padding-bottom: 0.5rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
 `;
 
 export const FilterLeft = styled.div`
@@ -75,6 +81,19 @@ export const FilterLeft = styled.div`
   gap: 0.75rem;
   flex: 1;
   min-width: 260px;
+
+  @media (max-width: 768px) {
+    min-width: 0;
+    width: 100%;
+    flex-wrap: wrap;
+
+    .ant-input-affix-wrapper {
+      max-width: 100% !important;
+      width: 100%;
+      min-height: 42px;
+      font-size: 15px;
+    }
+  }
 `;
 
 export const StatusPillGroup = styled.div`
@@ -84,6 +103,8 @@ export const StatusPillGroup = styled.div`
   background: #f1f5f9;
   padding: 0.25rem;
   border-radius: 8px;
+  flex-wrap: nowrap;
+  flex-shrink: 0;
 `;
 
 export const StatusFilterBtn = styled.button<{ $active: boolean }>`
@@ -98,9 +119,15 @@ export const StatusFilterBtn = styled.button<{ $active: boolean }>`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
+  white-space: nowrap;
 
   &:hover {
     color: #0f172a;
+  }
+
+  @media (max-width: 768px) {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.7rem;
   }
 `;
 
@@ -121,6 +148,7 @@ export const ServiceTableWrap = styled.div`
 export const ServiceRow = styled.div`
   display: grid;
   grid-template-columns: 64px 2.5fr 1.2fr 1.5fr 1.3fr 1fr 1fr 50px;
+  min-width: 900px;
   align-items: center;
   padding: 1rem 1.25rem;
   gap: 1rem;
@@ -138,6 +166,7 @@ export const ServiceRow = styled.div`
 
   @media (max-width: 1100px) {
     grid-template-columns: 56px 2fr 1.2fr 1.5fr 1fr 40px;
+    min-width: 0;
     .hide-tablet {
       display: none;
     }
@@ -149,12 +178,15 @@ export const ServiceRow = styled.div`
     align-items: stretch;
     gap: 0.75rem;
     padding: 1rem;
+    min-width: 0;
+    position: relative;
   }
 `;
 
 export const ServiceTableHeader = styled.div`
   display: grid;
   grid-template-columns: 64px 2.5fr 1.2fr 1.5fr 1.3fr 1fr 1fr 50px;
+  min-width: 900px;
   padding: 0.75rem 1.25rem;
   gap: 1rem;
   background: #f8fafc;
@@ -164,6 +196,10 @@ export const ServiceTableHeader = styled.div`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
+
+  & > div {
+    white-space: nowrap;
+  }
 
   @media (max-width: 1100px) {
     grid-template-columns: 56px 2fr 1.2fr 1.5fr 1fr 40px;
@@ -290,6 +326,22 @@ export const ActionCell = styled.div`
   display: flex;
   justify-content: flex-end;
   align-items: center;
+
+  @media (max-width: 768px) {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.5rem;
+
+    .ant-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: #f1f5f9;
+    }
+  }
 `;
 
 export const EmptyWorkspace = styled.div`

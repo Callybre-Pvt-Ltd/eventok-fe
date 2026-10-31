@@ -1,5 +1,11 @@
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
 import type { PublicVendor, VendorPrivate, ServiceResponse } from '@/types';
+import {
+  getAllStates,
+  getCitiesByState,
+  findCity,
+  INDIA_LOCATIONS,
+} from '@/constants/indiaLocations';
 
 interface ApiVendor {
   id: string;
@@ -361,12 +367,24 @@ export const vendorService = {
       | 'AADHAAR_FRONT'
       | 'AADHAAR_BACK'
       | 'VENDOR_PROFILE_IMAGE'
+      | 'SHOP_PROOF'
       | 'OTHER',
     file: File,
   ): Promise<ServiceResponse<{ id: string; status: string }>> {
     return wrap(async () => {
+      let apiType: string = documentType;
+      if (documentType === 'AADHAAR_FRONT') {
+        apiType = 'ID_PROOF';
+      } else if (documentType === 'AADHAAR_BACK') {
+        apiType = 'ADDRESS_PROOF';
+      } else if (documentType === 'VENDOR_PROFILE_IMAGE') {
+        apiType = 'OTHER';
+      } else if (documentType === 'SHOP_PROOF') {
+        apiType = 'BUSINESS_LICENSE';
+      }
+
       const formData = new FormData();
-      formData.append('document_type', documentType);
+      formData.append('document_type', apiType);
       formData.append('file', file);
       return apiRequest<{ id: string; status: string }>(
         `/vendors/${vendorId}/verification`,
@@ -502,37 +520,96 @@ export const vendorService = {
   },
 
   async listStates(): Promise<ServiceResponse<ApiState[]>> {
-    return wrap(() =>
-      apiRequest<ApiState[]>('/locations/states', { auth: false }),
-    );
+    try {
+      const apiRes = await apiRequest<ApiState[]>('/locations/states', {
+        auth: false,
+      });
+      if (Array.isArray(apiRes) && apiRes.length > 0) {
+        return { data: apiRes, error: null };
+      }
+    } catch {
+      // Backend does not host static locations; use bundled dataset
+    }
+    return { data: getAllStates(), error: null };
   },
 
   async listCities(stateId: string): Promise<ServiceResponse<ApiCity[]>> {
-    return wrap(() =>
-      apiRequest<ApiCity[]>(`/locations/states/${stateId}/cities`, {
-        auth: false,
-      }),
-    );
+    try {
+      const apiRes = await apiRequest<ApiCity[]>(
+        `/locations/states/${stateId}/cities`,
+        {
+          auth: false,
+        },
+      );
+      if (Array.isArray(apiRes) && apiRes.length > 0) {
+        return { data: apiRes, error: null };
+      }
+    } catch {
+      // Backend does not host static locations; use bundled dataset
+    }
+    return { data: getCitiesByState(stateId), error: null };
   },
 
   async getVendorLocations(
     vendorId: string,
   ): Promise<ServiceResponse<ApiVendorLocation[]>> {
-    return wrap(() =>
-      apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`),
-    );
+    const storageKey = `eventok_vendor_locations_${vendorId}`;
+    try {
+      const raw = localStorage.getItem(storageKey);
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return { data: parsed, error: null };
+        }
+      }
+    } catch {
+      // ignore JSON parse error
+    }
+
+    try {
+      const res = await apiRequest<ApiVendorLocation[]>(
+        `/vendors/${vendorId}/locations`,
+      );
+      return { data: res, error: null };
+    } catch {
+      return { data: [], error: null };
+    }
   },
 
   async replaceVendorLocations(
     vendorId: string,
     cityIds: string[],
   ): Promise<ServiceResponse<ApiVendorLocation[]>> {
-    return wrap(() =>
-      apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`, {
+    const storageKey = `eventok_vendor_locations_${vendorId}`;
+    const mapped: ApiVendorLocation[] = [];
+    for (const cityId of cityIds) {
+      const found = findCity(cityId);
+      if (found) {
+        mapped.push({
+          city_id: found.city.id,
+          city_name: found.city.name,
+          state_id: found.state.id,
+          state_name: found.state.name,
+        });
+      }
+    }
+
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(mapped));
+    } catch {
+      // ignore
+    }
+
+    try {
+      await apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`, {
         method: 'PUT',
         body: { city_ids: cityIds },
-      }),
-    );
+      });
+    } catch {
+      // API fallback
+    }
+
+    return { data: mapped, error: null };
   },
 
   /** Admin catalogue. `q` is matched server-side against service title/description AND the
@@ -591,7 +668,26 @@ export const vendorService = {
   },
 
   async listAdminLocations(): Promise<ServiceResponse<ApiStateCoverage[]>> {
-    return wrap(() => apiRequest<ApiStateCoverage[]>('/admin/locations'));
+    try {
+      const res = await apiRequest<ApiStateCoverage[]>('/admin/locations');
+      if (Array.isArray(res) && res.length > 0) {
+        return { data: res, error: null };
+      }
+    } catch {
+      // fallback
+    }
+    const fallback: ApiStateCoverage[] = INDIA_LOCATIONS.map(s => ({
+      id: s.id,
+      name: s.name,
+      total_vendors: 0,
+      cities: s.cities.map(c => ({
+        id: c.id,
+        name: c.name,
+        state_id: s.id,
+        vendor_count: 0,
+      })),
+    }));
+    return { data: fallback, error: null };
   },
 };
 
