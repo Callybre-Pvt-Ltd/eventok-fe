@@ -34,14 +34,32 @@
     "styled-components": "^6.4.3",
     "zod": "^4.4.3"
   },
+  "simple-git-hooks": {
+    "pre-commit": "npx lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "oxlint",
+      "prettier --write"
+    ],
+    "*.{js,jsx,mjs,cjs}": [
+      "oxlint",
+      "prettier --write"
+    ],
+    "*.{json,css,md,html,yaml,yml}": [
+      "prettier --write"
+    ]
+  },
   "devDependencies": {
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@types/styled-components": "^5.1.36",
     "@vitejs/plugin-react": "^6.0.3",
+    "lint-staged": "^16.4.0",
     "oxlint": "^1.71.0",
     "prettier": "^2.8.8",
+    "simple-git-hooks": "^2.14.0",
     "typescript": "~6.0.2",
     "vite": "^8.1.1"
   }
