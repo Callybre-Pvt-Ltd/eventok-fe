@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, ExternalLink, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BrandIcon } from '@/components/global/brand-icon';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import type { UserRole } from '@/types';
@@ -60,6 +61,7 @@ export function PortalSidebar({
               {portalEyebrow}
             </SidebarEyebrow>
             <SidebarLogo $palette={palette} to={ROUTES.HOME}>
+              <BrandIcon size={24} style={{ marginRight: '0.4rem', flexShrink: 0 }} />
               Event<span>OK</span>
             </SidebarLogo>
           </BrandBlock>

@@ -1,5 +1,6 @@
 import { Heart, LogIn, Store, User, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BrandIcon } from '@/components/global/brand-icon';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { useMobileMenu } from './helper';
@@ -41,7 +42,10 @@ export function MobileMenu({
       <Overlay $open={open} onClick={onClose} aria-hidden />
       <Drawer $open={open} aria-hidden={!open}>
         <DrawerHead>
-          <DrawerTitle>{t('common.appName')}</DrawerTitle>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            <BrandIcon size={26} />
+            <DrawerTitle>{t('common.appName')}</DrawerTitle>
+          </div>
           <CloseButton
             type="button"
             onClick={onClose}

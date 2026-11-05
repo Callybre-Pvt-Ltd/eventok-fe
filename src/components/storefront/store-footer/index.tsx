@@ -6,6 +6,7 @@ import {
   ThumbsUp,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BrandIcon } from '@/components/global/brand-icon';
 import { ROUTES } from '@/constants/routes';
 import { useStoreFooter } from './helper';
 import {
@@ -41,7 +42,9 @@ export function StoreFooter() {
       <Inner>
         <BrandBlock>
           <BrandRow to={ROUTES.HOME}>
-            <BrandMark>EO</BrandMark>
+            <BrandMark>
+              <BrandIcon size={32} />
+            </BrandMark>
             <BrandWord>{t('common.appName')}</BrandWord>
           </BrandRow>
           <Tagline>{t('storefront.footerTagline')}</Tagline>

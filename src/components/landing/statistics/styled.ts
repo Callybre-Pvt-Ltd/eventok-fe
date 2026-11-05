@@ -1,25 +1,32 @@
 import styled from 'styled-components';
 import type { ThemePalette } from '@/theme';
-import { fontFamily, fontSizes, media, radii, spacing } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Section = styled.section<{ $palette: ThemePalette }>`
-  padding: ${spacing.section} ${spacing.xl};
+  width: 100%;
+  padding: 3.5rem clamp(1rem, 3.5vw, 2.5rem);
   background: ${({ $palette }) => $palette.background};
+  transition: background 0.25s ease;
 
-  ${media.belowMd} {
-    padding: ${spacing.xxl} ${spacing.md};
+  ${media.md} {
+    padding: 4rem clamp(1.25rem, 3.5vw, 2.5rem);
+  }
+
+  ${media.lg} {
+    padding: 4.5rem clamp(1.5rem, 4vw, 3rem);
   }
 `;
 
 export const Inner = styled.div`
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
+  width: 100%;
 `;
 
 export const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: ${spacing.xl};
+  gap: 1.5rem;
 
   ${media.belowLg} {
     grid-template-columns: repeat(2, 1fr);
@@ -27,30 +34,65 @@ export const Grid = styled.div`
 
   ${media.belowMd} {
     grid-template-columns: 1fr;
-    gap: ${spacing.lg};
+    gap: 1.25rem;
   }
 `;
 
 export const StatCard = styled.div<{ $palette: ThemePalette }>`
   text-align: center;
-  padding: ${spacing.xl};
+  padding: 1.75rem 1.25rem;
   border-radius: ${radii.xl};
-  background: ${({ $palette }) => $palette.surface};
-  border: 1px solid ${({ $palette }) => $palette.border};
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 24px -6px var(--color-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+
+  [data-theme='light'] & {
+    background: #FFFFFF;
+    border-color: rgba(124, 58, 237, 0.12);
+    box-shadow: 0 10px 30px -8px rgba(99, 102, 241, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  [data-theme='dark'] & {
+    background: #141A32;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  }
+
+  &:hover {
+    transform: translateY(-3px);
+    border-color: var(--color-primary);
+    box-shadow: 0 16px 36px -8px var(--color-shadow-strong);
+  }
 `;
 
 export const StatValue = styled.p<{ $palette: ThemePalette }>`
-  margin: 0 0 ${spacing.sm};
+  margin: 0 0 0.35rem;
   font-family: ${fontFamily.display};
-  font-size: ${fontSizes.h2};
-  font-weight: 700;
-  color: ${({ $palette }) => $palette.text};
-  letter-spacing: -0.03em;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  background: linear-gradient(135deg, #6D28D9 0%, #7C3AED 50%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  [data-theme='dark'] & {
+    background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 50%, #93C5FD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
 `;
 
 export const StatLabel = styled.p<{ $palette: ThemePalette }>`
   margin: 0;
-  font-size: ${fontSizes.sm};
-  color: ${({ $palette }) => $palette.textSecondary};
-  font-weight: 500;
+  font-size: ${fontSizes.xs};
+  color: var(--color-text-secondary);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  [data-theme='dark'] & {
+    color: rgba(255, 255, 255, 0.8);
+  }
 `;

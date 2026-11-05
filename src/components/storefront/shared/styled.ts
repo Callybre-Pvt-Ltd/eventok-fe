@@ -1,29 +1,30 @@
 import styled from 'styled-components';
-import { brandColors } from '@/theme/brand';
 import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
 
 export const Section = styled.section<{ $tint?: boolean; $dark?: boolean }>`
   width: 100%;
-  padding: 1.75rem 1rem;
+  padding: 2.5rem clamp(1rem, 3.5vw, 2.5rem);
   background: ${({ $tint, $dark }) =>
     $dark
-      ? brandColors.ink900
+      ? 'var(--color-bg-alt)'
       : $tint
-      ? brandColors.pink50
-      : brandColors.white};
+      ? 'var(--color-bg-alt)'
+      : 'var(--color-bg)'};
+  color: var(--color-text);
+  transition: background 0.25s ease, color 0.25s ease;
 
   ${media.md} {
-    padding: 2rem 1.5rem;
+    padding: 3rem clamp(1.25rem, 3.5vw, 2.5rem);
   }
 
   ${media.lg} {
-    padding: 2.5rem 2.5rem;
+    padding: 3.5rem clamp(1.5rem, 4vw, 3rem);
   }
 `;
 
 export const SectionInner = styled.div`
   width: 100%;
-  max-width: 1360px;
+  max-width: 1440px;
   margin: 0 auto;
 `;
 
@@ -32,7 +33,8 @@ export const SectionHead = styled.div`
   align-items: flex-end;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
 `;
 
 export const Eyebrow = styled.span<{ $onDark?: boolean }>`
@@ -44,8 +46,7 @@ export const Eyebrow = styled.span<{ $onDark?: boolean }>`
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: ${({ $onDark }) =>
-    $onDark ? brandColors.pink400 : brandColors.pink500};
+  color: var(--color-primary);
 
   &::before {
     content: '';
@@ -62,8 +63,7 @@ export const SectionTitle = styled.h2<{ $onDark?: boolean }>`
   font-weight: 800;
   line-height: 1.15;
   margin-top: 0.25rem;
-  color: ${({ $onDark }) =>
-    $onDark ? brandColors.white : brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const SectionSubtitle = styled.p<{ $onDark?: boolean }>`
@@ -71,8 +71,7 @@ export const SectionSubtitle = styled.p<{ $onDark?: boolean }>`
   max-width: 44rem;
   font-size: ${fontSizes.md};
   font-weight: 500;
-  color: ${({ $onDark }) =>
-    $onDark ? brandColors.gray400 : brandColors.gray600};
+  color: var(--color-text-secondary);
 `;
 
 export const PillLink = styled.a`
@@ -81,19 +80,19 @@ export const PillLink = styled.a`
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--button-primary-gradient);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   border: none;
   cursor: pointer;
   text-decoration: none;
   box-shadow: ${shadows.sm};
-  transition: background 0.2s ease, transform 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
     transform: translateY(-1px);
+    box-shadow: ${shadows.md};
   }
 `;
 
@@ -103,17 +102,17 @@ export const OutlinePill = styled.button`
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
   border-radius: ${radii.full};
-  background: ${brandColors.white};
-  color: ${brandColors.chocolate};
-  border: 1px solid ${brandColors.tan};
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
   font-size: ${fontSizes.sm};
   font-weight: 700;
   cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 
   &:hover {
-    border-color: ${brandColors.pink500};
-    color: ${brandColors.pink500};
+    border-color: var(--color-primary);
+    color: var(--color-primary);
   }
 `;
 
@@ -129,16 +128,16 @@ export const RoundButton = styled.button`
   align-items: center;
   justify-content: center;
   border-radius: ${radii.full};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
-  color: ${brandColors.chocolate};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 
   &:hover:not(:disabled) {
-    background: ${brandColors.pink500};
-    border-color: ${brandColors.pink500};
-    color: ${brandColors.white};
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: #ffffff;
   }
 
   &:disabled {
@@ -152,8 +151,9 @@ export const Rail = styled.div`
   gap: 1.25rem;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.75rem;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     display: none;
@@ -167,11 +167,11 @@ export const Rail = styled.div`
 
 export const TabRow = styled.div`
   display: flex;
-  gap: 1.5rem;
+  gap: 0.625rem;
   overflow-x: auto;
-  border-bottom: 1px solid ${brandColors.tan};
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.75rem;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 
   &::-webkit-scrollbar {
     display: none;
@@ -179,26 +179,24 @@ export const TabRow = styled.div`
 `;
 
 export const TabItem = styled.button<{ $active: boolean }>`
-  position: relative;
-  padding: 0.75rem 0.25rem;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-  white-space: nowrap;
+  padding: 0.5rem 1.125rem;
+  border-radius: ${radii.full};
+  border: 1px solid
+    ${({ $active }) => ($active ? 'transparent' : 'var(--color-border)')};
+  background: ${({ $active }) =>
+    $active ? 'var(--button-primary-gradient)' : 'var(--color-surface)'};
+  color: ${({ $active }) =>
+    $active ? '#ffffff' : 'var(--color-text-secondary)'};
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${({ $active }) =>
-    $active ? brandColors.pink500 : brandColors.gray600};
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: ${({ $active }) =>
+    $active ? '0 4px 14px var(--button-primary-shadow)' : 'none'};
+  transition: all 0.2s ease;
 
-  &::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -1px;
-    height: 2px;
-    border-radius: ${radii.full};
-    background: ${({ $active }) =>
-      $active ? brandColors.pink500 : 'transparent'};
+  &:hover {
+    border-color: var(--color-primary);
+    color: ${({ $active }) => ($active ? '#ffffff' : 'var(--color-text)')};
   }
 `;

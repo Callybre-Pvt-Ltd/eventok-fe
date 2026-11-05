@@ -1,17 +1,16 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { brandColors } from '@/theme/brand';
-import { fontSizes, media, radii, shadows } from '@/theme';
+import { fontSizes, media, radii } from '@/theme';
 
 export const Layout = styled.div`
   display: grid;
-  gap: 1.5rem;
+  gap: 2rem;
   grid-template-columns: 1fr;
-  align-items: start;
+  align-items: center;
 
   ${media.lg} {
     grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
+    gap: 3.5rem;
   }
 `;
 
@@ -22,7 +21,7 @@ export const ChooseLabel = styled.p`
   text-align: right;
   font-size: ${fontSizes.xs};
   font-weight: 600;
-  color: ${brandColors.gray400};
+  color: var(--color-text-muted);
 `;
 
 export const TileGrid = styled.div`
@@ -40,15 +39,30 @@ export const Tile = styled(Link)`
   gap: 0.5rem;
   justify-items: center;
   text-align: center;
-  padding: 0.75rem 0.5rem;
+  padding: 0.875rem 0.5rem;
   border-radius: ${radii.lg};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   text-decoration: none;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    border-color: ${brandColors.pink500};
-    box-shadow: ${shadows.md};
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 24px var(--color-shadow-strong);
+    transform: translateY(-2px);
+  }
+
+  [data-theme='light'] & {
+    background: #FFFFFF;
+    border-color: rgba(226, 232, 240, 0.85);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.04);
+  }
+
+  [data-theme='dark'] & {
+    background: #141A32;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   }
 `;
 
@@ -62,25 +76,26 @@ export const Thumb = styled.img`
 export const TileLabel = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const Actions = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
-  margin-top: 1rem;
+  margin-top: 1.25rem;
 `;
 
 export const Collage = styled.div`
   display: grid;
-  gap: 0.875rem;
+  gap: 1rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 `;
 
 export const CollageImage = styled.img<{ $tall?: boolean }>`
   width: 100%;
-  height: ${({ $tall }) => ($tall ? '13rem' : '9rem')};
+  height: ${({ $tall }) => ($tall ? '14rem' : '10rem')};
   object-fit: cover;
   border-radius: ${radii.lg};
+  box-shadow: 0 4px 16px var(--color-shadow);
 `;

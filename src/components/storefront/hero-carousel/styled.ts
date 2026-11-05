@@ -1,29 +1,40 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { brandColors, brandGradients, brandRgb } from '@/theme/brand';
 import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const HeroWrap = styled.section`
-  padding: 1rem;
-
-  ${media.lg} {
-    padding: 1.5rem 2.5rem;
-  }
+  width: 100%;
+  padding: 1.25rem clamp(1rem, 3.5vw, 2.5rem);
+  margin: 0;
+  box-sizing: border-box;
 `;
 
 export const Panel = styled.div`
   position: relative;
-  max-width: 1360px;
+  width: 100%;
+  max-width: 1440px;
   margin: 0 auto;
-  min-height: 24rem;
+  min-height: 26rem;
+  border-radius: 1.5rem;
   overflow: hidden;
-  border-radius: ${radii.xxl};
-  background: ${brandColors.heroBg};
+  background: #0A0D18;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   display: grid;
   align-items: center;
 
-  ${media.lg} {
+  [data-theme='light'] & {
+    box-shadow: 0 20px 50px rgba(124, 58, 237, 0.18);
+    border: 1px solid rgba(124, 58, 237, 0.15);
+  }
+
+  ${media.md} {
     min-height: 30rem;
+    border-radius: 1.75rem;
+  }
+
+  ${media.lg} {
+    min-height: 34rem;
   }
 `;
 
@@ -32,6 +43,7 @@ export const Slide = styled.div<{ $active: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: inherit;
   opacity: ${({ $active }) => ($active ? 1 : 0)};
   pointer-events: ${({ $active }) => ($active ? 'auto' : 'none')};
   transition: opacity 0.6s ease;
@@ -51,22 +63,39 @@ export const SlideImage = styled.img`
 export const Scrim = styled.div`
   position: absolute;
   inset: 0;
-  background: ${brandGradients.heroScrim};
+  background: linear-gradient(
+    90deg,
+    rgba(10, 13, 24, 0.94) 0%,
+    rgba(10, 13, 24, 0.65) 50%,
+    rgba(10, 13, 24, 0.15) 100%
+  );
 `;
 
 export const Glow = styled.div`
   position: absolute;
   inset: 0;
-  background: ${brandGradients.heroGlow};
+  background: radial-gradient(
+    65% 85% at 85% 20%,
+    rgba(124, 58, 237, 0.35) 0%,
+    rgba(99, 102, 241, 0.2) 40%,
+    transparent 75%
+  );
+  opacity: 0.85;
 `;
 
 export const Content = styled.div`
   position: relative;
+  z-index: 2;
   padding: 2.5rem 1.5rem;
-  max-width: 44rem;
+  max-width: 1440px;
+  width: 100%;
+
+  ${media.md} {
+    padding: 3.5rem 3rem;
+  }
 
   ${media.lg} {
-    padding: 3.5rem;
+    padding: 4.5rem 4.5rem;
   }
 `;
 
@@ -78,7 +107,7 @@ export const Eyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
-  color: ${brandColors.pink400};
+  color: var(--color-primary);
 
   &::before {
     content: '';
@@ -90,34 +119,37 @@ export const Eyebrow = styled.span`
 `;
 
 export const Title = styled.h1`
-  margin-top: 0.875rem;
+  margin-top: 0.5rem;
+  max-width: 44rem;
   font-family: ${fontFamily.display};
-  font-size: clamp(1.875rem, 4vw, 3rem);
-  font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-  color: ${brandColors.white};
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #ffffff;
 `;
 
-export const Accent = styled.em`
-  font-family: ${fontFamily.emphasis};
-  font-style: italic;
-  font-weight: 600;
-  color: ${brandColors.pink400};
+export const Accent = styled.span`
+  color: var(--color-primary);
+  font-family: ${fontFamily.display};
+  font-weight: 700;
+  background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 40%, #FDA4AF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
 
 export const Subtitle = styled.p`
   margin-top: 1rem;
-  max-width: 32rem;
-  font-size: ${fontSizes.md};
-  font-weight: 500;
-  color: rgba(${brandRgb.white}, 0.78);
+  max-width: 34rem;
+  font-size: clamp(0.9375rem, 1.5vw, 1.05rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.85);
 `;
 
 export const Buttons = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.875rem;
   margin-top: 1.75rem;
 `;
 
@@ -125,16 +157,19 @@ export const PrimaryCta = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
+  padding: 0.875rem 2rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--button-primary-gradient);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 8px 24px var(--button-primary-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px var(--button-primary-shadow);
   }
 `;
 
@@ -142,29 +177,31 @@ export const GhostCta = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.75rem;
+  padding: 0.875rem 1.75rem;
   border-radius: ${radii.full};
-  border: 1px solid rgba(${brandRgb.white}, 0.35);
-  color: ${brandColors.white};
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background: rgba(${brandRgb.white}, 0.12);
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.4);
   }
 `;
 
 export const Dots = styled.div`
   position: absolute;
-  left: 1.5rem;
-  bottom: 1.25rem;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translateX(-50%);
   display: flex;
   gap: 0.5rem;
-
-  ${media.lg} {
-    left: 3.5rem;
-  }
+  z-index: 3;
 `;
 
 export const Dot = styled.button<{ $active: boolean }>`
@@ -173,21 +210,18 @@ export const Dot = styled.button<{ $active: boolean }>`
   border: none;
   border-radius: ${radii.full};
   background: ${({ $active }) =>
-    $active ? brandColors.pink500 : `rgba(${brandRgb.white}, 0.4)`};
+    $active ? 'var(--color-primary)' : 'rgba(255, 255, 255, 0.35)'};
   cursor: pointer;
-  transition: width 0.3s ease, background 0.3s ease;
+  transition: all 0.3s ease;
 `;
 
 export const Arrows = styled.div`
   position: absolute;
-  right: 1.25rem;
-  bottom: 1.25rem;
-  display: none;
+  right: clamp(1rem, 3.5vw, 2.5rem);
+  bottom: 1.5rem;
+  display: flex;
   gap: 0.5rem;
-
-  ${media.md} {
-    display: flex;
-  }
+  z-index: 3;
 `;
 
 export const Arrow = styled.button`
@@ -196,14 +230,16 @@ export const Arrow = styled.button`
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: ${radii.full};
-  border: 1px solid rgba(${brandRgb.white}, 0.35);
-  background: rgba(${brandRgb.ink}, 0.35);
-  color: ${brandColors.white};
+  background: rgba(10, 13, 24, 0.6);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
   cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink500};
-    border-color: ${brandColors.pink500};
+    background: var(--color-primary);
+    border-color: var(--color-primary);
   }
 `;

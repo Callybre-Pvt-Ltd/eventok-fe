@@ -1,7 +1,9 @@
 import { createPortal } from 'react-dom';
-import { ArrowRight, Gem, Menu, X } from 'lucide-react';
+import { ArrowRight, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BrandIcon } from '@/components/global/brand-icon';
 import { ProfileMenu } from '@/components/auth/profile-menu';
+import { ThemeToggle } from '@/components/global/theme-toggle';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { getPostAuthPath } from '@/utils/auth/post-auth';
@@ -62,17 +64,20 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
         <MobileTop>
           <Brand to={ROUTES.HOME} onClick={nav.closeMenu}>
             <BrandMark>
-              <Gem size={18} strokeWidth={1.5} />
+              <BrandIcon size={28} />
             </BrandMark>
             {t('common.appName')}
           </Brand>
-          <MobileClose
-            type="button"
-            onClick={nav.closeMenu}
-            aria-label={t('nav.closeMenu')}
-          >
-            <X size={20} />
-          </MobileClose>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+            <ThemeToggle compact />
+            <MobileClose
+              type="button"
+              onClick={nav.closeMenu}
+              aria-label={t('nav.closeMenu')}
+            >
+              <X size={20} />
+            </MobileClose>
+          </div>
         </MobileTop>
 
         <MobileLinks>
@@ -124,7 +129,7 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
         <NavInner $scrolled={nav.scrolled}>
           <Brand to={ROUTES.HOME}>
             <BrandMark $scrolled={nav.scrolled}>
-              <Gem size={nav.scrolled ? 16 : 18} strokeWidth={1.5} />
+              <BrandIcon size={nav.scrolled ? 26 : 30} />
             </BrandMark>
             {t('common.appName')}
           </Brand>
@@ -144,6 +149,7 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
           </CenterNav>
 
           <Actions>
+            <ThemeToggle compact />
             {isSignedIn ? (
               <ProfileMenu tone="light" />
             ) : (

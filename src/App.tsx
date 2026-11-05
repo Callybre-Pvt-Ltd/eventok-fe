@@ -44,11 +44,17 @@ function ThemedApp() {
           colorText: palette.text,
           colorBorder: palette.border,
           colorPrimaryBg: palette.primaryLight,
-          controlOutline: 'rgba(232, 0, 111, 0.18)',
+          controlOutline:
+            mode === 'dark'
+              ? 'rgba(139, 92, 246, 0.25)'
+              : 'rgba(124, 58, 237, 0.18)',
         },
         components: {
           Button: {
-            primaryShadow: '0 6px 16px rgba(232, 0, 111, 0.28)',
+            primaryShadow:
+              mode === 'dark'
+                ? '0 6px 16px rgba(124, 58, 237, 0.35)'
+                : '0 6px 16px rgba(124, 58, 237, 0.28)',
             borderRadius: 10,
             fontWeight: 600,
           },
@@ -57,14 +63,18 @@ function ThemedApp() {
             headerColor: palette.primaryDark,
             rowHoverBg: palette.backgroundTint,
             borderColor: palette.border,
+            colorBgContainer: palette.surface,
           },
           Menu: {
             itemSelectedBg: palette.primaryLight,
             itemSelectedColor: palette.primary,
             itemHoverBg: palette.backgroundTint,
+            colorBgContainer: palette.surface,
           },
           Card: {
             borderRadiusLG: 16,
+            colorBgContainer: palette.surface,
+            colorBorderSecondary: palette.border,
           },
           Tag: {
             defaultBg: palette.primaryLight,
@@ -72,7 +82,8 @@ function ThemedApp() {
           },
           Modal: {
             borderRadiusLG: 20,
-            headerBg: 'transparent',
+            contentBg: palette.surface,
+            headerBg: palette.surface,
             titleFontSize: 20,
             titleLineHeight: 1.3,
             paddingContentHorizontalLG: 28,
@@ -84,14 +95,37 @@ function ThemedApp() {
             controlHeight: 42,
             activeBorderColor: palette.primary,
             hoverBorderColor: palette.primary,
+            colorBgContainer: palette.surface,
+            colorText: palette.text,
+            colorBorder: palette.border,
           },
           InputNumber: {
             borderRadius: 10,
             controlHeight: 42,
+            colorBgContainer: palette.surface,
+            colorText: palette.text,
+            colorBorder: palette.border,
           },
           Select: {
             borderRadius: 10,
             controlHeight: 42,
+            colorBgContainer: palette.surface,
+            colorText: palette.text,
+            colorBorder: palette.border,
+            optionSelectedBg: palette.primaryLight,
+            optionActiveBg: palette.backgroundTint,
+          },
+          Dropdown: {
+            colorBgElevated: palette.surface,
+            colorText: palette.text,
+          },
+          Popover: {
+            colorBgElevated: palette.surface,
+            colorText: palette.text,
+          },
+          Tooltip: {
+            colorBgSpotlight: mode === 'dark' ? '#241444' : '#1A1028',
+            colorTextLightSolid: '#FFFFFF',
           },
         },
       }}
@@ -105,7 +139,7 @@ function ThemedApp() {
   );
 }
 
-function App() {
+export function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>

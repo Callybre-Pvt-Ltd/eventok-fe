@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { ProductCard } from '@/components/storefront/product-card';
 import {
   Eyebrow,
-  Rail,
   RailControls,
   RoundButton,
   Section,
@@ -15,7 +14,7 @@ import {
   TabRow,
 } from '@/components/storefront/shared/styled';
 import { useServiceRail } from './helper';
-import { CardSlot } from './styled';
+import { CardSlot, Rail } from './styled';
 
 export function ServiceRail() {
   const { t } = useTranslation();

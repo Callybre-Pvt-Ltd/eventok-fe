@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import type { ThemePalette } from '@/theme';
 import { fontFamily, media, spacing } from '@/theme';
-import { brandColors } from '@/theme/brand';
 
 export const Layout = styled.div<{ $palette: ThemePalette }>`
   display: flex;
   min-height: 100vh;
   min-height: 100dvh;
-  background: ${brandColors.ivory};
+  background: ${({ $palette }) => $palette.backgroundAlt};
+  color: ${({ $palette }) => $palette.text};
   font-family: ${fontFamily.body};
+  transition: background 0.25s ease, color 0.25s ease;
 `;
 
 export const Main = styled.main`
@@ -63,11 +64,12 @@ export const TopBar = styled.div<{ $palette: ThemePalette }>`
   align-items: center;
   gap: ${spacing.md};
   padding: ${spacing.md} ${spacing.xl};
-  border-bottom: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
+  border-bottom: 1px solid ${({ $palette }) => $palette.border};
+  background: ${({ $palette }) => $palette.surface};
   position: sticky;
   top: 0;
   z-index: 50;
+  transition: background 0.25s ease, border-color 0.25s ease;
 
   ${media.belowMd} {
     padding: ${spacing.md};
@@ -80,18 +82,18 @@ export const MenuBtn = styled.button<{ $palette: ThemePalette }>`
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border: 1px solid ${brandColors.tan};
+  border: 1px solid ${({ $palette }) => $palette.border};
   border-radius: 10px;
-  background: ${brandColors.white};
-  color: ${brandColors.chocolate};
+  background: ${({ $palette }) => $palette.surface};
+  color: ${({ $palette }) => $palette.text};
   cursor: pointer;
   flex-shrink: 0;
-  transition: background 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink500};
-    color: ${brandColors.white};
-    border-color: ${brandColors.pink500};
+    background: ${({ $palette }) => $palette.primary};
+    color: #ffffff;
+    border-color: ${({ $palette }) => $palette.primary};
   }
 
   ${media.belowLg} {
@@ -111,7 +113,7 @@ export const TopBarEyebrow = styled.span`
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: ${brandColors.gray600};
+  color: var(--color-text-secondary);
 `;
 
 export const TopBarTitle = styled.h2<{ $palette: ThemePalette }>`
@@ -136,9 +138,9 @@ export const RolePill = styled.span`
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: ${brandColors.gray600};
-  background: ${brandColors.gray100};
-  border: 1px solid ${brandColors.tan};
+  color: var(--color-text-secondary);
+  background: var(--color-bg-tint);
+  border: 1px solid var(--color-border);
   flex-shrink: 0;
 
   ${media.belowSm} {

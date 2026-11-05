@@ -6,12 +6,108 @@
   padding: 0;
 }
 
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: #FAFAFE;
+  --color-bg-alt: #F4F4FD;
+  --color-bg-tint: #F5F3FF;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFFFF;
+  --color-text: #0F172A;
+  --color-text-secondary: #64748B;
+  --color-text-muted: #94A3B8;
+  --color-primary: #7C3AED;
+  --color-primary-hover: #6D28D9;
+  --color-primary-dark: #5B21B6;
+  --color-primary-light: #EDE9FE;
+  --color-primary-subtle: #F5F3FF;
+  --color-accent: #6366F1;
+  --color-accent-soft: #E0E7FF;
+  --color-highlight: #C4B5FD;
+  --color-peach: #FDA4AF;
+  --color-border: rgba(226, 232, 240, 0.85);
+  --color-border-light: rgba(241, 245, 249, 0.9);
+  --color-border-hover: rgba(124, 58, 237, 0.4);
+  --color-shadow: rgba(99, 102, 241, 0.05);
+  --color-shadow-strong: rgba(99, 102, 241, 0.12);
+  --color-overlay: rgba(15, 23, 42, 0.55);
+  --color-glass: rgba(255, 255, 255, 0.92);
+
+  /* Nav & Header */
+  --nav-scrolled-bg: rgba(255, 255, 255, 0.92);
+  --nav-scrolled-border: rgba(124, 58, 237, 0.08);
+  --nav-scrolled-shadow: 0 10px 40px rgba(99, 102, 241, 0.06);
+
+  /* Footer */
+  --footer-bg: #F7F7FD;
+  --footer-text: #0F172A;
+  --footer-watermark: rgba(124, 58, 237, 0.04);
+
+  /* Button gradients & glow */
+  --button-primary-gradient: linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #818CF8 100%);
+  --button-primary-shadow: rgba(124, 58, 237, 0.28);
+
+  /* Theme Toggle */
+  --theme-toggle-border: rgba(124, 58, 237, 0.2);
+  --theme-toggle-bg: rgba(255, 255, 255, 0.95);
+  --theme-toggle-color: #7C3AED;
+  --theme-toggle-hover-bg: #EDE9FE;
+  --theme-toggle-shadow: rgba(124, 58, 237, 0.15);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #0A0D18;
+  --color-bg-alt: #0F1426;
+  --color-bg-tint: #141A32;
+  --color-surface: #141A32;
+  --color-surface-elevated: #1A2242;
+  --color-text: #FFFFFF;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
+  --color-primary: #8B5CF6;
+  --color-primary-hover: #A78BFA;
+  --color-primary-dark: #7C3AED;
+  --color-primary-light: #1E1838;
+  --color-primary-subtle: #15122B;
+  --color-accent: #818CF8;
+  --color-accent-soft: #1E2045;
+  --color-highlight: #C4B5FD;
+  --color-peach: #FDA4AF;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.05);
+  --color-border-hover: rgba(167, 139, 250, 0.35);
+  --color-shadow: rgba(0, 0, 0, 0.45);
+  --color-shadow-strong: rgba(0, 0, 0, 0.65);
+  --color-overlay: rgba(7, 9, 19, 0.8);
+  --color-glass: rgba(20, 26, 50, 0.88);
+
+  /* Nav & Header */
+  --nav-scrolled-bg: rgba(10, 13, 24, 0.92);
+  --nav-scrolled-border: rgba(255, 255, 255, 0.08);
+  --nav-scrolled-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+
+  /* Footer */
+  --footer-bg: #080B14;
+  --footer-text: #FFFFFF;
+  --footer-watermark: rgba(255, 255, 255, 0.03);
+
+  /* Button gradients & glow */
+  --button-primary-gradient: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #6366F1 100%);
+  --button-primary-shadow: rgba(124, 58, 237, 0.35);
+
+  /* Theme Toggle */
+  --theme-toggle-border: rgba(167, 139, 250, 0.3);
+  --theme-toggle-bg: rgba(20, 26, 50, 0.9);
+  --theme-toggle-color: #C4B5FD;
+  --theme-toggle-hover-bg: #1E1838;
+  --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* html is the scroll container, so the clip has to live here too — on body alone
-     it never applies and pages can still be dragged sideways on phones.
-     `clip` rather than `hidden` so position: sticky keeps working. */
   max-width: 100%;
   overflow-x: clip;
 }
@@ -44,6 +140,19 @@ body {
   max-width: 100%;
   overflow-x: clip;
   overflow-wrap: break-word;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+[data-theme='light'] body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+[data-theme='dark'] body {
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 img,
@@ -76,17 +185,7 @@ em.brand-emphasis,
   font-family: 'Lora', Georgia, serif;
   font-style: italic;
   font-weight: 600;
-  color: #f0559f;
-}
-
-[data-theme='light'] body {
-  background: #faf7fc;
-  color: #1b0b33;
-}
-
-[data-theme='dark'] body {
-  background: #12071f;
-  color: #faf7fc;
+  color: var(--color-primary);
 }
 
 #root {
@@ -111,13 +210,13 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid #ec2e8e;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(236, 46, 142, 0.22);
-  color: #1b0b33;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
 }
 
 .skip-link {
@@ -125,7 +224,7 @@ button {
   left: -9999px;
   z-index: 9999;
   padding: 0.75rem 1rem;
-  background: #ec2e8e;
+  background: var(--color-primary);
   color: #fff;
   border-radius: 9999px;
 }
