@@ -266,17 +266,22 @@ const resolvePackageNames = async (
   return names;
 };
 
+export interface CreateBookingRequestPayload {
+  serviceId?: string;
+  vendorId?: string;
+  eventDate: string;
+  eventType: string;
+  guestCount: number;
+  city: string;
+  notes: string;
+}
+
 export const bookingService = {
-  async createRequest(payload: {
-    customerId: string;
-    vendorId: string;
-    eventDate: string;
-    eventType: string;
-    guestCount: number;
-    city: string;
-    notes: string;
-  }): Promise<ServiceResponse<Booking>> {
+  async createRequest(
+    payload: CreateBookingRequestPayload,
+  ): Promise<ServiceResponse<Booking>> {
     return wrap(async () => {
+      const targetServiceId = payload.serviceId || payload.vendorId;
       const enquiry = await apiRequest<ApiEnquiry>('/enquiries', {
         method: 'POST',
         body: {
@@ -286,7 +291,7 @@ export const bookingService = {
           guest_count: payload.guestCount || null,
           requirements: [
             payload.notes,
-            payload.vendorId ? `Preferred service id: ${payload.vendorId}` : '',
+            targetServiceId ? `Preferred service id: ${targetServiceId}` : '',
           ]
             .filter(Boolean)
             .join('\n'),

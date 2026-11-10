@@ -73,7 +73,13 @@ const ensureVendorProfile = async (input: {
     return await apiRequest<{ id: string; status: string }>('/vendors/me');
   } catch (error) {
     // Only a missing profile may be created; a timeout must not POST a duplicate.
-    if (!(error instanceof ApiError && error.status === 404)) throw error;
+    if (
+      !(
+        error instanceof ApiError &&
+        (error.status === 404 || error.status === 403)
+      )
+    )
+      throw error;
     return apiRequest<{ id: string; status: string }>('/vendors', {
       method: 'POST',
       body: {
