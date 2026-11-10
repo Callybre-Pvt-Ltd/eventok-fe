@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { brandColors, brandRgb } from '@/theme/brand';
 import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const HeaderRoot = styled.header`
@@ -15,7 +14,9 @@ export const MainBar = styled.div`
   align-items: center;
   gap: 0.75rem;
   padding: 0.625rem 1rem;
-  background: ${brandColors.ink900};
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  transition: background 0.25s ease, border-color 0.25s ease;
 
   ${media.belowSm} {
     gap: 0.375rem;
@@ -25,6 +26,18 @@ export const MainBar = styled.div`
   ${media.lg} {
     gap: 1.25rem;
     padding: 0.75rem 2.5rem;
+  }
+
+  [data-theme='light'] & {
+    background: rgba(255, 255, 255, 0.94);
+    border-color: rgba(124, 58, 237, 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  [data-theme='dark'] & {
+    background: rgba(10, 13, 24, 0.94);
+    border-color: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
   }
 `;
 
@@ -40,14 +53,8 @@ export const BrandMark = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: ${radii.md};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
-  font-family: ${fontFamily.display};
-  font-weight: 800;
-  font-size: ${fontSizes.sm};
+  flex-shrink: 0;
+  line-height: 0;
 `;
 
 export const BrandWord = styled.span`
@@ -55,7 +62,7 @@ export const BrandWord = styled.span`
   font-size: ${fontSizes.lg};
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: ${brandColors.white};
+  color: var(--color-text);
   display: none;
 
   ${media.md} {
@@ -69,9 +76,9 @@ export const LocationChip = styled.button`
   gap: 0.375rem;
   padding: 0.5rem 0.875rem;
   border-radius: ${radii.full};
-  border: 1px solid rgba(${brandRgb.white}, 0.18);
-  background: transparent;
-  color: ${brandColors.white};
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
   font-size: ${fontSizes.sm};
   font-weight: 600;
   cursor: pointer;
@@ -82,7 +89,7 @@ export const LocationChip = styled.button`
   }
 
   &:hover {
-    border-color: ${brandColors.pink500};
+    border-color: var(--color-primary);
   }
 `;
 
@@ -93,8 +100,20 @@ export const SearchForm = styled.form`
   align-items: center;
   gap: 0.5rem;
   padding: 0.25rem 0.25rem 0.25rem 1rem;
-  background: ${brandColors.white};
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
   border-radius: ${radii.full};
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    border-color: rgba(226, 232, 240, 0.9);
+    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.04);
+  }
+
+  [data-theme='dark'] & {
+    background: #141a32;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
 
   ${media.belowSm} {
     gap: 0.25rem;
@@ -104,7 +123,7 @@ export const SearchForm = styled.form`
 
 export const SearchIcon = styled.span`
   display: inline-flex;
-  color: ${brandColors.gray400};
+  color: var(--color-text-muted);
   flex: 0 0 auto;
 `;
 
@@ -117,10 +136,10 @@ export const SearchInput = styled.input`
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.sm};
   font-weight: 600;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 
   &::placeholder {
-    color: ${brandColors.gray400};
+    color: var(--color-text-muted);
     font-weight: 500;
   }
 `;
@@ -134,12 +153,14 @@ export const SearchSubmit = styled.button`
   flex: 0 0 auto;
   border: none;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--button-primary-gradient);
+  color: #ffffff;
   cursor: pointer;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
+    opacity: 0.92;
+    transform: scale(1.04);
   }
 `;
 
@@ -158,7 +179,7 @@ export const VendorLink = styled(Link)`
   display: none;
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.white};
+  color: var(--color-text);
   text-decoration: none;
   white-space: nowrap;
 
@@ -167,7 +188,7 @@ export const VendorLink = styled(Link)`
   }
 
   &:hover {
-    color: ${brandColors.pink400};
+    color: var(--color-primary);
   }
 `;
 
@@ -179,7 +200,7 @@ export const VendorButton = styled.button`
   padding: 0;
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.white};
+  color: var(--color-text);
   white-space: nowrap;
 
   ${media.xl} {
@@ -187,7 +208,7 @@ export const VendorButton = styled.button`
   }
 
   &:hover {
-    color: ${brandColors.pink400};
+    color: var(--color-primary);
   }
 `;
 
@@ -217,12 +238,13 @@ export const MenuButton = styled.button`
   height: 2.25rem;
   border: none;
   border-radius: ${radii.full};
-  background: rgba(${brandRgb.white}, 0.12);
-  color: ${brandColors.white};
+  background: var(--color-bg-alt);
+  color: var(--color-text);
   cursor: pointer;
 
   &:hover {
-    background: rgba(${brandRgb.white}, 0.2);
+    background: var(--color-primary);
+    color: #ffffff;
   }
 `;
 
@@ -234,7 +256,7 @@ export const IconLink = styled(Link)`
   width: 2.5rem;
   height: 2.5rem;
   border-radius: ${radii.full};
-  color: ${brandColors.white};
+  color: var(--color-text);
   text-decoration: none;
 
   ${media.belowSm} {
@@ -243,7 +265,8 @@ export const IconLink = styled(Link)`
   }
 
   &:hover {
-    background: rgba(${brandRgb.white}, 0.1);
+    background: var(--color-bg-alt);
+    color: var(--color-primary);
   }
 `;
 
@@ -268,8 +291,8 @@ export const Badge = styled.span`
   align-items: center;
   justify-content: center;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: 0.625rem;
   font-weight: 800;
 `;
@@ -280,15 +303,18 @@ export const LoginButton = styled(Link)`
   gap: 0.375rem;
   padding: 0.5rem 1.125rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--button-primary-gradient);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
+  box-shadow: 0 4px 14px var(--button-primary-shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px var(--button-primary-shadow);
   }
 `;
 

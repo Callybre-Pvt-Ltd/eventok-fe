@@ -1,5 +1,6 @@
-import { ArrowUpRight, ChevronUp, Gem } from 'lucide-react';
+import { ArrowUpRight, ChevronUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { BrandIcon } from '@/components/global/brand-icon';
 import { ROUTES } from '@/constants/routes';
 import {
   footerQuickLinks,
@@ -54,7 +55,7 @@ export function PublicFooter() {
           <FooterBrandCol>
             <FooterLogo>
               <FooterLogoMark>
-                <Gem size={18} strokeWidth={1.5} />
+                <BrandIcon size={32} />
               </FooterLogoMark>
               {t('common.appName')}
             </FooterLogo>

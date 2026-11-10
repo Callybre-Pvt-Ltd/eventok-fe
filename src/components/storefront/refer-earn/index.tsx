@@ -16,6 +16,7 @@ import {
   Panel,
   Pill,
   ReferButton,
+  SparklesWrap,
   Text,
   Title,
 } from './styled';
@@ -28,6 +29,32 @@ export function ReferEarn() {
     <Section>
       <SectionInner>
         <Panel>
+          <SparklesWrap aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"
+                fill="rgba(255, 255, 255, 0.75)"
+              />
+            </svg>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              style={{ marginTop: '12px' }}
+            >
+              <path
+                d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"
+                fill="rgba(255, 255, 255, 0.55)"
+              />
+            </svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+              <path
+                d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"
+                fill="rgba(255, 255, 255, 0.65)"
+              />
+            </svg>
+          </SparklesWrap>
           <Copy>
             <Pill>{t('storefront.referEyebrow')}</Pill>
             <Title>{t('storefront.referTitle')}</Title>
@@ -56,7 +83,9 @@ export function ReferEarn() {
             </CodeRow>
             <Input
               value={refer.enteredCode}
-              onChange={event => refer.setEnteredCode(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
+                refer.setEnteredCode(event.target.value)
+              }
               placeholder={t('storefront.referEnterCode')}
               aria-label={t('storefront.referEnterCode')}
             />

@@ -46,7 +46,7 @@ export const storefront = {
   scrollRight: 'Scroll right',
 
   recentCelebrations: 'Our recent celebrations',
-  trendingTitle: 'Trending Decorations',
+  trendingTitle: 'Trendiest Decorations',
   trendingSubtitle: 'Loved by customers across every celebration this month.',
 
   venuesEyebrow: 'Celebrate differently',

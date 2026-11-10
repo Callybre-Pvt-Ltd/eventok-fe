@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { brandColors, brandGradients, brandRgb } from '@/theme/brand';
-import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Banner = styled.div`
   position: relative;
@@ -8,13 +7,14 @@ export const Banner = styled.div`
   display: grid;
   gap: 1.5rem;
   align-items: center;
-  padding: 2rem 1.5rem;
+  padding: 2.25rem 1.75rem;
   border-radius: ${radii.xxl};
-  background: ${brandGradients.venueBanner};
+  background: linear-gradient(135deg, #1e1038 0%, #4c1d95 50%, #6b21a8 100%);
+  margin-bottom: 2.5rem;
 
   ${media.lg} {
-    grid-template-columns: 1fr 1fr;
-    padding: 2.75rem;
+    grid-template-columns: 1.2fr 1fr;
+    padding: 3rem 3.5rem;
   }
 `;
 
@@ -25,7 +25,7 @@ export const BannerEyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: ${brandColors.pink400};
+  color: #a78bfa;
 `;
 
 export const BannerTitle = styled.h2`
@@ -34,7 +34,7 @@ export const BannerTitle = styled.h2`
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 800;
   line-height: 1.15;
-  color: ${brandColors.white};
+  color: #ffffff;
 `;
 
 export const BannerCta = styled.a`
@@ -42,16 +42,19 @@ export const BannerCta = styled.a`
   align-items: center;
   gap: 0.5rem;
   margin-top: 1.25rem;
-  padding: 0.625rem 1.5rem;
+  padding: 0.75rem 1.75rem;
   border-radius: ${radii.full};
-  background: ${brandColors.white};
-  color: ${brandColors.chocolate};
+  background: #ffffff;
+  color: #1a1028;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink100};
+    transform: translateY(-2px);
+    background: #f3e8ff;
   }
 `;
 
@@ -63,14 +66,33 @@ export const BannerCollage = styled.div`
 
 export const BannerImage = styled.img`
   width: 100%;
-  height: 8rem;
+  height: 8.5rem;
   object-fit: cover;
   border-radius: ${radii.lg};
 `;
 
+export const BannerGlow = styled.div`
+  position: absolute;
+  top: -40%;
+  right: -20%;
+  width: 30rem;
+  height: 30rem;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(167, 139, 250, 0.3) 0%,
+    transparent 70%
+  );
+  pointer-events: none;
+`;
+
+export const ListHead = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
 export const VenueGrid = styled.div`
   display: grid;
-  gap: 1.25rem;
+  gap: 1.5rem;
   grid-template-columns: repeat(1, minmax(0, 1fr));
 
   ${media.sm} {
@@ -78,57 +100,82 @@ export const VenueGrid = styled.div`
   }
 
   ${media.lg} {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 `;
 
 export const VenueCard = styled.article`
   border-radius: ${radii.lg};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   overflow: hidden;
-  box-shadow: ${shadows.sm};
+  box-shadow: 0 2px 10px var(--color-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.25s ease, transform 0.25s ease,
+    border-color 0.25s ease;
 
   &:hover {
-    box-shadow: ${shadows.md};
+    box-shadow: 0 16px 36px -8px var(--color-shadow-strong);
+    border-color: var(--color-primary);
+    transform: translateY(-3px);
+  }
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    border-color: rgba(226, 232, 240, 0.85);
+    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07),
+      0 2px 6px rgba(0, 0, 0, 0.02);
+  }
+
+  [data-theme='dark'] & {
+    background: #141a32;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   }
 `;
 
 export const VenueImage = styled.img`
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
 `;
 
 export const VenueBody = styled.div`
-  display: grid;
-  gap: 0.375rem;
-  padding: 0.875rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1.15rem;
+  flex: 1 1 auto;
 `;
 
 export const VenueName = styled.h3`
   font-size: ${fontSizes.md};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
+  line-height: 1.35;
 `;
 
-export const VenueMeta = styled.p`
+export const VenueMeta = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
   font-size: ${fontSizes.xs};
-  font-weight: 600;
-  color: ${brandColors.gray600};
+  font-weight: 500;
+  color: var(--color-text-secondary);
 `;
 
 export const VenueTag = styled.span`
-  justify-self: start;
-  padding: 0.1875rem 0.5rem;
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
   border-radius: ${radii.full};
-  background: ${brandColors.success50};
-  color: ${brandColors.success500};
-  font-size: ${fontSizes.xs};
+  background: var(--color-bg-tint);
+  color: var(--color-primary);
+  font-size: 0.6875rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 `;
 
 export const VenueFoot = styled.div`
@@ -136,47 +183,38 @@ export const VenueFoot = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-top: 0.25rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border-light);
 `;
 
 export const VenuePrice = styled.span`
-  font-size: ${fontSizes.sm};
+  font-family: ${fontFamily.display};
+  font-size: ${fontSizes.lg};
   font-weight: 800;
-  color: ${brandColors.chocolate};
+  color: var(--color-primary);
 `;
 
 export const VenueUnit = styled.span`
+  margin-left: 0.25rem;
   font-size: ${fontSizes.xs};
-  font-weight: 600;
-  color: ${brandColors.gray400};
+  color: var(--color-text-muted);
 `;
 
 export const VenueButton = styled.a`
-  padding: 0.4375rem 1.125rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--button-primary-gradient);
+  color: #ffffff;
   font-size: ${fontSizes.xs};
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 4px 12px var(--button-primary-shadow);
+  transition: transform 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
+    transform: translateY(-1px);
   }
-`;
-
-export const BannerGlow = styled.div`
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    50% 60% at 15% 20%,
-    rgba(${brandRgb.pink}, 0.35) 0%,
-    rgba(${brandRgb.pink}, 0) 70%
-  );
-  pointer-events: none;
-`;
-
-export const ListHead = styled.div`
-  margin-top: 2.5rem;
-  margin-bottom: 1.25rem;
 `;

@@ -1,15 +1,18 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { brandColors } from '@/theme/brand';
-import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Grid = styled.div`
   display: grid;
-  gap: 1rem;
+  gap: 1.15rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
 
-  ${media.md} {
+  ${media.sm} {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  ${media.md} {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 
   ${media.lg} {
@@ -19,20 +22,34 @@ export const Grid = styled.div`
 
 export const Tile = styled(Link)`
   display: grid;
-  gap: 0.5rem;
+  gap: 0.65rem;
   justify-items: center;
   text-align: center;
-  padding: 1.25rem 0.875rem;
+  padding: 1.35rem 1rem;
   border-radius: ${radii.lg};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   text-decoration: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 2px 8px var(--color-shadow);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease,
+    transform 0.25s ease;
 
   &:hover {
-    border-color: ${brandColors.pink500};
-    box-shadow: ${shadows.md};
-    transform: translateY(-2px);
+    border-color: var(--color-primary);
+    box-shadow: 0 8px 24px var(--color-shadow-strong);
+    transform: translateY(-3px);
+  }
+
+  [data-theme='light'] & {
+    background: #ffffff;
+    border-color: rgba(226, 232, 240, 0.85);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.04);
+  }
+
+  [data-theme='dark'] & {
+    background: #141a32;
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   }
 `;
 
@@ -40,22 +57,36 @@ export const IconCircle = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
+  width: 3.25rem;
+  height: 3.25rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink100};
-  color: ${brandColors.pink500};
+  background: rgba(124, 58, 237, 0.08);
+  color: var(--color-primary);
+  border: 1px solid rgba(124, 58, 237, 0.18);
+  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+
+  ${Tile}:hover & {
+    transform: scale(1.08);
+    background: rgba(124, 58, 237, 0.16);
+    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
+  }
+
+  [data-theme='dark'] & {
+    background: rgba(139, 92, 246, 0.18);
+    border-color: rgba(167, 139, 250, 0.3);
+    color: #c4b5fd;
+  }
 `;
 
 export const TileName = styled.span`
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const TileMeta = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 600;
-  color: ${brandColors.gray400};
+  color: var(--color-text-muted);
 `;

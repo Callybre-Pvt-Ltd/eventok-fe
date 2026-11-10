@@ -1,14 +1,13 @@
 import styled, { keyframes } from 'styled-components';
 import { Link, NavLink as RouterNavLink } from 'react-router-dom';
-import { brandColors, brandRgb } from '@/theme/brand';
 import { fontFamily, media } from '@/theme';
 
 const hoverFine = `@media (hover: hover) and (pointer: fine)`;
 const reduceMotion = `@media (prefers-reduced-motion: reduce)`;
 
 const glowPulse = keyframes`
-  0%, 100% { box-shadow: 0 8px 28px rgba(201, 162, 39, 0.28); }
-  50% { box-shadow: 0 12px 36px rgba(201, 162, 39, 0.45); }
+  0%, 100% { box-shadow: 0 8px 28px rgba(124, 58, 237, 0.28); }
+  50% { box-shadow: 0 12px 36px rgba(124, 58, 237, 0.45); }
 `;
 
 export const NavRoot = styled.header<{
@@ -32,14 +31,14 @@ export const NavRoot = styled.header<{
   transition: padding 0.4s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease,
     border-color 0.4s ease, box-shadow 0.4s ease, backdrop-filter 0.4s ease;
   background: ${({ $scrolled }) =>
-    $scrolled ? 'rgba(255, 252, 250, 0.92)' : 'transparent'};
+    $scrolled ? 'var(--nav-scrolled-bg)' : 'transparent'};
   backdrop-filter: ${({ $scrolled }) =>
     $scrolled ? 'blur(20px) saturate(1.15)' : 'blur(0px)'};
   border-bottom: 1px solid
     ${({ $scrolled }) =>
-      $scrolled ? `rgba(${brandRgb.chocolate}, 0.08)` : 'transparent'};
+      $scrolled ? 'var(--nav-scrolled-border)' : 'transparent'};
   box-shadow: ${({ $scrolled }) =>
-    $scrolled ? '0 10px 40px rgba(28, 25, 23, 0.06)' : 'none'};
+    $scrolled ? 'var(--nav-scrolled-shadow)' : 'none'};
 
   /* Instant size change on mobile so sticky filters stay flush under the nav */
   ${media.belowLg} {
@@ -73,7 +72,7 @@ export const Brand = styled(Link)`
   align-items: center;
   gap: 0.75rem;
   text-decoration: none;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   font-family: ${fontFamily.display};
   font-size: clamp(1.2rem, 2vw, 1.4rem);
   font-weight: 700;
@@ -85,18 +84,9 @@ export const BrandMark = styled.span<{ $scrolled?: boolean }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: ${({ $scrolled }) => ($scrolled ? '2.1rem' : '2.5rem')};
-  height: ${({ $scrolled }) => ($scrolled ? '2.1rem' : '2.5rem')};
-  border-radius: 0.75rem;
-  background: linear-gradient(
-    145deg,
-    #e8c547 0%,
-    ${brandColors.gold} 55%,
-    #a8841a 100%
-  );
-  color: ${brandColors.chocolate};
-  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), width 0.4s ease,
-    height 0.4s ease;
+  flex-shrink: 0;
+  line-height: 0;
+  transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 
   ${hoverFine} {
     ${Brand}:hover & {
@@ -128,7 +118,7 @@ export const NavItem = styled(RouterNavLink)`
   min-height: 48px;
   padding: 0.5rem 1rem;
   text-decoration: none;
-  color: ${brandColors.brown};
+  color: var(--color-text-secondary);
   font-family: ${fontFamily.body};
   font-size: 0.9375rem;
   font-weight: 500;
@@ -141,16 +131,16 @@ export const NavItem = styled(RouterNavLink)`
     left: 50%;
     bottom: 0.55rem;
     width: 0;
-    height: 1.5px;
+    height: 2px;
     border-radius: 9999px;
-    background: ${brandColors.gold};
+    background: var(--color-primary);
     transform: translateX(-50%);
     transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   ${hoverFine} {
     &:hover {
-      color: ${brandColors.gold};
+      color: var(--color-primary);
       transform: translateY(-2px);
     }
 
@@ -160,7 +150,7 @@ export const NavItem = styled(RouterNavLink)`
   }
 
   &.active {
-    color: ${brandColors.gold};
+    color: var(--color-primary);
     font-weight: 600;
   }
 
@@ -169,7 +159,7 @@ export const NavItem = styled(RouterNavLink)`
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.gold};
+    outline: 2px solid var(--color-primary);
     outline-offset: 3px;
     border-radius: 0.5rem;
   }
@@ -179,7 +169,7 @@ export const Actions = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.5rem;
+  gap: 0.65rem;
   z-index: 2;
 `;
 
@@ -188,22 +178,17 @@ export const ConsultCta = styled(Link)`
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
-  min-height: 48px;
+  min-height: 44px;
   padding: 0 1.25rem;
   border-radius: 9999px;
   text-decoration: none;
-  color: ${brandColors.chocolate};
+  color: #ffffff;
   font-family: ${fontFamily.body};
   font-size: 0.875rem;
   font-weight: 700;
   letter-spacing: 0.01em;
-  background: linear-gradient(
-    135deg,
-    #efd36a 0%,
-    ${brandColors.gold} 48%,
-    #b8921f 100%
-  );
-  box-shadow: 0 8px 28px rgba(201, 162, 39, 0.28);
+  background: var(--button-primary-gradient);
+  box-shadow: 0 6px 20px var(--button-primary-shadow);
   transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
     box-shadow 0.35s ease;
 
@@ -227,7 +212,7 @@ export const ConsultCta = styled(Link)`
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.chocolate};
+    outline: 2px solid var(--color-primary);
     outline-offset: 3px;
   }
 
@@ -240,15 +225,15 @@ export const MenuToggle = styled.button<{ $open?: boolean }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  min-width: 48px;
-  min-height: 48px;
-  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--color-border);
   border-radius: 50%;
   background: ${({ $open }) =>
-    $open ? brandColors.chocolate : 'rgba(42, 37, 34, 0.05)'};
-  color: ${({ $open }) => ($open ? brandColors.white : brandColors.chocolate)};
+    $open ? 'var(--color-primary)' : 'var(--color-surface)'};
+  color: ${({ $open }) => ($open ? '#ffffff' : 'var(--color-text)')};
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease, transform 0.3s ease;
 
@@ -257,7 +242,7 @@ export const MenuToggle = styled.button<{ $open?: boolean }>`
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.gold};
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 `;
@@ -266,7 +251,7 @@ export const MobileOverlay = styled.div<{ $open: boolean }>`
   position: fixed;
   inset: 0;
   z-index: 130;
-  background: rgba(${brandRgb.chocolate}, 0.55);
+  background: var(--color-overlay);
   backdrop-filter: blur(16px);
   opacity: ${({ $open }) => ($open ? 1 : 0)};
   visibility: ${({ $open }) => ($open ? 'visible' : 'hidden')};
@@ -283,12 +268,8 @@ export const MobilePanel = styled.div<{ $open: boolean }>`
   z-index: 131;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(
-    165deg,
-    rgba(42, 37, 34, 0.96) 0%,
-    rgba(42, 37, 34, 0.99) 100%
-  );
-  color: ${brandColors.white};
+  background: var(--color-surface);
+  color: var(--color-text);
   padding: max(1rem, env(safe-area-inset-top, 0px))
     max(1.25rem, env(safe-area-inset-right, 0px))
     max(1rem, env(safe-area-inset-bottom, 0px))
@@ -313,7 +294,7 @@ export const MobileTop = styled.div`
   padding-bottom: 0.5rem;
 
   ${Brand} {
-    color: ${brandColors.white};
+    color: var(--color-text);
   }
 `;
 
@@ -321,18 +302,18 @@ export const MobileClose = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  min-width: 48px;
-  min-height: 48px;
-  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 44px;
+  min-height: 44px;
+  border: 1px solid var(--color-border);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: ${brandColors.white};
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
   cursor: pointer;
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.gold};
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 `;
@@ -352,21 +333,21 @@ export const MobileLink = styled(Link)`
   min-height: 64px;
   padding: 0.85rem 0.15rem;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.94);
+  color: var(--color-text);
   font-family: ${fontFamily.display};
   font-size: clamp(1.75rem, 7.5vw, 2.35rem);
   font-weight: 600;
   letter-spacing: -0.025em;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--color-border);
   transition: color 0.25s ease;
 
   &:hover,
   &:focus-visible {
-    color: ${brandColors.gold};
+    color: var(--color-primary);
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.gold};
+    outline: 2px solid var(--color-primary);
     outline-offset: 4px;
     border-radius: 0.35rem;
   }
@@ -385,23 +366,18 @@ export const MobileCta = styled(Link)`
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
-  min-height: 56px;
+  min-height: 52px;
   border-radius: 9999px;
   text-decoration: none;
-  color: ${brandColors.chocolate};
+  color: #ffffff;
   font-family: ${fontFamily.body};
   font-size: 1rem;
   font-weight: 700;
-  background: linear-gradient(
-    135deg,
-    #efd36a 0%,
-    ${brandColors.gold} 48%,
-    #b8921f 100%
-  );
-  box-shadow: 0 12px 32px rgba(201, 162, 39, 0.32);
+  background: var(--button-primary-gradient);
+  box-shadow: 0 8px 24px var(--button-primary-shadow);
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.white};
+    outline: 2px solid var(--color-primary);
     outline-offset: 3px;
   }
 `;

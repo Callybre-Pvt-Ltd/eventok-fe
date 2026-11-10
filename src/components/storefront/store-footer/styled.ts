@@ -1,20 +1,22 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { brandColors, brandRgb } from '@/theme/brand';
 import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const FooterRoot = styled.footer`
-  background: ${brandColors.ink900};
-  color: ${brandColors.white};
-  padding: 3rem 1rem 0;
+  width: 100%;
+  background: var(--footer-bg);
+  color: var(--footer-text);
+  border-top: 1px solid var(--color-border);
+  padding: 3.5rem 1rem 0;
+  transition: background 0.25s ease, color 0.25s ease;
 
   ${media.lg} {
-    padding: 4rem 2.5rem 0;
+    padding: 4.5rem clamp(1rem, 3.5vw, 2.5rem) 0;
   }
 `;
 
 export const Inner = styled.div`
-  max-width: 1360px;
+  max-width: 1440px;
   margin: 0 auto;
   display: grid;
   gap: 2.5rem;
@@ -47,28 +49,22 @@ export const BrandMark = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: ${radii.md};
-  background: ${brandColors.accent500};
-  color: ${brandColors.white};
-  font-family: ${fontFamily.display};
-  font-weight: 800;
-  font-size: ${fontSizes.sm};
+  flex-shrink: 0;
+  line-height: 0;
 `;
 
 export const BrandWord = styled.span`
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.lg};
   font-weight: 800;
-  color: ${brandColors.white};
+  color: var(--color-text);
 `;
 
 export const Tagline = styled.p`
   max-width: 24rem;
   font-size: ${fontSizes.sm};
   font-weight: 500;
-  color: ${brandColors.gray400};
+  color: var(--color-text-secondary);
 `;
 
 export const Socials = styled.div`
@@ -80,14 +76,19 @@ export const SocialButton = styled.a`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: ${radii.full};
-  background: rgba(${brandRgb.white}, 0.08);
-  color: ${brandColors.white};
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    background: ${brandColors.pink500};
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
   }
 `;
 
@@ -99,30 +100,51 @@ export const Column = styled.div`
 
 export const ColumnTitle = styled.h3`
   font-family: ${fontFamily.body};
-  font-size: ${fontSizes.xs};
+  font-size: ${fontSizes.sm};
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: ${brandColors.white};
+  color: var(--color-text);
 `;
 
 export const ColumnLink = styled(Link)`
   font-size: ${fontSizes.sm};
   font-weight: 500;
-  color: ${brandColors.gray400};
+  color: var(--color-text-secondary);
   text-decoration: none;
+  transition: color 0.2s ease;
 
   &:hover {
-    color: ${brandColors.pink400};
+    color: var(--color-primary);
   }
 `;
 
+export const FooterLink = ColumnLink;
+
 export const BottomBar = styled.div`
-  margin-top: 2.5rem;
-  padding: 1.25rem 0;
-  border-top: 1px solid rgba(${brandRgb.white}, 0.08);
+  margin-top: 3.5rem;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-border);
   text-align: center;
   font-size: ${fontSizes.xs};
-  font-weight: 500;
-  color: ${brandColors.gray600};
+  color: var(--color-text-muted);
+`;
+
+export const SubFooter = BottomBar;
+
+export const SubInner = styled.div`
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: ${fontSizes.xs};
+  color: var(--color-text-muted);
+`;
+
+export const LegalLinks = styled.div`
+  display: flex;
+  gap: 1.5rem;
 `;

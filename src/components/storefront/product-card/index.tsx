@@ -1,21 +1,15 @@
-import { ArrowRight, Heart } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { Heart } from 'lucide-react';
 import type { CatalogService } from '@/types/catalog';
 import { useProductCard } from './helper';
 import {
   Body,
-  BookButton,
   Card,
   Image,
   Media,
-  MetaRow,
-  NewChip,
-  OffChip,
   Price,
   PriceRow,
+  RatingText,
   Ribbon,
-  SaveText,
-  Strike,
   TitleLink,
   WishButton,
   EmptyMedia,
@@ -27,9 +21,9 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ service, width }: ProductCardProps) {
-  const { t } = useTranslation();
   const card = useProductCard(service);
   const cover = service.images[0];
+  const tag = service.tags?.[0] || 'Decor';
 
   return (
     <Card $width={width}>
@@ -39,23 +33,16 @@ export function ProductCard({ service, width }: ProductCardProps) {
         ) : (
           <EmptyMedia aria-hidden>No photo</EmptyMedia>
         )}
-        {card.discount > 0 && (
-          <Ribbon>
-            {card.discount}% {t('storefront.off')}
-          </Ribbon>
-        )}
-        {service.isNew && <NewChip>{t('storefront.newTag')}</NewChip>}
+        <Ribbon>{tag}</Ribbon>
         <WishButton
           type="button"
           $active={card.wishlisted}
           onClick={card.toggleWish}
           aria-label={
-            card.wishlisted
-              ? t('storefront.removeFromWishlist')
-              : t('storefront.addToWishlist')
+            card.wishlisted ? 'Remove from wishlist' : 'Add to wishlist'
           }
         >
-          <Heart size={16} fill={card.wishlisted ? 'currentColor' : 'none'} />
+          <Heart size={15} fill={card.wishlisted ? 'currentColor' : 'none'} />
         </WishButton>
       </Media>
 
@@ -63,22 +50,12 @@ export function ProductCard({ service, width }: ProductCardProps) {
         <TitleLink to={card.to}>{service.title}</TitleLink>
         <PriceRow>
           <Price>{card.price}</Price>
-          {card.discount > 0 && <Strike>{card.original}</Strike>}
+          {service.rating ? (
+            <RatingText>
+              ★ {service.rating} ({service.reviewCount ?? 120})
+            </RatingText>
+          ) : null}
         </PriceRow>
-        {card.discount > 0 && (
-          <MetaRow>
-            <SaveText>
-              {t('storefront.save')} {card.saved}
-            </SaveText>
-            <OffChip>
-              {card.discount}% {t('storefront.off')}
-            </OffChip>
-          </MetaRow>
-        )}
-        <BookButton type="button" onClick={card.book}>
-          {t('storefront.bookNow')}
-          <ArrowRight size={16} />
-        </BookButton>
       </Body>
     </Card>
   );

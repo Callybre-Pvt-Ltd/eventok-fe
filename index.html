@@ -7,7 +7,23 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
-    <title>eventok-fe</title>
+    <title>EventOK</title>
+    <script>
+      (function () {
+        try {
+          var mode = localStorage.getItem('eventok_theme');
+          if (mode === 'dark' || mode === 'light') {
+            document.documentElement.setAttribute('data-theme', mode);
+            document.documentElement.style.colorScheme = mode;
+          } else {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.style.colorScheme = 'light';
+          }
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'light');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

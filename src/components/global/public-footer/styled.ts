@@ -1,21 +1,17 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { brandColors, brandRgb } from '@/theme/brand';
 import { fontFamily, fontSizes, media, spacing } from '@/theme';
 
 export const Footer = styled.footer`
   position: relative;
   overflow: hidden;
-  background: radial-gradient(
-      ellipse 60% 40% at 10% 0%,
-      rgba(255, 255, 255, 0.7),
-      transparent 55%
-    ),
-    ${brandColors.cream};
-  color: ${brandColors.chocolate};
+  background: var(--footer-bg);
+  color: var(--footer-text);
   font-family: ${fontFamily.body};
   margin-top: auto;
   padding-bottom: env(safe-area-inset-bottom, 0px);
+  border-top: 1px solid var(--color-border);
+  transition: background 0.25s ease, color 0.25s ease;
 `;
 
 export const FooterWatermark = styled.div`
@@ -26,7 +22,7 @@ export const FooterWatermark = styled.div`
   font-size: clamp(4rem, 18vw, 10rem);
   font-weight: 700;
   letter-spacing: -0.04em;
-  color: rgba(${brandRgb.chocolate}, 0.04);
+  color: var(--footer-watermark);
   pointer-events: none;
   user-select: none;
   line-height: 1;
@@ -71,18 +67,15 @@ export const FooterLogo = styled.div`
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.xxl};
   letter-spacing: 0.02em;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const FooterLogoMark = styled.span`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.5rem;
-  background: ${brandColors.gold};
-  color: ${brandColors.chocolate};
+  flex-shrink: 0;
+  line-height: 0;
 `;
 
 export const SocialRow = styled.div`
@@ -94,23 +87,26 @@ export const SocialLink = styled.a`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   min-width: 44px;
   min-height: 44px;
   border-radius: 0.65rem;
-  background: ${brandColors.tan};
-  color: ${brandColors.chocolate};
-  transition: background 0.2s ease, transform 0.2s ease;
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  transition: background 0.2s ease, transform 0.2s ease, color 0.2s ease;
 
   &:hover,
   &:focus-visible {
-    background: ${brandColors.gold};
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
     transform: translateY(-2px);
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.chocolate};
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 `;
@@ -126,15 +122,15 @@ export const FooterTitle = styled.h4`
   margin: 0 0 ${spacing.sm};
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.lg};
-  font-weight: 400;
-  color: ${brandColors.chocolate};
-  letter-spacing: 0.02em;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.01em;
 `;
 
 export const FooterLink = styled(Link)`
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.sm};
-  color: ${brandColors.taupe};
+  color: var(--color-text-secondary);
   text-decoration: none;
   min-height: 44px;
   display: inline-flex;
@@ -143,11 +139,11 @@ export const FooterLink = styled(Link)`
 
   &:hover,
   &:focus-visible {
-    color: ${brandColors.chocolate};
+    color: var(--color-primary);
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.gold};
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -157,7 +153,7 @@ export const NewsletterSub = styled.p`
   margin: 0;
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.sm};
-  color: ${brandColors.taupe};
+  color: var(--color-text-secondary);
 `;
 
 export const NewsletterForm = styled.form`
@@ -171,22 +167,22 @@ export const NewsletterInput = styled.input`
   width: 100%;
   min-height: 48px;
   padding: 0.875rem 3.5rem 0.875rem 1.25rem;
-  border: 1px solid ${brandColors.tan};
+  border: 1px solid var(--color-border);
   border-radius: 9999px;
-  background: ${brandColors.white};
+  background: var(--color-surface);
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.sm};
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   outline: none;
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   &::placeholder {
-    color: ${brandColors.taupe};
+    color: var(--color-text-muted);
   }
 
   &:focus-visible {
-    border-color: ${brandColors.gold};
-    box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.25);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
   }
 `;
 
@@ -198,24 +194,25 @@ export const NewsletterSubmit = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  min-width: 44px;
-  min-height: 44px;
+  width: 2.25rem;
+  height: 2.25rem;
+  min-width: 36px;
+  min-height: 36px;
   border: none;
   border-radius: 50%;
-  background: ${brandColors.gold};
-  color: ${brandColors.chocolate};
+  background: var(--color-primary);
+  color: #ffffff;
   cursor: pointer;
   transition: background 0.2s ease, transform 0.2s ease;
 
   &:hover,
   &:focus-visible {
-    background: ${brandColors.sand};
+    background: var(--color-primary-hover);
+    transform: translateY(-50%) scale(1.05);
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.chocolate};
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 `;
@@ -225,12 +222,12 @@ export const FooterBottom = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  border-top: 1px solid rgba(${brandRgb.chocolate}, 0.15);
+  border-top: 1px solid var(--color-border);
   padding-top: ${spacing.xl};
   text-align: center;
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.sm};
-  color: ${brandColors.chocolate};
+  color: var(--color-text-secondary);
 
   ${media.md} {
     flex-direction: row;
@@ -247,26 +244,28 @@ export const BackToTop = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 2.5rem;
+  height: 2.5rem;
   min-width: 44px;
   min-height: 44px;
-  border: 1px solid rgba(${brandRgb.chocolate}, 0.12);
+  border: 1px solid var(--color-border);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  color: ${brandColors.chocolate};
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
-  box-shadow: 0 10px 28px rgba(${brandRgb.black}, 0.08);
-  transition: transform 0.25s ease, background 0.25s ease;
+  box-shadow: 0 4px 14px var(--color-shadow);
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
 
   &:hover,
   &:focus-visible {
     transform: translateY(-2px);
-    background: ${brandColors.gold};
+    background: var(--color-primary);
+    color: #ffffff;
+    border-color: var(--color-primary);
   }
 
   &:focus-visible {
-    outline: 2px solid ${brandColors.chocolate};
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 `;

@@ -11,6 +11,8 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ProfileMenu } from '@/components/auth/profile-menu';
+import { BrandIcon } from '@/components/global/brand-icon';
+import { ThemeToggle } from '@/components/global/theme-toggle';
 import { BecomeVendorModal } from '@/components/vendor/become-vendor-modal';
 import { CategoryNav } from '@/components/storefront/category-nav';
 import { MobileMenu } from '@/components/storefront/mobile-menu';
@@ -79,7 +81,9 @@ export function StoreHeader() {
     <HeaderRoot>
       <MainBar>
         <Brand to={ROUTES.HOME}>
-          <BrandMark>EO</BrandMark>
+          <BrandMark>
+            <BrandIcon size={32} />
+          </BrandMark>
           <BrandWord>{t('common.appName')}</BrandWord>
         </Brand>
 
@@ -109,6 +113,7 @@ export function StoreHeader() {
         </SearchForm>
 
         <Actions>
+          <ThemeToggle compact />
           <DesktopOnly>
             {!isSignedIn || !isVendor ? (
               <VendorButton type="button" onClick={openVendorApplication}>

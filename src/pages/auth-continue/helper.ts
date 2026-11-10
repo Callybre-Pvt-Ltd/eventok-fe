@@ -6,11 +6,13 @@ import { readNextPath } from '@/utils/auth/auth-return';
 import { getPostAuthPath, peekAuthIntent } from '@/utils/auth/post-auth';
 import type { Session } from '@/types';
 
-/** Shoppers land on the storefront; the vendor login sends vendors to their portal. */
-const landingPath = (session: Session) =>
-  peekAuthIntent() === 'vendor'
+/** Shoppers land on the storefront; the vendor login sends vendors to their portal; admins to admin dashboard. */
+const landingPath = (session: Session) => {
+  if (session.user.role === 'admin') return ROUTES.ADMIN_DASHBOARD;
+  return peekAuthIntent() === 'vendor'
     ? getPostAuthPath(session.user.role, session.user.vendorStatus)
     : ROUTES.HOME;
+};
 
 /** Resolves the correct portal after Clerk sign-in / SSO completes. */
 export function useAuthContinuePage() {

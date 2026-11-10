@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { brandColors, brandRgb } from '@/theme/brand';
 import { fontFamily, fontSizes, radii } from '@/theme';
 
 export const MenuRoot = styled.div`
@@ -20,8 +19,7 @@ export const MenuButton = styled.button<{
   border: none;
   border-radius: ${radii.full};
   background: transparent;
-  color: ${({ $tone }) =>
-    $tone === 'dark' ? brandColors.white : brandColors.chocolate};
+  color: var(--color-text);
   cursor: pointer;
   font: inherit;
 `;
@@ -42,8 +40,8 @@ export const AvatarCircle = styled.span`
   width: 2.25rem;
   height: 2.25rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--color-primary);
+  color: #ffffff;
   flex-shrink: 0;
   font-family: ${fontFamily.body};
   font-size: 0.95rem;
@@ -68,10 +66,10 @@ export const MenuPanel = styled.div`
   min-width: 13.5rem;
   padding: 0.4rem;
   border-radius: 0.9rem;
-  background: ${brandColors.white};
-  color: ${brandColors.chocolate};
-  box-shadow: 0 16px 40px rgba(10, 10, 10, 0.18);
-  border: 1px solid rgba(${brandRgb.chocolate}, 0.08);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 16px 40px var(--color-shadow-strong);
+  border: 1px solid var(--color-border);
   font-family: ${fontFamily.body};
 `;
 
@@ -81,7 +79,7 @@ export const MenuEmail = styled.p`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   word-break: break-all;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const MenuRole = styled.p`
@@ -91,7 +89,7 @@ export const MenuRole = styled.p`
   font-weight: 650;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: ${brandColors.pink600};
+  color: var(--color-primary);
 `;
 
 export const MenuItem = styled(Link)`
@@ -101,14 +99,14 @@ export const MenuItem = styled(Link)`
   width: 100%;
   padding: 0.65rem 0.75rem;
   border-radius: 0.65rem;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   font-size: ${fontSizes.sm};
   font-weight: 650;
   text-decoration: none;
 
   &:hover {
-    background: ${brandColors.pink50};
-    color: ${brandColors.pink600};
+    background: var(--color-primary-light);
+    color: var(--color-primary);
   }
 `;
 
@@ -121,7 +119,7 @@ export const MenuItemButton = styled.button`
   border: none;
   border-radius: 0.65rem;
   background: transparent;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   font: inherit;
   font-size: ${fontSizes.sm};
   font-weight: 650;
@@ -129,13 +127,13 @@ export const MenuItemButton = styled.button`
   text-align: left;
 
   &:hover {
-    background: ${brandColors.pink50};
-    color: ${brandColors.pink600};
+    background: var(--color-primary-light);
+    color: var(--color-primary);
   }
 `;
 
 export const MenuDivider = styled.hr`
   margin: 0.25rem 0.35rem;
   border: none;
-  border-top: 1px solid rgba(${brandRgb.chocolate}, 0.08);
+  border-top: 1px solid var(--color-border);
 `;

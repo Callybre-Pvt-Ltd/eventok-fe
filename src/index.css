@@ -6,12 +6,118 @@
   padding: 0;
 }
 
+:root,
+[data-theme='light'] {
+  color-scheme: light;
+  --color-bg: #fafafe;
+  --color-bg-alt: #f4f4fd;
+  --color-bg-tint: #f5f3ff;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-text: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-dark: #5b21b6;
+  --color-primary-light: #ede9fe;
+  --color-primary-subtle: #f5f3ff;
+  --color-accent: #6366f1;
+  --color-accent-soft: #e0e7ff;
+  --color-highlight: #c4b5fd;
+  --color-peach: #fda4af;
+  --color-border: rgba(226, 232, 240, 0.85);
+  --color-border-light: rgba(241, 245, 249, 0.9);
+  --color-border-hover: rgba(124, 58, 237, 0.4);
+  --color-shadow: rgba(99, 102, 241, 0.05);
+  --color-shadow-strong: rgba(99, 102, 241, 0.12);
+  --color-overlay: rgba(15, 23, 42, 0.55);
+  --color-glass: rgba(255, 255, 255, 0.92);
+
+  /* Nav & Header */
+  --nav-scrolled-bg: rgba(255, 255, 255, 0.92);
+  --nav-scrolled-border: rgba(124, 58, 237, 0.08);
+  --nav-scrolled-shadow: 0 10px 40px rgba(99, 102, 241, 0.06);
+
+  /* Footer */
+  --footer-bg: #f7f7fd;
+  --footer-text: #0f172a;
+  --footer-watermark: rgba(124, 58, 237, 0.04);
+
+  /* Button gradients & glow */
+  --button-primary-gradient: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #6366f1 50%,
+    #818cf8 100%
+  );
+  --button-primary-shadow: rgba(124, 58, 237, 0.28);
+
+  /* Theme Toggle */
+  --theme-toggle-border: rgba(124, 58, 237, 0.2);
+  --theme-toggle-bg: rgba(255, 255, 255, 0.95);
+  --theme-toggle-color: #7c3aed;
+  --theme-toggle-hover-bg: #ede9fe;
+  --theme-toggle-shadow: rgba(124, 58, 237, 0.15);
+}
+
+[data-theme='dark'] {
+  color-scheme: dark;
+  --color-bg: #0a0d18;
+  --color-bg-alt: #0f1426;
+  --color-bg-tint: #141a32;
+  --color-surface: #141a32;
+  --color-surface-elevated: #1a2242;
+  --color-text: #ffffff;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #a78bfa;
+  --color-primary-dark: #7c3aed;
+  --color-primary-light: #1e1838;
+  --color-primary-subtle: #15122b;
+  --color-accent: #818cf8;
+  --color-accent-soft: #1e2045;
+  --color-highlight: #c4b5fd;
+  --color-peach: #fda4af;
+  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border-light: rgba(255, 255, 255, 0.05);
+  --color-border-hover: rgba(167, 139, 250, 0.35);
+  --color-shadow: rgba(0, 0, 0, 0.45);
+  --color-shadow-strong: rgba(0, 0, 0, 0.65);
+  --color-overlay: rgba(7, 9, 19, 0.8);
+  --color-glass: rgba(20, 26, 50, 0.88);
+
+  /* Nav & Header */
+  --nav-scrolled-bg: rgba(10, 13, 24, 0.92);
+  --nav-scrolled-border: rgba(255, 255, 255, 0.08);
+  --nav-scrolled-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+
+  /* Footer */
+  --footer-bg: #080b14;
+  --footer-text: #ffffff;
+  --footer-watermark: rgba(255, 255, 255, 0.03);
+
+  /* Button gradients & glow */
+  --button-primary-gradient: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #8b5cf6 50%,
+    #6366f1 100%
+  );
+  --button-primary-shadow: rgba(124, 58, 237, 0.35);
+
+  /* Theme Toggle */
+  --theme-toggle-border: rgba(167, 139, 250, 0.3);
+  --theme-toggle-bg: rgba(20, 26, 50, 0.9);
+  --theme-toggle-color: #c4b5fd;
+  --theme-toggle-hover-bg: #1e1838;
+  --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
+}
+
 html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* html is the scroll container, so the clip has to live here too — on body alone
-     it never applies and pages can still be dragged sideways on phones.
-     `clip` rather than `hidden` so position: sticky keeps working. */
   max-width: 100%;
   overflow-x: clip;
 }
@@ -44,6 +150,19 @@ body {
   max-width: 100%;
   overflow-x: clip;
   overflow-wrap: break-word;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+[data-theme='light'] body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+[data-theme='dark'] body {
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
 img,
@@ -76,17 +195,7 @@ em.brand-emphasis,
   font-family: 'Lora', Georgia, serif;
   font-style: italic;
   font-weight: 600;
-  color: #f0559f;
-}
-
-[data-theme='light'] body {
-  background: #faf7fc;
-  color: #1b0b33;
-}
-
-[data-theme='dark'] body {
-  background: #12071f;
-  color: #faf7fc;
+  color: var(--color-primary);
 }
 
 #root {
@@ -111,13 +220,13 @@ button {
 }
 
 :focus-visible {
-  outline: 2px solid #ec2e8e;
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
 ::selection {
-  background: rgba(236, 46, 142, 0.22);
-  color: #1b0b33;
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
 }
 
 .skip-link {
@@ -125,7 +234,7 @@ button {
   left: -9999px;
   z-index: 9999;
   padding: 0.75rem 1rem;
-  background: #ec2e8e;
+  background: var(--color-primary);
   color: #fff;
   border-radius: 9999px;
 }
