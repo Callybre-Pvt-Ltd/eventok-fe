@@ -58,7 +58,7 @@ export const GridButton = styled.button`
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     color: var(--color-primary);
   }
 `;
@@ -109,7 +109,7 @@ export const IconBox = styled.div`
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     color: var(--color-primary);
   }
 `;
@@ -124,4 +124,3 @@ export const CategoryLabel = styled.span`
     color: #94a3b8;
   }
 `;
-

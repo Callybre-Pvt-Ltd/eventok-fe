@@ -30,7 +30,14 @@ export const BrandIcon: React.FC<BrandIconProps> = ({
       aria-hidden="true"
     >
       <defs>
-        <linearGradient id="brandIconGradient" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+        <linearGradient
+          id="brandIconGradient"
+          x1="0"
+          y1="0"
+          x2="48"
+          y2="48"
+          gradientUnits="userSpaceOnUse"
+        >
           <stop stopColor="#5B21B6" />
           <stop offset="1" stopColor="#7C3AED" />
         </linearGradient>

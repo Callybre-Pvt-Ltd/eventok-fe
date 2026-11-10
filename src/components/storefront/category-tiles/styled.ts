@@ -31,7 +31,8 @@ export const Tile = styled(Link)`
   background: var(--color-surface);
   text-decoration: none;
   box-shadow: 0 2px 8px var(--color-shadow);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease,
+    transform 0.25s ease;
 
   &:hover {
     border-color: var(--color-primary);
@@ -40,13 +41,13 @@ export const Tile = styled(Link)`
   }
 
   [data-theme='light'] & {
-    background: #FFFFFF;
+    background: #ffffff;
     border-color: rgba(226, 232, 240, 0.85);
     box-shadow: 0 4px 16px rgba(99, 102, 241, 0.04);
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   }
@@ -73,7 +74,7 @@ export const IconCircle = styled.span`
   [data-theme='dark'] & {
     background: rgba(139, 92, 246, 0.18);
     border-color: rgba(167, 139, 250, 0.3);
-    color: #C4B5FD;
+    color: #c4b5fd;
   }
 `;
 

@@ -17,7 +17,7 @@ export const Panel = styled.div`
   min-height: 26rem;
   border-radius: 1.5rem;
   overflow: hidden;
-  background: #0A0D18;
+  background: #0a0d18;
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: grid;
@@ -133,7 +133,7 @@ export const Accent = styled.span`
   color: var(--color-primary);
   font-family: ${fontFamily.display};
   font-weight: 700;
-  background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 40%, #FDA4AF 100%);
+  background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 40%, #fda4af 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 `;

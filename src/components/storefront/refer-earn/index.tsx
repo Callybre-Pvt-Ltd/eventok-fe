@@ -36,7 +36,13 @@ export function ReferEarn() {
                 fill="rgba(255, 255, 255, 0.75)"
               />
             </svg>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ marginTop: '12px' }}>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              style={{ marginTop: '12px' }}
+            >
               <path
                 d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"
                 fill="rgba(255, 255, 255, 0.55)"

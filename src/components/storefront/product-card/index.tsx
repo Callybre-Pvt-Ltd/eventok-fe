@@ -38,7 +38,9 @@ export function ProductCard({ service, width }: ProductCardProps) {
           type="button"
           $active={card.wishlisted}
           onClick={card.toggleWish}
-          aria-label={card.wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-label={
+            card.wishlisted ? 'Remove from wishlist' : 'Add to wishlist'
+          }
         >
           <Heart size={15} fill={card.wishlisted ? 'currentColor' : 'none'} />
         </WishButton>
@@ -49,7 +51,9 @@ export function ProductCard({ service, width }: ProductCardProps) {
         <PriceRow>
           <Price>{card.price}</Price>
           {service.rating ? (
-            <RatingText>★ {service.rating} ({service.reviewCount ?? 120})</RatingText>
+            <RatingText>
+              ★ {service.rating} ({service.reviewCount ?? 120})
+            </RatingText>
           ) : null}
         </PriceRow>
       </Body>

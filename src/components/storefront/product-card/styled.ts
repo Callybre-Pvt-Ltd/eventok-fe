@@ -12,7 +12,8 @@ export const Card = styled.article<{ $width?: string }>`
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   box-shadow: 0 4px 14px var(--color-shadow);
-  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease,
+    border-color 0.25s ease;
 
   &:hover {
     box-shadow: 0 10px 28px var(--color-shadow-strong);
@@ -21,13 +22,14 @@ export const Card = styled.article<{ $width?: string }>`
   }
 
   [data-theme='light'] & {
-    background: #FFFFFF;
+    background: #ffffff;
     border-color: rgba(226, 232, 240, 0.85);
-    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07), 0 2px 8px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07),
+      0 2px 8px rgba(0, 0, 0, 0.02);
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   }

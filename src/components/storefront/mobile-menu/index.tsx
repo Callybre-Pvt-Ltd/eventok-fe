@@ -42,7 +42,13 @@ export function MobileMenu({
       <Overlay $open={open} onClick={onClose} aria-hidden />
       <Drawer $open={open} aria-hidden={!open}>
         <DrawerHead>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
             <BrandIcon size={26} />
             <DrawerTitle>{t('common.appName')}</DrawerTitle>
           </div>

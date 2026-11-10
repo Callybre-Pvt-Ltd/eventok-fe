@@ -61,7 +61,10 @@ export function PortalSidebar({
               {portalEyebrow}
             </SidebarEyebrow>
             <SidebarLogo $palette={palette} to={ROUTES.HOME}>
-              <BrandIcon size={24} style={{ marginRight: '0.4rem', flexShrink: 0 }} />
+              <BrandIcon
+                size={24}
+                style={{ marginRight: '0.4rem', flexShrink: 0 }}
+              />
               Event<span>OK</span>
             </SidebarLogo>
           </BrandBlock>

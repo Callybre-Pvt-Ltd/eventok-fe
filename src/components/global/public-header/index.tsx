@@ -68,7 +68,13 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
             </BrandMark>
             {t('common.appName')}
           </Brand>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+            }}
+          >
             <ThemeToggle compact />
             <MobileClose
               type="button"

@@ -1,11 +1,6 @@
 import { brandColors } from './brand';
 
-const {
-  success500,
-  success50,
-  warning500,
-  danger500,
-} = brandColors;
+const { success500, success50, warning500, danger500 } = brandColors;
 
 export const lightPalette = {
   // Soft Violet & Periwinkle primary brand
@@ -47,8 +42,10 @@ export const lightPalette = {
   shadow: 'rgba(99, 102, 241, 0.05)',
   shadowStrong: 'rgba(99, 102, 241, 0.12)',
   // Soft lavender-blue-peach gradients & subtle accents
-  gradientHero: 'linear-gradient(135deg, #FAFAFE 0%, #F5F3FF 45%, #EFF6FF 80%, #FFF1F2 100%)',
-  gradientPrimary: 'linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #818CF8 100%)',
+  gradientHero:
+    'linear-gradient(135deg, #FAFAFE 0%, #F5F3FF 45%, #EFF6FF 80%, #FFF1F2 100%)',
+  gradientPrimary:
+    'linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #818CF8 100%)',
   gradientCard: 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFE 100%)',
 } as const;
 
@@ -92,9 +89,12 @@ export const darkPalette = {
   shadow: 'rgba(0, 0, 0, 0.45)',
   shadowStrong: 'rgba(0, 0, 0, 0.65)',
   // Subtle gradients & highlights
-  gradientHero: 'linear-gradient(135deg, #0A0D18 0%, #0F1123 45%, #181938 100%)',
-  gradientPrimary: 'linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #6366F1 100%)',
-  gradientCard: 'linear-gradient(180deg, rgba(20, 26, 50, 0.95) 0%, rgba(26, 34, 66, 0.95) 100%)',
+  gradientHero:
+    'linear-gradient(135deg, #0A0D18 0%, #0F1123 45%, #181938 100%)',
+  gradientPrimary:
+    'linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #6366F1 100%)',
+  gradientCard:
+    'linear-gradient(180deg, rgba(20, 26, 50, 0.95) 0%, rgba(26, 34, 66, 0.95) 100%)',
 } as const;
 
 export type ThemePalette = typeof lightPalette | typeof darkPalette;

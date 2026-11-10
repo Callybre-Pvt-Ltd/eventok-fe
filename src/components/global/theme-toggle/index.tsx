@@ -7,7 +7,10 @@ interface ThemeToggleProps {
   className?: string;
 }
 
-const ToggleButton = styled.button<{ $compact?: boolean; $mode: 'light' | 'dark' }>`
+const ToggleButton = styled.button<{
+  $compact?: boolean;
+  $mode: 'light' | 'dark';
+}>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -19,7 +22,7 @@ const ToggleButton = styled.button<{ $compact?: boolean; $mode: 'light' | 'dark'
   border-radius: 9999px;
   border: 1px solid var(--theme-toggle-border, rgba(124, 58, 237, 0.2));
   background: var(--theme-toggle-bg, rgba(255, 255, 255, 0.95));
-  color: var(--theme-toggle-color, #7C3AED);
+  color: var(--theme-toggle-color, #7c3aed);
   cursor: pointer;
   padding: 0;
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
@@ -27,14 +30,14 @@ const ToggleButton = styled.button<{ $compact?: boolean; $mode: 'light' | 'dark'
 
   &:hover {
     transform: translateY(-2px) scale(1.05);
-    border-color: var(--color-primary, #7C3AED);
-    background: var(--theme-toggle-hover-bg, #EDE9FE);
-    color: var(--color-primary, #7C3AED);
+    border-color: var(--color-primary, #7c3aed);
+    background: var(--theme-toggle-hover-bg, #ede9fe);
+    color: var(--color-primary, #7c3aed);
     box-shadow: 0 4px 14px var(--theme-toggle-shadow, rgba(124, 58, 237, 0.22));
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7C3AED);
+    outline: 2px solid var(--color-primary, #7c3aed);
     outline-offset: 2px;
   }
 
@@ -49,8 +52,8 @@ const ToggleButton = styled.button<{ $compact?: boolean; $mode: 'light' | 'dark'
   [data-theme='dark'] & {
     --theme-toggle-border: rgba(167, 139, 250, 0.3);
     --theme-toggle-bg: rgba(20, 26, 50, 0.9);
-    --theme-toggle-color: #C4B5FD;
-    --theme-toggle-hover-bg: #1E1838;
+    --theme-toggle-color: #c4b5fd;
+    --theme-toggle-hover-bg: #1e1838;
     --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
   }
 `;
@@ -65,7 +68,9 @@ export function ThemeToggle({ compact = false, className }: ThemeToggleProps) {
       $mode={mode}
       onClick={toggleTheme}
       className={className}
-      aria-label={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+      aria-label={
+        mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+      }
       title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {mode === 'dark' ? (
@@ -76,4 +81,3 @@ export function ThemeToggle({ compact = false, className }: ThemeToggleProps) {
     </ToggleButton>
   );
 }
-

@@ -9,23 +9,23 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --color-bg: #FAFAFE;
-  --color-bg-alt: #F4F4FD;
-  --color-bg-tint: #F5F3FF;
-  --color-surface: #FFFFFF;
-  --color-surface-elevated: #FFFFFF;
-  --color-text: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-text-muted: #94A3B8;
-  --color-primary: #7C3AED;
-  --color-primary-hover: #6D28D9;
-  --color-primary-dark: #5B21B6;
-  --color-primary-light: #EDE9FE;
-  --color-primary-subtle: #F5F3FF;
-  --color-accent: #6366F1;
-  --color-accent-soft: #E0E7FF;
-  --color-highlight: #C4B5FD;
-  --color-peach: #FDA4AF;
+  --color-bg: #fafafe;
+  --color-bg-alt: #f4f4fd;
+  --color-bg-tint: #f5f3ff;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
+  --color-text: #0f172a;
+  --color-text-secondary: #64748b;
+  --color-text-muted: #94a3b8;
+  --color-primary: #7c3aed;
+  --color-primary-hover: #6d28d9;
+  --color-primary-dark: #5b21b6;
+  --color-primary-light: #ede9fe;
+  --color-primary-subtle: #f5f3ff;
+  --color-accent: #6366f1;
+  --color-accent-soft: #e0e7ff;
+  --color-highlight: #c4b5fd;
+  --color-peach: #fda4af;
   --color-border: rgba(226, 232, 240, 0.85);
   --color-border-light: rgba(241, 245, 249, 0.9);
   --color-border-hover: rgba(124, 58, 237, 0.4);
@@ -40,41 +40,46 @@
   --nav-scrolled-shadow: 0 10px 40px rgba(99, 102, 241, 0.06);
 
   /* Footer */
-  --footer-bg: #F7F7FD;
-  --footer-text: #0F172A;
+  --footer-bg: #f7f7fd;
+  --footer-text: #0f172a;
   --footer-watermark: rgba(124, 58, 237, 0.04);
 
   /* Button gradients & glow */
-  --button-primary-gradient: linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #818CF8 100%);
+  --button-primary-gradient: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #6366f1 50%,
+    #818cf8 100%
+  );
   --button-primary-shadow: rgba(124, 58, 237, 0.28);
 
   /* Theme Toggle */
   --theme-toggle-border: rgba(124, 58, 237, 0.2);
   --theme-toggle-bg: rgba(255, 255, 255, 0.95);
-  --theme-toggle-color: #7C3AED;
-  --theme-toggle-hover-bg: #EDE9FE;
+  --theme-toggle-color: #7c3aed;
+  --theme-toggle-hover-bg: #ede9fe;
   --theme-toggle-shadow: rgba(124, 58, 237, 0.15);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --color-bg: #0A0D18;
-  --color-bg-alt: #0F1426;
-  --color-bg-tint: #141A32;
-  --color-surface: #141A32;
-  --color-surface-elevated: #1A2242;
-  --color-text: #FFFFFF;
-  --color-text-secondary: #94A3B8;
-  --color-text-muted: #64748B;
-  --color-primary: #8B5CF6;
-  --color-primary-hover: #A78BFA;
-  --color-primary-dark: #7C3AED;
-  --color-primary-light: #1E1838;
-  --color-primary-subtle: #15122B;
-  --color-accent: #818CF8;
-  --color-accent-soft: #1E2045;
-  --color-highlight: #C4B5FD;
-  --color-peach: #FDA4AF;
+  --color-bg: #0a0d18;
+  --color-bg-alt: #0f1426;
+  --color-bg-tint: #141a32;
+  --color-surface: #141a32;
+  --color-surface-elevated: #1a2242;
+  --color-text: #ffffff;
+  --color-text-secondary: #94a3b8;
+  --color-text-muted: #64748b;
+  --color-primary: #8b5cf6;
+  --color-primary-hover: #a78bfa;
+  --color-primary-dark: #7c3aed;
+  --color-primary-light: #1e1838;
+  --color-primary-subtle: #15122b;
+  --color-accent: #818cf8;
+  --color-accent-soft: #1e2045;
+  --color-highlight: #c4b5fd;
+  --color-peach: #fda4af;
   --color-border: rgba(255, 255, 255, 0.08);
   --color-border-light: rgba(255, 255, 255, 0.05);
   --color-border-hover: rgba(167, 139, 250, 0.35);
@@ -89,19 +94,24 @@
   --nav-scrolled-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
 
   /* Footer */
-  --footer-bg: #080B14;
-  --footer-text: #FFFFFF;
+  --footer-bg: #080b14;
+  --footer-text: #ffffff;
   --footer-watermark: rgba(255, 255, 255, 0.03);
 
   /* Button gradients & glow */
-  --button-primary-gradient: linear-gradient(135deg, #7C3AED 0%, #8B5CF6 50%, #6366F1 100%);
+  --button-primary-gradient: linear-gradient(
+    135deg,
+    #7c3aed 0%,
+    #8b5cf6 50%,
+    #6366f1 100%
+  );
   --button-primary-shadow: rgba(124, 58, 237, 0.35);
 
   /* Theme Toggle */
   --theme-toggle-border: rgba(167, 139, 250, 0.3);
   --theme-toggle-bg: rgba(20, 26, 50, 0.9);
-  --theme-toggle-color: #C4B5FD;
-  --theme-toggle-hover-bg: #1E1838;
+  --theme-toggle-color: #c4b5fd;
+  --theme-toggle-hover-bg: #1e1838;
   --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
 }
 

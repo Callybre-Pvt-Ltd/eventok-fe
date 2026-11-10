@@ -26,7 +26,8 @@ export const Card = styled(Link)`
   background: var(--color-surface);
   box-shadow: 0 2px 10px var(--color-shadow);
   text-decoration: none;
-  transition: box-shadow 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+  transition: box-shadow 0.25s ease, transform 0.25s ease,
+    border-color 0.25s ease;
 
   &:hover {
     box-shadow: 0 16px 36px -8px var(--color-shadow-strong);
@@ -35,13 +36,14 @@ export const Card = styled(Link)`
   }
 
   [data-theme='light'] & {
-    background: #FFFFFF;
+    background: #ffffff;
     border-color: rgba(226, 232, 240, 0.85);
-    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07), 0 2px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07),
+      0 2px 6px rgba(0, 0, 0, 0.02);
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   }

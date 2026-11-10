@@ -1,8 +1,4 @@
-import {
-  useEffect,
-  useState,
-  type ReactNode,
-} from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import { lightPalette, darkPalette } from './palette';
 import { ThemeContext, type ThemeMode } from './ThemeContext';
@@ -37,9 +33,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ mode, palette, toggleTheme, setMode }}>
-      <StyledThemeProvider theme={palette}>
-        {children}
-      </StyledThemeProvider>
+      <StyledThemeProvider theme={palette}>{children}</StyledThemeProvider>
     </ThemeContext.Provider>
   );
 }

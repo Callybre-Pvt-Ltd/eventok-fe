@@ -54,13 +54,13 @@ export const Tile = styled(Link)`
   }
 
   [data-theme='light'] & {
-    background: #FFFFFF;
+    background: #ffffff;
     border-color: rgba(226, 232, 240, 0.85);
     box-shadow: 0 4px 16px rgba(99, 102, 241, 0.04);
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
   }

@@ -45,16 +45,18 @@ export const StatCard = styled.div<{ $palette: ThemePalette }>`
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   box-shadow: 0 8px 24px -6px var(--color-shadow);
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  transition: transform 0.25s ease, box-shadow 0.25s ease,
+    border-color 0.25s ease;
 
   [data-theme='light'] & {
-    background: #FFFFFF;
+    background: #ffffff;
     border-color: rgba(124, 58, 237, 0.12);
-    box-shadow: 0 10px 30px -8px rgba(99, 102, 241, 0.08), 0 2px 6px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 10px 30px -8px rgba(99, 102, 241, 0.08),
+      0 2px 6px rgba(0, 0, 0, 0.02);
   }
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     border-color: rgba(255, 255, 255, 0.08);
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   }
@@ -73,12 +75,12 @@ export const StatValue = styled.p<{ $palette: ThemePalette }>`
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
-  background: linear-gradient(135deg, #6D28D9 0%, #7C3AED 50%, #6366F1 100%);
+  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 50%, #6366f1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 
   [data-theme='dark'] & {
-    background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 50%, #93C5FD 100%);
+    background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 50%, #93c5fd 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

@@ -23,7 +23,11 @@ const CATEGORIES = [
   { label: 'Birthdays', slug: 'birthday-decoration', icon: Cake },
   { label: 'Anniversary', slug: 'romantic-room-decor', icon: Sparkles },
   { label: 'Baby Shower', slug: 'pastel-baby-shower', icon: Baby },
-  { label: 'Theme Parties', slug: 'house-drapes-decoration', icon: PartyPopper },
+  {
+    label: 'Theme Parties',
+    slug: 'house-drapes-decoration',
+    icon: PartyPopper,
+  },
   { label: 'Corporate Events', slug: 'venue-decoration', icon: Briefcase },
   { label: 'Dinner & Dates', slug: 'home-floral-decor', icon: UtensilsCrossed },
 ];
@@ -54,4 +58,3 @@ export function CategoryIconBar() {
 }
 
 export default CategoryIconBar;
-

@@ -19,35 +19,20 @@ export const Panel = styled.div`
   padding: 2.5rem 1.5rem;
   border-radius: ${radii.xxl};
   border: 1px solid rgba(255, 255, 255, 0.25);
-  background: linear-gradient(
-    135deg,
-    #6366F1 0%,
-    #7C3AED 50%,
-    #8B5CF6 100%
-  );
+  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #8b5cf6 100%);
   color: #ffffff;
   box-shadow: 0 20px 50px -12px rgba(124, 58, 237, 0.38);
   position: relative;
   overflow: hidden;
 
   [data-theme='light'] & {
-    background: linear-gradient(
-      135deg,
-      #6366F1 0%,
-      #7C3AED 52%,
-      #8B5CF6 100%
-    );
+    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 52%, #8b5cf6 100%);
     border-color: rgba(255, 255, 255, 0.3);
     box-shadow: 0 20px 50px -10px rgba(124, 58, 237, 0.38);
   }
 
   [data-theme='dark'] & {
-    background: linear-gradient(
-      135deg,
-      #1E1B4B 0%,
-      #2E1065 50%,
-      #3B0764 100%
-    );
+    background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #3b0764 100%);
     border-color: rgba(167, 139, 250, 0.3);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
   }
@@ -140,14 +125,14 @@ export const CodeCard = styled.div`
   padding: 1.75rem;
   border-radius: ${radii.xl};
   background: #ffffff;
-  color: #0F172A;
+  color: #0f172a;
   border: 1px solid rgba(226, 232, 240, 0.85);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
   position: relative;
   z-index: 2;
 
   [data-theme='dark'] & {
-    background: #141A32;
+    background: #141a32;
     color: #ffffff;
     border-color: rgba(255, 255, 255, 0.1);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
@@ -214,13 +199,13 @@ export const Input = styled.input`
   outline: none;
 
   [data-theme='light'] & {
-    background: #FAFAFE;
+    background: #fafafe;
     border-color: rgba(226, 232, 240, 0.9);
-    color: #0F172A;
+    color: #0f172a;
   }
 
   [data-theme='dark'] & {
-    background: #0A0D18;
+    background: #0a0d18;
     border-color: rgba(255, 255, 255, 0.1);
     color: #ffffff;
   }
