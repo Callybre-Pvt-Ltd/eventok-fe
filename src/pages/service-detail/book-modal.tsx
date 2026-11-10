@@ -104,8 +104,7 @@ export function BookServiceModal({ service, onClose }: BookServiceModalProps) {
     setLoading(true);
     setError(null);
     const { error: apiError } = await bookingService.createRequest({
-      customerId: session.user.id,
-      vendorId: service.id,
+      serviceId: service.id,
       eventDate,
       eventType,
       guestCount,
