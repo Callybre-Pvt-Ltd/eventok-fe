@@ -3,6 +3,7 @@ import type { CatalogService } from '@/types/catalog';
 import { useProductCard } from './helper';
 import {
   Body,
+  BookButton,
   Card,
   Image,
   Media,
@@ -56,6 +57,7 @@ export function ProductCard({ service, width }: ProductCardProps) {
             </RatingText>
           ) : null}
         </PriceRow>
+        <BookButton to={card.to}>Book Service</BookButton>
       </Body>
     </Card>
   );

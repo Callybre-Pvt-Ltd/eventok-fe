@@ -25,7 +25,7 @@ export default function SsoCallbackPage() {
 
   return (
     <>
-      <LoadingState text={t('auth.signingIn')} />
+      <LoadingState text={t('auth.signingIn')} fullPage />
       <AuthenticateWithRedirectCallback
         signInFallbackRedirectUrl={target}
         signUpFallbackRedirectUrl={target}

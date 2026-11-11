@@ -7,7 +7,14 @@ import {
 } from '@/components/storefront/shared/styled';
 import { categoryIcon } from '@/utils/storefront/icons';
 import { useCategoryTiles } from './helper';
-import { Grid, IconCircle, Tile, TileMeta, TileName } from './styled';
+import {
+  Grid,
+  HeaderWrap,
+  IconCircle,
+  Tile,
+  TileMeta,
+  TileName,
+} from './styled';
 
 interface CategoryTilesProps {
   limit?: number;
@@ -26,8 +33,10 @@ export function CategoryTiles({
   return (
     <Section $tint={tint}>
       <SectionInner>
-        <SectionTitle>{t('storefront.builderTitle')}</SectionTitle>
-        <SectionSubtitle>{t('storefront.builderSubtitle')}</SectionSubtitle>
+        <HeaderWrap>
+          <SectionTitle>{t('storefront.builderTitle')}</SectionTitle>
+          <SectionSubtitle>{t('storefront.builderSubtitle')}</SectionSubtitle>
+        </HeaderWrap>
         <Grid>
           {categories.map(category => {
             const Icon = categoryIcon(category.icon);

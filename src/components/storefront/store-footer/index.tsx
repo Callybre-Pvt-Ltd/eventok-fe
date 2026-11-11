@@ -36,6 +36,12 @@ const socials = [
 export function StoreFooter() {
   const { t } = useTranslation();
   const { columns, year } = useStoreFooter();
+  const mainColumns = columns.filter(
+    col => col.titleKey !== 'storefront.footerLegal',
+  );
+  const legalColumn = columns.find(
+    col => col.titleKey === 'storefront.footerLegal',
+  );
 
   return (
     <FooterRoot>
@@ -57,7 +63,7 @@ export function StoreFooter() {
           </Socials>
         </BrandBlock>
 
-        {columns.map(column => (
+        {mainColumns.map(column => (
           <Column key={column.titleKey}>
             <ColumnTitle>{t(column.titleKey)}</ColumnTitle>
             {column.links.map(link => (
@@ -68,7 +74,39 @@ export function StoreFooter() {
           </Column>
         ))}
       </Inner>
-      <BottomBar>{t('storefront.footerRights', { year })}</BottomBar>
+
+      <BottomBar>
+        {legalColumn && (
+          <div
+            style={{
+              marginBottom: '1.25rem',
+              textAlign: 'left',
+              maxWidth: '1440px',
+              margin: '0 auto 1.25rem',
+            }}
+          >
+            <ColumnTitle style={{ marginBottom: '0.5rem' }}>
+              {t(legalColumn.titleKey)}
+            </ColumnTitle>
+            <div style={{ display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+              {legalColumn.links.map(link => (
+                <ColumnLink key={link.label} to={link.to}>
+                  {link.label}
+                </ColumnLink>
+              ))}
+            </div>
+          </div>
+        )}
+        <div
+          style={{
+            paddingTop: '1rem',
+            borderTop: '1px solid var(--color-border)',
+            textAlign: 'center',
+          }}
+        >
+          {t('storefront.footerRights', { year })}
+        </div>
+      </BottomBar>
     </FooterRoot>
   );
 }

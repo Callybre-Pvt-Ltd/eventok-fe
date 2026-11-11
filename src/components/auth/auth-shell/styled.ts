@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import type { ThemePalette } from '@/theme';
-import { fontFamily, fontSizes, media, radii, shadows, spacing } from '@/theme';
+import { fontFamily, fontSizes, media, radii, spacing } from '@/theme';
 import { brandColors, brandRgb } from '@/theme/brand';
 
 export const Shell = styled.div<{ $palette: ThemePalette }>`
@@ -11,7 +11,7 @@ export const Shell = styled.div<{ $palette: ThemePalette }>`
   align-items: center;
   justify-content: center;
   padding: ${spacing.xl};
-  background: ${brandColors.pink100};
+  background: var(--color-bg);
 
   ${media.belowMd} {
     padding: ${spacing.sm};
@@ -26,12 +26,7 @@ export const Shell = styled.div<{ $palette: ThemePalette }>`
 export const BgLayer = styled.div<{ $palette: ThemePalette }>`
   position: fixed;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    ${brandColors.pink100} 0%,
-    ${brandColors.white} 55%,
-    ${brandColors.accent100} 100%
-  );
+  background: var(--color-bg);
   z-index: 0;
 `;
 
@@ -39,19 +34,7 @@ export const Blob = styled.div<{
   $palette: ThemePalette;
   $secondary?: boolean;
 }>`
-  position: fixed;
-  width: ${({ $secondary }) => ($secondary ? '280px' : '420px')};
-  height: ${({ $secondary }) => ($secondary ? '280px' : '420px')};
-  border-radius: 50%;
-  background: ${({ $secondary }) =>
-    $secondary ? brandColors.accent500 : brandColors.pink500};
-  opacity: ${({ $secondary }) => ($secondary ? 0.1 : 0.12)};
-  filter: blur(80px);
-  z-index: 0;
-  top: ${({ $secondary }) => ($secondary ? '60%' : '10%')};
-  left: ${({ $secondary }) => ($secondary ? '5%' : 'auto')};
-  right: ${({ $secondary }) => ($secondary ? 'auto' : '10%')};
-  pointer-events: none;
+  display: none;
 `;
 
 export const Grid = styled.div`
@@ -65,8 +48,9 @@ export const Grid = styled.div`
   align-items: stretch;
   border-radius: 1.5rem;
   overflow: hidden;
-  box-shadow: ${shadows.lg};
-  background: ${brandColors.white};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: 0 20px 50px var(--color-shadow-strong);
 
   ${media.belowLg} {
     grid-template-columns: 1fr;
@@ -76,8 +60,8 @@ export const Grid = styled.div`
 
 export const BenefitsPanel = styled.div`
   padding: clamp(1.75rem, 4vw, 2.75rem);
-  background: ${brandColors.pink50};
-  color: ${brandColors.chocolate};
+  background: var(--color-bg-alt);
+  color: var(--color-text);
 
   ${media.belowLg} {
     display: none;
@@ -89,7 +73,7 @@ export const BenefitsPanel = styled.div`
     font-weight: 800;
     letter-spacing: -0.02em;
     margin: 0 0 ${spacing.md};
-    color: ${brandColors.chocolate};
+    color: var(--color-text);
   }
 
   > p {
@@ -108,6 +92,19 @@ export const BenefitsPanel = styled.div`
     flex-direction: column;
     gap: ${spacing.md};
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+
+    h2 {
+      color: var(--color-text);
+    }
+
+    > p {
+      color: var(--color-text-secondary);
+    }
+  }
 `;
 
 export const BenefitItem = styled.li<{ $palette: ThemePalette }>`
@@ -122,6 +119,10 @@ export const BenefitItem = styled.li<{ $palette: ThemePalette }>`
     color: ${brandColors.pink500};
     flex-shrink: 0;
     margin-top: 2px;
+  }
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
   }
 `;
 
@@ -146,6 +147,10 @@ export const QuoteAuthor = styled.p<{ $palette: ThemePalette }>`
   font-size: ${fontSizes.sm};
   font-weight: 600;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const CardWrap = styled.div`
@@ -154,6 +159,10 @@ export const CardWrap = styled.div`
 
   ${media.belowMd} {
     padding: 1.15rem 1rem 1.5rem;
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
   }
 `;
 
@@ -185,5 +194,18 @@ export const VendorCta = styled.div`
     font-size: 0.8125rem;
     line-height: 1.45;
     color: ${brandColors.gray600};
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    border-color: var(--color-border);
+
+    h3 {
+      color: var(--color-text);
+    }
+
+    p {
+      color: var(--color-text-secondary);
+    }
   }
 `;

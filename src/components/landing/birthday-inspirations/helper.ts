@@ -20,7 +20,7 @@ export const birthdayItems = [
   {
     id: 'b4',
     title: 'Elegant Soirée',
-    image: 'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?w=600',
+    image: 'https://images.unsplash.com/photo-1558636508-e0db3814bd1d?w=600',
     size: 'normal' as const,
   },
   {
@@ -32,7 +32,7 @@ export const birthdayItems = [
   {
     id: 'b6',
     title: 'Vintage Charm',
-    image: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600',
+    image: 'https://images.unsplash.com/photo-1527529482837-4698179dc6ce?w=600',
     size: 'wide' as const,
   },
 ] as const;

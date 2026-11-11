@@ -36,6 +36,11 @@ export const Drawer = styled.aside<{ $open: boolean }>`
   ${media.lg} {
     display: none;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-left: 1px solid var(--color-border);
+  }
 `;
 
 export const DrawerHead = styled.div`
@@ -79,6 +84,10 @@ export const Section = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const MenuLink = styled(Link)`
@@ -95,6 +104,15 @@ export const MenuLink = styled(Link)`
   &:hover {
     background: ${brandColors.pink50};
     color: ${brandColors.pink500};
+  }
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+
+    &:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
   }
 `;
 
@@ -117,6 +135,15 @@ export const MenuAction = styled.button`
     background: ${brandColors.pink50};
     color: ${brandColors.pink500};
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+
+    &:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+  }
 `;
 
 export const MenuCount = styled.span`
@@ -124,6 +151,10 @@ export const MenuCount = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 700;
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const SubLink = styled(Link)`
@@ -139,5 +170,14 @@ export const SubLink = styled(Link)`
   &:hover {
     background: ${brandColors.pink50};
     color: ${brandColors.pink500};
+  }
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
   }
 `;

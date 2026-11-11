@@ -19,6 +19,10 @@ export const Title = styled.h1`
   font-weight: 800;
   color: ${brandColors.chocolate};
   margin-bottom: 1.25rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Grid = styled.div`
@@ -44,14 +48,23 @@ export const Empty = styled.div`
   font-size: ${fontSizes.md};
   font-weight: 700;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const EmptyLink = styled(Link)`
   padding: 0.625rem 1.5rem;
-  border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  border-radius: ${radii.md};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.92;
+  }
 `;

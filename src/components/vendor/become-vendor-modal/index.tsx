@@ -183,7 +183,11 @@ export function BecomeVendorModal({
       styles={{ body: { maxHeight: '70vh', overflowY: 'auto' } }}
     >
       <p
-        style={{ color: '#666', marginBottom: '1.25rem', fontSize: '0.875rem' }}
+        style={{
+          color: 'var(--color-text-secondary)',
+          marginBottom: '1.25rem',
+          fontSize: '0.875rem',
+        }}
       >
         Register your service or shop. Once submitted, our Super Admin team will
         review and approve your vendor profile.

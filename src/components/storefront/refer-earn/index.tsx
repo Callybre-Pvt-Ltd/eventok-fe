@@ -26,7 +26,7 @@ export function ReferEarn() {
   const refer = useReferEarn();
 
   return (
-    <Section>
+    <Section $tint>
       <SectionInner>
         <Panel>
           <SparklesWrap aria-hidden="true">

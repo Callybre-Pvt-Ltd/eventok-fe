@@ -8,6 +8,7 @@ import {
   SectionInner,
   SectionTitle,
 } from '@/components/storefront/shared/styled';
+import { getCategoryPhoto } from '@/pages/categories/helper';
 import { useWeddingServices } from './helper';
 import {
   Actions,
@@ -22,23 +23,12 @@ import {
   TileLabel,
 } from './styled';
 
-const THUMBS = [
-  'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1595407753234-0882f1e77954?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=240&q=60',
-  'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=240&q=60',
-];
-
 export function WeddingServices() {
   const { t } = useTranslation();
   const { tiles, collage } = useWeddingServices();
 
   return (
-    <Section>
+    <Section $tint>
       <SectionInner>
         <Layout>
           <Left>
@@ -50,9 +40,13 @@ export function WeddingServices() {
                   {t('storefront.weddingChooseService')}
                 </ChooseLabel>
                 <TileGrid>
-                  {tiles.map((tile, index) => (
+                  {tiles.map(tile => (
                     <Tile key={tile.id} to={`/category/${tile.slug}`}>
-                      <Thumb src={THUMBS[index % THUMBS.length]} alt="" />
+                      <Thumb
+                        src={tile.photo || getCategoryPhoto(tile.slug)}
+                        alt={tile.name}
+                        loading="lazy"
+                      />
                       <TileLabel>{tile.name}</TileLabel>
                     </Tile>
                   ))}
@@ -60,8 +54,8 @@ export function WeddingServices() {
               </>
             )}
             <Actions>
-              <PillLink as="a" href={`${ROUTES.SHOP}?event=wedding`}>
-                {t('storefront.weddingExplore')}
+              <PillLink to={`${ROUTES.SHOP}?event=wedding`}>
+                {t('storefront.weddingViewAll')}
                 <ArrowRight size={16} />
               </PillLink>
             </Actions>
@@ -73,8 +67,8 @@ export function WeddingServices() {
                 key={src}
                 src={src}
                 alt=""
+                $tall={index === 0 || index === 3}
                 loading="lazy"
-                $tall={index % 3 === 0}
               />
             ))}
           </Collage>

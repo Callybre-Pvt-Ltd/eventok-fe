@@ -9,109 +9,111 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --color-bg: #fafafe;
-  --color-bg-alt: #f4f4fd;
-  --color-bg-tint: #f5f3ff;
-  --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
-  --color-text: #0f172a;
-  --color-text-secondary: #64748b;
-  --color-text-muted: #94a3b8;
-  --color-primary: #7c3aed;
-  --color-primary-hover: #6d28d9;
-  --color-primary-dark: #5b21b6;
-  --color-primary-light: #ede9fe;
-  --color-primary-subtle: #f5f3ff;
-  --color-accent: #6366f1;
-  --color-accent-soft: #e0e7ff;
-  --color-highlight: #c4b5fd;
-  --color-peach: #fda4af;
-  --color-border: rgba(226, 232, 240, 0.85);
-  --color-border-light: rgba(241, 245, 249, 0.9);
-  --color-border-hover: rgba(124, 58, 237, 0.4);
-  --color-shadow: rgba(99, 102, 241, 0.05);
-  --color-shadow-strong: rgba(99, 102, 241, 0.12);
-  --color-overlay: rgba(15, 23, 42, 0.55);
-  --color-glass: rgba(255, 255, 255, 0.92);
+  --color-bg: #FAF7F2;
+  --color-bg-alt: #F3ECE2;
+  --color-bg-tint: #FFF3E6;
+  --color-surface: #FFFFFF;
+  --color-surface-elevated: #FFFDFB;
+  --color-surface-warm: #FAF2E8;
+  --color-text: #1C1917;
+  --color-text-secondary: #57534E;
+  --color-text-muted: #8C827A;
+  --color-primary: #EA580C;
+  --color-primary-hover: #C2410C;
+  --color-primary-dark: #9A3412;
+  --color-primary-light: #FFF7ED;
+  --color-primary-subtle: #FFEDD5;
+  --color-accent: #0284C7;
+  --color-accent-soft: #F0F9FF;
+  --color-highlight: #FEF3C7;
+  --color-gold: #F59E0B;
+  --color-gold-light: #FEF3C7;
+  --color-peach: #FED7AA;
+  --color-border: #E8E1D5;
+  --color-border-light: #F2ECE1;
+  --color-border-hover: #EA580C;
+  --color-shadow: rgba(60, 42, 25, 0.06);
+  --color-shadow-strong: rgba(60, 42, 25, 0.14);
+  --color-shadow-subtle: rgba(60, 42, 25, 0.03);
+  --color-overlay: rgba(28, 25, 23, 0.6);
+  --color-glass: rgba(255, 253, 250, 0.95);
 
   /* Nav & Header */
-  --nav-scrolled-bg: rgba(255, 255, 255, 0.92);
-  --nav-scrolled-border: rgba(124, 58, 237, 0.08);
-  --nav-scrolled-shadow: 0 10px 40px rgba(99, 102, 241, 0.06);
+  --nav-topbar-bg: #FAF7F2;
+  --nav-topbar-text: #1C1917;
+  --nav-scrolled-bg: rgba(250, 247, 242, 0.96);
+  --nav-scrolled-border: #E8E1D5;
+  --nav-scrolled-shadow: 0 4px 20px rgba(60, 42, 25, 0.07);
 
   /* Footer */
-  --footer-bg: #f7f7fd;
-  --footer-text: #0f172a;
-  --footer-watermark: rgba(124, 58, 237, 0.04);
+  --footer-bg: #F3ECE2;
+  --footer-text: #1C1917;
+  --footer-watermark: rgba(234, 88, 12, 0.05);
 
-  /* Button gradients & glow */
-  --button-primary-gradient: linear-gradient(
-    135deg,
-    #7c3aed 0%,
-    #6366f1 50%,
-    #818cf8 100%
-  );
-  --button-primary-shadow: rgba(124, 58, 237, 0.28);
+  /* Solid button - strictly NO gradients */
+  --button-primary-gradient: #EA580C;
+  --button-primary-shadow: rgba(234, 88, 12, 0.25);
 
   /* Theme Toggle */
-  --theme-toggle-border: rgba(124, 58, 237, 0.2);
-  --theme-toggle-bg: rgba(255, 255, 255, 0.95);
-  --theme-toggle-color: #7c3aed;
-  --theme-toggle-hover-bg: #ede9fe;
-  --theme-toggle-shadow: rgba(124, 58, 237, 0.15);
+  --theme-toggle-border: #E8E1D5;
+  --theme-toggle-bg: #FFFFFF;
+  --theme-toggle-color: #EA580C;
+  --theme-toggle-hover-bg: #FFF7ED;
+  --theme-toggle-shadow: rgba(60, 42, 25, 0.08);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --color-bg: #0a0d18;
-  --color-bg-alt: #0f1426;
-  --color-bg-tint: #141a32;
-  --color-surface: #141a32;
-  --color-surface-elevated: #1a2242;
-  --color-text: #ffffff;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-primary: #8b5cf6;
-  --color-primary-hover: #a78bfa;
-  --color-primary-dark: #7c3aed;
-  --color-primary-light: #1e1838;
-  --color-primary-subtle: #15122b;
-  --color-accent: #818cf8;
-  --color-accent-soft: #1e2045;
-  --color-highlight: #c4b5fd;
-  --color-peach: #fda4af;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-light: rgba(255, 255, 255, 0.05);
-  --color-border-hover: rgba(167, 139, 250, 0.35);
+  --color-bg: #090D16;
+  --color-bg-alt: #0E1424;
+  --color-bg-tint: #141C30;
+  --color-surface: #121A2B;
+  --color-surface-elevated: #1A253D;
+  --color-surface-warm: #1E2B44;
+  --color-text: #F8FAFC;
+  --color-text-secondary: #CBD5E1;
+  --color-text-muted: #8896AB;
+  --color-primary: #F97316;
+  --color-primary-hover: #EA580C;
+  --color-primary-dark: #C2410C;
+  --color-primary-light: #2C150A;
+  --color-primary-subtle: #2C150A;
+  --color-accent: #38BDF8;
+  --color-accent-soft: #082F49;
+  --color-highlight: #1A253D;
+  --color-gold: #F59E0B;
+  --color-gold-light: #451A03;
+  --color-peach: #FDBA74;
+  --color-border: #232F47;
+  --color-border-light: #162032;
+  --color-border-hover: #F97316;
   --color-shadow: rgba(0, 0, 0, 0.45);
-  --color-shadow-strong: rgba(0, 0, 0, 0.65);
-  --color-overlay: rgba(7, 9, 19, 0.8);
-  --color-glass: rgba(20, 26, 50, 0.88);
+  --color-shadow-strong: rgba(0, 0, 0, 0.7);
+  --color-shadow-subtle: rgba(0, 0, 0, 0.25);
+  --color-overlay: rgba(4, 7, 14, 0.85);
+  --color-glass: #121A2B;
 
   /* Nav & Header */
-  --nav-scrolled-bg: rgba(10, 13, 24, 0.92);
-  --nav-scrolled-border: rgba(255, 255, 255, 0.08);
-  --nav-scrolled-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --nav-topbar-bg: #090D16;
+  --nav-topbar-text: #F8FAFC;
+  --nav-scrolled-bg: rgba(9, 13, 22, 0.96);
+  --nav-scrolled-border: #232F47;
+  --nav-scrolled-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
 
   /* Footer */
-  --footer-bg: #080b14;
-  --footer-text: #ffffff;
-  --footer-watermark: rgba(255, 255, 255, 0.03);
+  --footer-bg: #060910;
+  --footer-text: #F8FAFC;
+  --footer-watermark: rgba(249, 115, 22, 0.04);
 
-  /* Button gradients & glow */
-  --button-primary-gradient: linear-gradient(
-    135deg,
-    #7c3aed 0%,
-    #8b5cf6 50%,
-    #6366f1 100%
-  );
-  --button-primary-shadow: rgba(124, 58, 237, 0.35);
+  /* Solid button - strictly NO gradients */
+  --button-primary-gradient: #F97316;
+  --button-primary-shadow: rgba(249, 115, 22, 0.3);
 
   /* Theme Toggle */
-  --theme-toggle-border: rgba(167, 139, 250, 0.3);
-  --theme-toggle-bg: rgba(20, 26, 50, 0.9);
-  --theme-toggle-color: #c4b5fd;
-  --theme-toggle-hover-bg: #1e1838;
+  --theme-toggle-border: #232F47;
+  --theme-toggle-bg: #121A2B;
+  --theme-toggle-color: #F97316;
+  --theme-toggle-hover-bg: #1A253D;
   --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
 }
 

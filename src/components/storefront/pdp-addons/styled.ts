@@ -7,6 +7,11 @@ export const Wrap = styled.section`
   border: 1px solid ${brandColors.gray200};
   border-radius: ${radii.md};
   background: ${brandColors.white};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
 `;
 
 export const Title = styled.h2`
@@ -15,12 +20,20 @@ export const Title = styled.h2`
   font-size: ${fontSizes.xl};
   font-weight: ${fontWeight.bold};
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Subtitle = styled.p`
   margin: 0 0 1rem;
   font-size: ${fontSizes.sm};
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const List = styled.ul`
@@ -38,6 +51,11 @@ export const Row = styled.li`
   border: 1px solid ${brandColors.gray200};
   border-radius: ${radii.sm};
   background: ${brandColors.cream};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+  }
 `;
 
 export const RowMain = styled.div`
@@ -50,11 +68,19 @@ export const Name = styled.span`
   font-size: ${fontSizes.md};
   font-weight: ${fontWeight.medium};
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Description = styled.span`
   font-size: ${fontSizes.sm};
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Price = styled.span`

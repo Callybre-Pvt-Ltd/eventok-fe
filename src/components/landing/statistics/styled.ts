@@ -4,16 +4,16 @@ import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Section = styled.section<{ $palette: ThemePalette }>`
   width: 100%;
-  padding: 3.5rem clamp(1rem, 3.5vw, 2.5rem);
-  background: ${({ $palette }) => $palette.background};
+  padding: 1rem clamp(1rem, 3.5vw, 2.5rem) 2.5rem;
+  background: var(--color-bg);
   transition: background 0.25s ease;
 
   ${media.md} {
-    padding: 4rem clamp(1.25rem, 3.5vw, 2.5rem);
+    padding: 1.5rem clamp(1.25rem, 3.5vw, 2.5rem) 3rem;
   }
 
   ${media.lg} {
-    padding: 4.5rem clamp(1.5rem, 4vw, 3rem);
+    padding: 1.5rem clamp(1.5rem, 4vw, 3rem) 3.5rem;
   }
 `;
 
@@ -25,12 +25,10 @@ export const Inner = styled.div`
 
 export const Grid = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-
-  ${media.belowLg} {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  max-width: 680px;
+  margin: 0 auto;
 
   ${media.belowMd} {
     grid-template-columns: 1fr;
@@ -38,63 +36,70 @@ export const Grid = styled.div`
   }
 `;
 
-export const StatCard = styled.div<{ $palette: ThemePalette }>`
+export const StatCard = styled.div<{
+  $palette: ThemePalette;
+  $variant?: 'primary' | 'secondary';
+}>`
   text-align: center;
-  padding: 1.75rem 1.25rem;
-  border-radius: ${radii.xl};
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  box-shadow: 0 8px 24px -6px var(--color-shadow);
-  transition: transform 0.25s ease, box-shadow 0.25s ease,
-    border-color 0.25s ease;
-
-  [data-theme='light'] & {
-    background: #ffffff;
-    border-color: rgba(124, 58, 237, 0.12);
-    box-shadow: 0 10px 30px -8px rgba(99, 102, 241, 0.08),
-      0 2px 6px rgba(0, 0, 0, 0.02);
-  }
+  padding: 1.5rem 2rem;
+  border-radius: ${radii.lg};
+  border: 1px solid
+    ${({ $variant }) => ($variant === 'primary' ? 'transparent' : '#fed7aa')};
+  background: ${({ $variant }) =>
+    $variant === 'primary' ? 'var(--color-primary)' : '#ffedd5'};
+  color: ${({ $variant }) => ($variant === 'primary' ? '#ffffff' : '#9a3412')};
+  box-shadow: 0 4px 16px var(--color-shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 
   [data-theme='dark'] & {
-    background: #141a32;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    background: ${({ $variant }) =>
+      $variant === 'primary' ? 'var(--color-primary)' : 'var(--color-surface)'};
+    border-color: ${({ $variant }) =>
+      $variant === 'primary' ? 'transparent' : 'var(--color-border)'};
+    color: ${({ $variant }) =>
+      $variant === 'primary' ? '#ffffff' : 'var(--color-peach)'};
   }
 
   &:hover {
-    transform: translateY(-3px);
-    border-color: var(--color-primary);
-    box-shadow: 0 16px 36px -8px var(--color-shadow-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px var(--color-shadow-strong);
   }
 `;
 
-export const StatValue = styled.p<{ $palette: ThemePalette }>`
+export const StatValue = styled.p<{
+  $palette: ThemePalette;
+  $variant?: 'primary' | 'secondary';
+}>`
   margin: 0 0 0.35rem;
   font-family: ${fontFamily.display};
-  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-size: clamp(2rem, 3.5vw, 2.5rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1;
-  background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 50%, #6366f1 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: ${({ $variant }) => ($variant === 'primary' ? '#ffffff' : '#ea580c')};
 
   [data-theme='dark'] & {
-    background: linear-gradient(135deg, #c4b5fd 0%, #a78bfa 50%, #93c5fd 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: ${({ $variant }) =>
+      $variant === 'primary' ? '#ffffff' : '#f97316'};
   }
 `;
 
-export const StatLabel = styled.p<{ $palette: ThemePalette }>`
+export const StatLabel = styled.p<{
+  $palette: ThemePalette;
+  $variant?: 'primary' | 'secondary';
+}>`
   margin: 0;
   font-size: ${fontSizes.xs};
-  color: var(--color-text-secondary);
+  color: ${({ $variant }) =>
+    $variant === 'primary' ? 'rgba(255, 255, 255, 0.9)' : '#9a3412'};
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
 
   [data-theme='dark'] & {
-    color: rgba(255, 255, 255, 0.8);
+    color: ${({ $variant }) =>
+      $variant === 'primary'
+        ? 'rgba(255, 255, 255, 0.9)'
+        : 'rgba(255, 255, 255, 0.8)'};
   }
 `;

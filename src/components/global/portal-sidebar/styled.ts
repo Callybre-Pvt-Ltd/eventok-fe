@@ -2,10 +2,10 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import type { ThemePalette } from '@/theme';
 import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
-import { brandColors, brandGradients, brandRgb } from '@/theme/brand';
+import { brandColors } from '@/theme/brand';
 
 const inkNav = css`
-  background: ${brandColors.ink800};
+  background: #0f172a;
   color: ${brandColors.white};
 `;
 
@@ -18,7 +18,7 @@ export const Sidebar = styled.aside<{
   height: 100vh;
   height: 100dvh;
   ${inkNav}
-  border-right: 1px solid rgba(${brandRgb.pink}, 0.18);
+  border-right: 1px solid #1e293b;
   display: flex;
   flex-direction: column;
   transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
@@ -29,16 +29,7 @@ export const Sidebar = styled.aside<{
   flex-shrink: 0;
   overflow-y: auto;
   overscroll-behavior: contain;
-  box-shadow: 4px 0 24px rgba(${brandRgb.ink}, 0.12);
-
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background: ${brandGradients.heroGlow};
-    opacity: 0.12;
-  }
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.1);
 
   ${media.belowLg} {
     position: fixed;
@@ -77,7 +68,7 @@ export const SidebarEyebrow = styled.span<{ $collapsed: boolean }>`
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: ${brandColors.pink400};
+  color: #ea580c;
   white-space: nowrap;
   opacity: ${({ $collapsed }) => ($collapsed ? 0 : 1)};
   height: ${({ $collapsed }) => ($collapsed ? 0 : 'auto')};
@@ -102,7 +93,7 @@ export const SidebarLogo = styled(Link)<{ $palette: ThemePalette }>`
   line-height: 1.1;
 
   span {
-    color: ${brandColors.pink500};
+    color: #ea580c;
   }
 `;
 
@@ -122,8 +113,8 @@ export const CollapseBtn = styled.button<{ $palette: ThemePalette }>`
 
   &:hover {
     color: ${brandColors.white};
-    border-color: rgba(${brandRgb.pink}, 0.55);
-    background: rgba(${brandRgb.pink}, 0.2);
+    border-color: #ea580c;
+    background: rgba(234, 88, 12, 0.15);
   }
 
   ${media.belowLg} {
@@ -137,7 +128,7 @@ export const NavList = styled.nav`
   display: flex;
   flex-direction: column;
   padding: 0.85rem 0.55rem;
-  gap: 3px;
+  gap: 4px;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -155,17 +146,16 @@ export const NavItem = styled(Link)<{
   border-radius: ${radii.md};
   text-decoration: none;
   color: ${({ $active }) =>
-    $active ? brandColors.white : 'rgba(255, 255, 255, 0.68)'};
-  background: ${({ $active }) =>
-    $active ? brandColors.pink500 : 'transparent'};
+    $active ? '#ffffff' : 'rgba(255, 255, 255, 0.72)'};
+  background: ${({ $active }) => ($active ? '#ea580c' : 'transparent')};
   font-size: ${fontSizes.sm};
   font-weight: ${({ $active }) => ($active ? 600 : 500)};
   transition: background 0.18s ease, color 0.18s ease;
 
   &:hover {
     background: ${({ $active }) =>
-      $active ? brandColors.pink500 : 'rgba(255, 255, 255, 0.07)'};
-    color: ${brandColors.white};
+      $active ? '#ea580c' : 'rgba(255, 255, 255, 0.08)'};
+    color: #ffffff;
   }
 `;
 
@@ -197,9 +187,9 @@ export const BackToSiteLink = styled(Link)<{ $palette: ThemePalette }>`
   width: 100%;
   margin-bottom: 0.5rem;
   padding: 0.65rem 0.75rem;
-  border: 1px solid rgba(${brandRgb.pink}, 0.35);
+  border: 1px solid rgba(234, 88, 12, 0.35);
   border-radius: ${radii.md};
-  background: rgba(${brandRgb.pink}, 0.14);
+  background: rgba(234, 88, 12, 0.12);
   color: ${brandColors.white};
   font-size: ${fontSizes.sm};
   font-weight: 600;
@@ -209,8 +199,8 @@ export const BackToSiteLink = styled(Link)<{ $palette: ThemePalette }>`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(${brandRgb.pink}, 0.26);
-    border-color: ${brandColors.pink500};
+    background: rgba(234, 88, 12, 0.22);
+    border-color: #ea580c;
   }
 `;
 
@@ -230,8 +220,8 @@ export const LogoutBtn = styled.button<{ $palette: ThemePalette }>`
   transition: all 0.2s ease;
 
   &:hover {
-    background: rgba(${brandRgb.accent}, 0.18);
-    border-color: rgba(${brandRgb.accent}, 0.45);
+    background: rgba(234, 88, 12, 0.15);
+    border-color: rgba(234, 88, 12, 0.4);
     color: ${brandColors.white};
   }
 `;

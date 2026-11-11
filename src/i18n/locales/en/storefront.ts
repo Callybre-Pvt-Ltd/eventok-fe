@@ -4,7 +4,7 @@ export const storefront = {
   appBannerCta: 'Install',
   appBannerDismiss: 'Dismiss app banner',
 
-  setLocation: 'Set location',
+  setLocation: 'Dehradun',
   searchPlaceholder: "Search for '{{term}}'",
   searchSubmit: 'Search services',
   voiceSearch: 'Search by voice',
@@ -45,9 +45,10 @@ export const storefront = {
   scrollLeft: 'Scroll left',
   scrollRight: 'Scroll right',
 
-  recentCelebrations: 'Our recent celebrations',
+  recentCelebrations: 'HANDPICKED FOR YOUR OCCASIONS',
   trendingTitle: 'Trendiest Decorations',
-  trendingSubtitle: 'Loved by customers across every celebration this month.',
+  trendingSubtitle:
+    'Loved by customers across every celebration this month',
 
   venuesEyebrow: 'Celebrate differently',
   venuesTitle: 'Select cafes & venues for EventOK',
@@ -55,9 +56,9 @@ export const storefront = {
   venuesListTitle: 'Explore Cafes near you',
   venuesView: 'View',
 
-  weddingEyebrow: 'Wedding services',
+  weddingEyebrow: 'Wedding specials',
   weddingTitle: 'Everything for Your Perfect Wedding',
-  weddingChooseService: 'Choose a service',
+  weddingChooseService: 'Choose media',
   weddingExplore: 'Explore Decorations',
 
   builderTitle: 'Select a Category to Build Your Package',

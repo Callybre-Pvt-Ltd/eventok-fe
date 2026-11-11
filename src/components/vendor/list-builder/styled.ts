@@ -13,11 +13,19 @@ export const Label = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Hint = styled.span`
   font-size: ${fontSizes.xs};
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const AddRow = styled.div`
@@ -45,6 +53,16 @@ export const AddInput = styled.input`
     outline: none;
     border-color: ${brandColors.pink500};
     box-shadow: 0 0 0 3px rgba(${brandRgb.pink}, 0.15);
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
   }
 `;
 
@@ -95,6 +113,11 @@ export const Row = styled.li`
     border-color: ${brandColors.pink400};
   }
 
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+
   ${media.belowSm} {
     gap: 0.2rem;
   }
@@ -128,6 +151,10 @@ export const RowInput = styled.input`
   &:focus {
     outline: none;
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const RowButton = styled.button`
@@ -152,6 +179,15 @@ export const RowButton = styled.button`
     opacity: 0.35;
     cursor: not-allowed;
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-surface-elevated);
+      color: var(--color-text);
+    }
+  }
 `;
 
 export const RemoveButton = styled(RowButton)`
@@ -168,4 +204,9 @@ export const Empty = styled.p`
   border: 1px dashed ${brandColors.tan};
   font-size: ${fontSizes.xs};
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+    color: var(--color-text-muted);
+  }
 `;

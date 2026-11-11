@@ -2,6 +2,14 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { fontFamily, fontSizes, media, radii } from '@/theme';
 
+export const HeaderWrap = styled.div`
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2.5rem;
+`;
+
 export const Grid = styled.div`
   display: grid;
   gap: 1.15rem;
@@ -26,7 +34,7 @@ export const Tile = styled(Link)`
   justify-items: center;
   text-align: center;
   padding: 1.35rem 1rem;
-  border-radius: ${radii.lg};
+  border-radius: ${radii.md};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   text-decoration: none;
@@ -34,22 +42,28 @@ export const Tile = styled(Link)`
   transition: border-color 0.25s ease, box-shadow 0.25s ease,
     transform 0.25s ease;
 
-  &:hover {
-    border-color: var(--color-primary);
-    box-shadow: 0 8px 24px var(--color-shadow-strong);
-    transform: translateY(-3px);
-  }
-
   [data-theme='light'] & {
     background: #ffffff;
-    border-color: rgba(226, 232, 240, 0.85);
-    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.04);
+    border-color: var(--color-border);
+    box-shadow: 0 2px 10px rgba(60, 42, 25, 0.05);
+
+    &:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 24px rgba(60, 42, 25, 0.12);
+      transform: translateY(-3px);
+    }
   }
 
   [data-theme='dark'] & {
-    background: #141a32;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+
+    &:hover {
+      border-color: var(--color-primary);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      transform: translateY(-3px);
+    }
   }
 `;
 
@@ -60,21 +74,26 @@ export const IconCircle = styled.span`
   width: 3.25rem;
   height: 3.25rem;
   border-radius: ${radii.full};
-  background: rgba(124, 58, 237, 0.08);
+  background: rgba(249, 115, 22, 0.08);
   color: var(--color-primary);
-  border: 1px solid rgba(124, 58, 237, 0.18);
-  transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  transition: transform 0.25s ease, background 0.25s ease, color 0.25s ease;
 
   ${Tile}:hover & {
     transform: scale(1.08);
-    background: rgba(124, 58, 237, 0.16);
-    box-shadow: 0 4px 16px rgba(124, 58, 237, 0.2);
+    background: var(--color-primary);
+    color: #ffffff;
   }
 
   [data-theme='dark'] & {
-    background: rgba(139, 92, 246, 0.18);
-    border-color: rgba(167, 139, 250, 0.3);
-    color: #c4b5fd;
+    background: rgba(249, 115, 22, 0.15);
+    border-color: rgba(249, 115, 22, 0.3);
+    color: #fdba74;
+  }
+
+  [data-theme='dark'] ${Tile}:hover & {
+    background: var(--color-primary);
+    color: #ffffff;
   }
 `;
 

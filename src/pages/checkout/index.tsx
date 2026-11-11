@@ -73,6 +73,7 @@ export default function CheckoutPage() {
                   {t('storefront.checkoutDate')}
                   <DatePicker
                     size="large"
+                    style={{ width: '100%' }}
                     format="DD MMM YYYY"
                     placeholder={t('storefront.checkoutDate')}
                     value={
@@ -95,6 +96,7 @@ export default function CheckoutPage() {
                   {t('storefront.checkoutTime')}
                   <TimePicker
                     size="large"
+                    style={{ width: '100%' }}
                     format="h:mm A"
                     use12Hours
                     minuteStep={5}

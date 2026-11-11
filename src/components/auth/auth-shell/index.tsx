@@ -55,6 +55,15 @@ const VendorBtn = styled(Link)`
   &:hover {
     color: ${brandColors.pink600};
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    color: var(--color-text);
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
 `;
 
 interface AuthShellProps {

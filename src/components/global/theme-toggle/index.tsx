@@ -20,24 +20,24 @@ const ToggleButton = styled.button<{
   min-width: ${({ $compact }) => ($compact ? '2.25rem' : '2.5rem')};
   min-height: ${({ $compact }) => ($compact ? '2.25rem' : '2.5rem')};
   border-radius: 9999px;
-  border: 1px solid var(--theme-toggle-border, rgba(124, 58, 237, 0.2));
-  background: var(--theme-toggle-bg, rgba(255, 255, 255, 0.95));
-  color: var(--theme-toggle-color, #7c3aed);
+  border: 1px solid var(--theme-toggle-border, var(--color-border));
+  background: var(--theme-toggle-bg, var(--color-surface));
+  color: var(--theme-toggle-color, var(--color-primary));
   cursor: pointer;
   padding: 0;
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 2px 8px var(--theme-toggle-shadow, rgba(124, 58, 237, 0.08));
+  box-shadow: 0 2px 8px var(--theme-toggle-shadow, var(--color-shadow));
 
   &:hover {
     transform: translateY(-2px) scale(1.05);
-    border-color: var(--color-primary, #7c3aed);
-    background: var(--theme-toggle-hover-bg, #ede9fe);
-    color: var(--color-primary, #7c3aed);
-    box-shadow: 0 4px 14px var(--theme-toggle-shadow, rgba(124, 58, 237, 0.22));
+    border-color: var(--color-primary);
+    background: var(--theme-toggle-hover-bg, var(--color-primary-light));
+    color: var(--color-primary);
+    box-shadow: 0 4px 14px var(--theme-toggle-shadow, var(--color-shadow-strong));
   }
 
   &:focus-visible {
-    outline: 2px solid var(--color-primary, #7c3aed);
+    outline: 2px solid var(--color-primary);
     outline-offset: 2px;
   }
 
@@ -49,11 +49,19 @@ const ToggleButton = styled.button<{
     transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
 
+  [data-theme='light'] & {
+    --theme-toggle-border: var(--color-border);
+    --theme-toggle-bg: #ffffff;
+    --theme-toggle-color: var(--color-primary);
+    --theme-toggle-hover-bg: #fff7ed;
+    --theme-toggle-shadow: rgba(60, 42, 25, 0.08);
+  }
+
   [data-theme='dark'] & {
-    --theme-toggle-border: rgba(167, 139, 250, 0.3);
-    --theme-toggle-bg: rgba(20, 26, 50, 0.9);
-    --theme-toggle-color: #c4b5fd;
-    --theme-toggle-hover-bg: #1e1838;
+    --theme-toggle-border: var(--color-border);
+    --theme-toggle-bg: var(--color-surface);
+    --theme-toggle-color: var(--color-primary);
+    --theme-toggle-hover-bg: var(--color-surface-elevated);
     --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
   }
 `;

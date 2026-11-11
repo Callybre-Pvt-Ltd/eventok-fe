@@ -8,6 +8,11 @@ export const Panel = styled.section`
   border: 1px solid ${brandColors.tan};
   background: ${brandColors.white};
   overflow: hidden;
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
 `;
 
 export const TabBar = styled.div`
@@ -17,6 +22,10 @@ export const TabBar = styled.div`
   border-bottom: 1px solid ${brandColors.tan};
   overflow-x: auto;
   scrollbar-width: none;
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 
   &::-webkit-scrollbar {
     display: none;
@@ -45,6 +54,16 @@ export const Tab = styled.button<{ $active: boolean }>`
     background: ${({ $active }) =>
       $active ? brandColors.pink500 : 'transparent'};
   }
+
+  [data-theme='dark'] & {
+    color: ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-text-secondary)'};
+
+    &::after {
+      background: ${({ $active }) =>
+        $active ? 'var(--color-primary)' : 'transparent'};
+    }
+  }
 `;
 
 export const Body = styled.div`
@@ -56,6 +75,10 @@ export const Intro = styled.p`
   font-weight: 600;
   color: ${brandColors.gray600};
   margin-bottom: 0.75rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const FeatureRow = styled.div`
@@ -69,12 +92,20 @@ export const FeatureRow = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const FeatureName = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const IncludedChip = styled.span`
@@ -86,6 +117,11 @@ export const IncludedChip = styled.span`
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+
+  [data-theme='dark'] & {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+  }
 `;
 
 export const List = styled.ul`
@@ -98,6 +134,10 @@ export const ListItem = styled.li`
   font-size: ${fontSizes.sm};
   font-weight: 500;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Paragraph = styled.p`
@@ -105,4 +145,8 @@ export const Paragraph = styled.p`
   font-weight: 500;
   line-height: 1.7;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;

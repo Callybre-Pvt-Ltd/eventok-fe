@@ -28,6 +28,10 @@ export const PackageCard = styled.div<{ $palette: ThemePalette }>`
   border-radius: 1rem;
   padding: 1.25rem;
   box-shadow: 0 8px 22px rgba(${brandRgb.ink}, 0.04);
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 `;
 
 export const PackageName = styled.h3<{ $palette: ThemePalette }>`
@@ -49,7 +53,7 @@ export const PriceLabel = styled.span<{ $palette: ThemePalette }>`
 
 export const PriceValue = styled.span<{ $emphasis?: boolean }>`
   font-weight: ${({ $emphasis }) => ($emphasis ? 800 : 600)};
-  color: ${({ $emphasis }) => ($emphasis ? brandColors.pink500 : 'inherit')};
+  color: ${({ $emphasis }) => ($emphasis ? 'var(--color-primary)' : 'inherit')};
 `;
 
 export const SavingsBadge = styled.span`
@@ -61,6 +65,11 @@ export const SavingsBadge = styled.span`
   color: ${brandColors.accent600};
   font-size: ${fontSizes.xs};
   font-weight: 700;
+
+  [data-theme='dark'] & {
+    background: var(--color-accent-soft);
+    color: var(--color-accent);
+  }
 `;
 
 export const CheckboxList = styled.div`
@@ -80,6 +89,10 @@ export const VisibilityRow = styled.div`
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid ${brandColors.gray200};
+
+  [data-theme='dark'] & {
+    border-top-color: var(--color-border);
+  }
 `;
 
 export const VisibilityLabel = styled.span<{ $live: boolean }>`
@@ -89,4 +102,9 @@ export const VisibilityLabel = styled.span<{ $live: boolean }>`
   text-transform: uppercase;
   color: ${({ $live }) =>
     $live ? brandColors.success500 : brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: ${({ $live }) =>
+      $live ? '#34d399' : 'var(--color-text-secondary)'};
+  }
 `;

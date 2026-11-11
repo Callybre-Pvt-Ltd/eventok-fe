@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import { Form, InputNumber } from 'antd';
-import { fontSizes, palette, spacing } from '@/theme';
+import { fontSizes, spacing } from '@/theme';
 
 export const Intro = styled.p`
-  color: ${palette.textSecondary};
+  color: var(--color-text-secondary);
   margin-bottom: ${spacing.lg};
   font-size: ${fontSizes.sm};
 `;

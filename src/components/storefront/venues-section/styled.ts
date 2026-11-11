@@ -8,9 +8,17 @@ export const Banner = styled.div`
   gap: 1.5rem;
   align-items: center;
   padding: 2.25rem 1.75rem;
-  border-radius: ${radii.xxl};
-  background: linear-gradient(135deg, #1e1038 0%, #4c1d95 50%, #6b21a8 100%);
+  border-radius: ${radii.xl};
+  background: #0d5c75;
+  border: 1px solid #0f766e;
+  box-shadow: 0 4px 16px rgba(13, 92, 117, 0.15);
   margin-bottom: 2.5rem;
+
+  [data-theme='dark'] & {
+    background: #0a3f50;
+    border-color: #115e59;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
 
   ${media.lg} {
     grid-template-columns: 1.2fr 1fr;
@@ -25,7 +33,7 @@ export const BannerEyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #a78bfa;
+  color: var(--color-gold);
 `;
 
 export const BannerTitle = styled.h2`
@@ -43,18 +51,18 @@ export const BannerCta = styled.a`
   gap: 0.5rem;
   margin-top: 1.25rem;
   padding: 0.75rem 1.75rem;
-  border-radius: ${radii.full};
+  border-radius: ${radii.sm};
   background: #ffffff;
-  color: #1a1028;
+  color: #0d5c75;
   font-size: ${fontSizes.sm};
-  font-weight: 700;
+  font-weight: 800;
   text-decoration: none;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
-    background: #f3e8ff;
+    background: #f0fdfa;
   }
 `;
 
@@ -72,18 +80,7 @@ export const BannerImage = styled.img`
 `;
 
 export const BannerGlow = styled.div`
-  position: absolute;
-  top: -40%;
-  right: -20%;
-  width: 30rem;
-  height: 30rem;
-  border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(167, 139, 250, 0.3) 0%,
-    transparent 70%
-  );
-  pointer-events: none;
+  display: none;
 `;
 
 export const ListHead = styled.div`

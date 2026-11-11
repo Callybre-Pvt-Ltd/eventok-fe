@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { fontSizes, fontFamily } from '@/theme';
-import { brandColors } from '@/theme/brand';
 
 export * from '@/components/ui/portal-primitives/styled';
 
@@ -21,7 +20,7 @@ export const GreetingEyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const GreetingTitle = styled.h1`
@@ -31,6 +30,10 @@ export const GreetingTitle = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const GreetingSub = styled.p`
@@ -38,6 +41,10 @@ export const GreetingSub = styled.p`
   font-size: ${fontSizes.sm};
   color: #64748b;
   line-height: 1.5;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const MetricsRow = styled.div`
@@ -60,6 +67,15 @@ export const MetricTile = styled.div`
     border-color: #cbd5e1;
     transform: translateY(-1px);
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
 `;
 
 export const MetricLabel = styled.span`
@@ -68,18 +84,27 @@ export const MetricLabel = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const MetricNumber = styled.span<{ $accent?: boolean }>`
   font-size: 1.6rem;
   font-weight: 800;
-  color: ${({ $accent }) => ($accent ? brandColors.pink500 : '#0f172a')};
+  color: ${({ $accent }) =>
+    $accent ? 'var(--color-primary)' : 'var(--color-text)'};
   font-family: ${fontFamily.display};
 `;
 
 export const MetricSubtext = styled.span`
   font-size: 0.72rem;
   color: #94a3b8;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const DashboardGrid = styled.div`
@@ -100,6 +125,11 @@ export const SectionBlock = styled.section`
   border-radius: 12px;
   border: 1px solid #e2e8f0;
   padding: 1.25rem 1.5rem;
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
 `;
 
 export const BlockHeader = styled.div`
@@ -113,6 +143,10 @@ export const BlockTitle = styled.h2`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const BookingList = styled.div`
@@ -129,6 +163,10 @@ export const BookingRow = styled.div`
   background: #f8fafc;
   border-radius: 8px;
   gap: 0.75rem;
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+  }
 `;
 
 export const BookingInfo = styled.div`
@@ -145,11 +183,19 @@ export const BookingTitle = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const BookingMeta = styled.span`
   font-size: ${fontSizes.xs};
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PerformanceItem = styled.div`
@@ -162,5 +208,10 @@ export const PerformanceItem = styled.div`
 
   &:last-child {
     border-bottom: none;
+  }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+    color: var(--color-text-secondary);
   }
 `;

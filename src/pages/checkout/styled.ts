@@ -19,6 +19,10 @@ export const Title = styled.h1`
   font-weight: 800;
   color: ${brandColors.chocolate};
   margin-bottom: 1.25rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Layout = styled.div`
@@ -45,12 +49,22 @@ export const Card = styled.section`
   border-radius: ${radii.lg};
   border: 1px solid ${brandColors.tan};
   background: ${brandColors.white};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 20px var(--color-shadow);
+  }
 `;
 
 export const CardTitle = styled.h2`
   font-size: ${fontSizes.md};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Row = styled.div`
@@ -69,6 +83,10 @@ export const Field = styled.label`
   font-size: ${fontSizes.xs};
   font-weight: 700;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Input = styled.input`
@@ -84,6 +102,21 @@ export const Input = styled.input`
   &:focus {
     border-color: ${brandColors.pink500};
     box-shadow: 0 0 0 3px rgba(${brandRgb.pink}, 0.2);
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+    }
   }
 `;
 
@@ -102,6 +135,21 @@ export const TextArea = styled.textarea`
   &:focus {
     border-color: ${brandColors.pink500};
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    &:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.2);
+    }
+  }
 `;
 
 export const TermsRow = styled.label`
@@ -112,6 +160,10 @@ export const TermsRow = styled.label`
   font-weight: 600;
   color: ${brandColors.gray600};
   cursor: pointer;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Checkbox = styled.input`
@@ -138,7 +190,13 @@ export const Summary = styled.aside`
 
   ${media.lg} {
     position: sticky;
-    top: 10rem;
+    top: 5.5rem;
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 30px var(--color-shadow-strong);
   }
 `;
 
@@ -150,26 +208,46 @@ export const SummaryLine = styled.div`
   font-size: ${fontSizes.sm};
   font-weight: 600;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const SummaryStrong = styled(SummaryLine)`
   font-size: ${fontSizes.md};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const PayButton = styled.button`
-  padding: 0.875rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
   border: none;
   border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 4px 14px var(--button-primary-shadow);
+  transition: transform 0.2s ease, background 0.2s ease;
 
-  &:hover {
-    background: ${brandColors.pink600};
+  &:hover:not(:disabled) {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 `;
 
@@ -178,6 +256,10 @@ export const PrivacyNote = styled.p`
   font-weight: 500;
   line-height: 1.6;
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const Success = styled.div`
@@ -189,6 +271,11 @@ export const Success = styled.div`
   border-radius: ${radii.xl};
   border: 1px solid ${brandColors.tan};
   background: ${brandColors.pink50};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
 `;
 
 export const SuccessTitle = styled.h1`
@@ -196,6 +283,10 @@ export const SuccessTitle = styled.h1`
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const SuccessText = styled.p`
@@ -203,6 +294,10 @@ export const SuccessText = styled.p`
   font-size: ${fontSizes.sm};
   font-weight: 500;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const BookingId = styled.span`
@@ -214,6 +309,12 @@ export const BookingId = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 800;
   letter-spacing: 0.08em;
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
 `;
 
 export const SuccessLink = styled(Link)`
@@ -246,10 +347,22 @@ export const ConfirmRow = styled.div`
     color: ${brandColors.chocolate};
     font-weight: 600;
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+
+    > span:last-child {
+      color: var(--color-text);
+    }
+  }
 `;
 
 export const ConfirmTotal = styled.span`
   font-size: ${fontSizes.md};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;

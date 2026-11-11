@@ -33,7 +33,7 @@ export const HeaderEyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const HeaderTitle = styled.h1`
@@ -43,6 +43,10 @@ export const HeaderTitle = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const HeaderSubtitle = styled.p`
@@ -51,6 +55,10 @@ export const HeaderSubtitle = styled.p`
   color: #64748b;
   max-width: 32rem;
   line-height: 1.5;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const HeaderActions = styled.div`
@@ -105,6 +113,10 @@ export const StatusPillGroup = styled.div`
   border-radius: 8px;
   flex-wrap: nowrap;
   flex-shrink: 0;
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+  }
 `;
 
 export const StatusFilterBtn = styled.button<{ $active: boolean }>`
@@ -129,12 +141,27 @@ export const StatusFilterBtn = styled.button<{ $active: boolean }>`
     padding: 0.3rem 0.5rem;
     font-size: 0.7rem;
   }
+
+  [data-theme='dark'] & {
+    background: ${({ $active }) =>
+      $active ? 'var(--color-surface)' : 'transparent'};
+    color: ${({ $active }) =>
+      $active ? 'var(--color-text)' : 'var(--color-text-secondary)'};
+
+    &:hover {
+      color: var(--color-text);
+    }
+  }
 `;
 
 export const CountText = styled.span`
   font-size: ${fontSizes.xs};
   color: #64748b;
   font-weight: 500;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const ServiceTableWrap = styled.div`
@@ -143,6 +170,11 @@ export const ServiceTableWrap = styled.div`
   border-radius: 12px;
   overflow-x: auto;
   max-width: 100%;
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
 `;
 
 export const ServiceRow = styled.div`
@@ -162,6 +194,14 @@ export const ServiceRow = styled.div`
 
   &:hover {
     background: #f8fafc;
+  }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+
+    &:hover {
+      background: var(--color-bg-alt);
+    }
   }
 
   @media (max-width: 1100px) {
@@ -201,6 +241,12 @@ export const ServiceTableHeader = styled.div`
     white-space: nowrap;
   }
 
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    border-bottom-color: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
   @media (max-width: 1100px) {
     grid-template-columns: 56px 2fr 1.2fr 1.5fr 1fr 40px;
     .hide-tablet {
@@ -230,6 +276,11 @@ export const Thumbnail = styled.div`
     height: 100%;
     object-fit: cover;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    color: var(--color-text-muted);
+  }
 `;
 
 export const ServiceInfo = styled.div`
@@ -246,6 +297,10 @@ export const ServiceTitleText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const ServiceSubtext = styled.span`
@@ -254,6 +309,10 @@ export const ServiceSubtext = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const CategoryTag = styled.span`
@@ -265,6 +324,11 @@ export const CategoryTag = styled.span`
   font-size: 0.72rem;
   font-weight: 600;
   width: fit-content;
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+  }
 `;
 
 export const PriceBlock = styled.div`
@@ -277,6 +341,10 @@ export const PriceMain = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const PriceCustomer = styled.span`
@@ -291,6 +359,10 @@ export const AreaText = styled.span`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const StatusIndicator = styled.span<{ $status: string }>`
@@ -308,6 +380,15 @@ export const StatusIndicator = styled.span<{ $status: string }>`
       ? brandColors.danger500
       : brandColors.gray600};
 
+  [data-theme='dark'] & {
+    color: ${({ $status }) =>
+      $status === 'PUBLISHED'
+        ? '#34d399'
+        : $status === 'ARCHIVED'
+        ? '#f87171'
+        : 'var(--color-text-secondary)'};
+  }
+
   &::before {
     content: '';
     width: 6px;
@@ -320,6 +401,10 @@ export const StatusIndicator = styled.span<{ $status: string }>`
 export const DateText = styled.span`
   font-size: ${fontSizes.xs};
   color: #94a3b8;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const ActionCell = styled.div`
@@ -340,6 +425,10 @@ export const ActionCell = styled.div`
       justify-content: center;
       border-radius: 8px;
       background: #f1f5f9;
+
+      [data-theme='dark'] & {
+        background: var(--color-surface-elevated);
+      }
     }
   }
 `;
@@ -369,6 +458,19 @@ export const EmptyWorkspace = styled.div`
     color: #64748b;
     line-height: 1.5;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+
+    h3 {
+      color: var(--color-text);
+    }
+
+    p {
+      color: var(--color-text-secondary);
+    }
+  }
 `;
 
 export const DrawerSection = styled.div`
@@ -381,6 +483,10 @@ export const DrawerSection = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const DrawerSectionTitle = styled.h4`
@@ -390,6 +496,10 @@ export const DrawerSectionTitle = styled.h4`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const DrawerImageGrid = styled.div`
@@ -405,4 +515,8 @@ export const DrawerThumb = styled.img`
   object-fit: cover;
   border-radius: 6px;
   border: 1px solid #e2e8f0;
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 `;

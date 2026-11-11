@@ -26,16 +26,6 @@ export const BarInner = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
-
-  [data-theme='light'] & {
-    background: #ffffff;
-    border-color: #e2e8f0;
-  }
-
-  [data-theme='dark'] & {
-    background: #131f37;
-    border-color: #1e293b;
-  }
 `;
 
 export const GridButton = styled.button`
@@ -58,7 +48,6 @@ export const GridButton = styled.button`
   }
 
   [data-theme='dark'] & {
-    background: #141a32;
     color: var(--color-primary);
   }
 `;
@@ -109,7 +98,6 @@ export const IconBox = styled.div`
   }
 
   [data-theme='dark'] & {
-    background: #141a32;
     color: var(--color-primary);
   }
 `;

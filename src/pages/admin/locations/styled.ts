@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { brandColors } from '@/theme/brand';
 import { fontFamily, fontSizes } from '@/theme';
 
 const fadeUp = keyframes`
@@ -33,7 +32,7 @@ export const HeaderEyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const HeaderTitle = styled.h1`
@@ -43,6 +42,10 @@ export const HeaderTitle = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const HeaderSubtitle = styled.p`
@@ -51,6 +54,10 @@ export const HeaderSubtitle = styled.p`
   color: #64748b;
   max-width: 38rem;
   line-height: 1.5;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const MetricsRow = styled.div`
@@ -67,6 +74,11 @@ export const MetricTile = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
 `;
 
 export const MetricLabel = styled.span`
@@ -75,6 +87,10 @@ export const MetricLabel = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const MetricValue = styled.span`
@@ -82,6 +98,10 @@ export const MetricValue = styled.span`
   font-size: 1.5rem;
   font-weight: 800;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const ControlsBar = styled.div`
@@ -108,6 +128,15 @@ export const StateItem = styled.div`
   &:hover {
     border-color: #cbd5e1;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+  }
 `;
 
 export const StateHeader = styled.div<{ $expanded: boolean }>`
@@ -123,6 +152,15 @@ export const StateHeader = styled.div<{ $expanded: boolean }>`
   &:hover {
     background: #f8fafc;
   }
+
+  [data-theme='dark'] & {
+    background: ${({ $expanded }) =>
+      $expanded ? 'var(--color-bg-alt)' : 'var(--color-surface)'};
+
+    &:hover {
+      background: var(--color-bg-alt);
+    }
+  }
 `;
 
 export const StateHeaderLeft = styled.div`
@@ -135,6 +173,10 @@ export const StateName = styled.span`
   font-weight: 700;
   font-size: ${fontSizes.sm};
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const StateHeaderRight = styled.div`
@@ -150,6 +192,11 @@ export const CityGrid = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 0.75rem;
   background: #ffffff;
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-top-color: var(--color-border);
+  }
 `;
 
 export const CityCard = styled.div`
@@ -162,6 +209,12 @@ export const CityCard = styled.div`
   border-radius: 8px;
   font-size: ${fontSizes.sm};
   color: #334155;
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
 `;
 
 export const CityName = styled.span`
@@ -175,4 +228,11 @@ export const VendorBadge = styled.span<{ $count: number }>`
   border-radius: 9999px;
   background: ${({ $count }) => ($count > 0 ? '#ecfdf5' : '#f1f5f9')};
   color: ${({ $count }) => ($count > 0 ? '#059669' : '#94a3b8')};
+
+  [data-theme='dark'] & {
+    background: ${({ $count }) =>
+      $count > 0 ? 'rgba(16, 185, 129, 0.2)' : 'rgba(148, 163, 184, 0.2)'};
+    color: ${({ $count }) =>
+      $count > 0 ? '#34d399' : 'var(--color-text-secondary)'};
+  }
 `;
