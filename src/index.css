@@ -9,29 +9,29 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --color-bg: #FAF7F2;
-  --color-bg-alt: #F3ECE2;
-  --color-bg-tint: #FFF3E6;
-  --color-surface: #FFFFFF;
-  --color-surface-elevated: #FFFDFB;
-  --color-surface-warm: #FAF2E8;
-  --color-text: #1C1917;
-  --color-text-secondary: #57534E;
-  --color-text-muted: #8C827A;
-  --color-primary: #EA580C;
-  --color-primary-hover: #C2410C;
-  --color-primary-dark: #9A3412;
-  --color-primary-light: #FFF7ED;
-  --color-primary-subtle: #FFEDD5;
-  --color-accent: #0284C7;
-  --color-accent-soft: #F0F9FF;
-  --color-highlight: #FEF3C7;
-  --color-gold: #F59E0B;
-  --color-gold-light: #FEF3C7;
-  --color-peach: #FED7AA;
-  --color-border: #E8E1D5;
-  --color-border-light: #F2ECE1;
-  --color-border-hover: #EA580C;
+  --color-bg: #faf7f2;
+  --color-bg-alt: #f3ece2;
+  --color-bg-tint: #fff3e6;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #fffdfb;
+  --color-surface-warm: #faf2e8;
+  --color-text: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #8c827a;
+  --color-primary: #ea580c;
+  --color-primary-hover: #c2410c;
+  --color-primary-dark: #9a3412;
+  --color-primary-light: #fff7ed;
+  --color-primary-subtle: #ffedd5;
+  --color-accent: #0284c7;
+  --color-accent-soft: #f0f9ff;
+  --color-highlight: #fef3c7;
+  --color-gold: #f59e0b;
+  --color-gold-light: #fef3c7;
+  --color-peach: #fed7aa;
+  --color-border: #e8e1d5;
+  --color-border-light: #f2ece1;
+  --color-border-hover: #ea580c;
   --color-shadow: rgba(60, 42, 25, 0.06);
   --color-shadow-strong: rgba(60, 42, 25, 0.14);
   --color-shadow-subtle: rgba(60, 42, 25, 0.03);
@@ -39,81 +39,81 @@
   --color-glass: rgba(255, 253, 250, 0.95);
 
   /* Nav & Header */
-  --nav-topbar-bg: #FAF7F2;
-  --nav-topbar-text: #1C1917;
+  --nav-topbar-bg: #faf7f2;
+  --nav-topbar-text: #1c1917;
   --nav-scrolled-bg: rgba(250, 247, 242, 0.96);
-  --nav-scrolled-border: #E8E1D5;
+  --nav-scrolled-border: #e8e1d5;
   --nav-scrolled-shadow: 0 4px 20px rgba(60, 42, 25, 0.07);
 
   /* Footer */
-  --footer-bg: #F3ECE2;
-  --footer-text: #1C1917;
+  --footer-bg: #f3ece2;
+  --footer-text: #1c1917;
   --footer-watermark: rgba(234, 88, 12, 0.05);
 
   /* Solid button - strictly NO gradients */
-  --button-primary-gradient: #EA580C;
+  --button-primary-gradient: #ea580c;
   --button-primary-shadow: rgba(234, 88, 12, 0.25);
 
   /* Theme Toggle */
-  --theme-toggle-border: #E8E1D5;
-  --theme-toggle-bg: #FFFFFF;
-  --theme-toggle-color: #EA580C;
-  --theme-toggle-hover-bg: #FFF7ED;
+  --theme-toggle-border: #e8e1d5;
+  --theme-toggle-bg: #ffffff;
+  --theme-toggle-color: #ea580c;
+  --theme-toggle-hover-bg: #fff7ed;
   --theme-toggle-shadow: rgba(60, 42, 25, 0.08);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --color-bg: #090D16;
-  --color-bg-alt: #0E1424;
-  --color-bg-tint: #141C30;
-  --color-surface: #121A2B;
-  --color-surface-elevated: #1A253D;
-  --color-surface-warm: #1E2B44;
-  --color-text: #F8FAFC;
-  --color-text-secondary: #CBD5E1;
-  --color-text-muted: #8896AB;
-  --color-primary: #F97316;
-  --color-primary-hover: #EA580C;
-  --color-primary-dark: #C2410C;
-  --color-primary-light: #2C150A;
-  --color-primary-subtle: #2C150A;
-  --color-accent: #38BDF8;
-  --color-accent-soft: #082F49;
-  --color-highlight: #1A253D;
-  --color-gold: #F59E0B;
-  --color-gold-light: #451A03;
-  --color-peach: #FDBA74;
-  --color-border: #232F47;
+  --color-bg: #090d16;
+  --color-bg-alt: #0e1424;
+  --color-bg-tint: #141c30;
+  --color-surface: #121a2b;
+  --color-surface-elevated: #1a253d;
+  --color-surface-warm: #1e2b44;
+  --color-text: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #8896ab;
+  --color-primary: #f97316;
+  --color-primary-hover: #ea580c;
+  --color-primary-dark: #c2410c;
+  --color-primary-light: #2c150a;
+  --color-primary-subtle: #2c150a;
+  --color-accent: #38bdf8;
+  --color-accent-soft: #082f49;
+  --color-highlight: #1a253d;
+  --color-gold: #f59e0b;
+  --color-gold-light: #451a03;
+  --color-peach: #fdba74;
+  --color-border: #232f47;
   --color-border-light: #162032;
-  --color-border-hover: #F97316;
+  --color-border-hover: #f97316;
   --color-shadow: rgba(0, 0, 0, 0.45);
   --color-shadow-strong: rgba(0, 0, 0, 0.7);
   --color-shadow-subtle: rgba(0, 0, 0, 0.25);
   --color-overlay: rgba(4, 7, 14, 0.85);
-  --color-glass: #121A2B;
+  --color-glass: #121a2b;
 
   /* Nav & Header */
-  --nav-topbar-bg: #090D16;
-  --nav-topbar-text: #F8FAFC;
+  --nav-topbar-bg: #090d16;
+  --nav-topbar-text: #f8fafc;
   --nav-scrolled-bg: rgba(9, 13, 22, 0.96);
-  --nav-scrolled-border: #232F47;
+  --nav-scrolled-border: #232f47;
   --nav-scrolled-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
 
   /* Footer */
   --footer-bg: #060910;
-  --footer-text: #F8FAFC;
+  --footer-text: #f8fafc;
   --footer-watermark: rgba(249, 115, 22, 0.04);
 
   /* Solid button - strictly NO gradients */
-  --button-primary-gradient: #F97316;
+  --button-primary-gradient: #f97316;
   --button-primary-shadow: rgba(249, 115, 22, 0.3);
 
   /* Theme Toggle */
-  --theme-toggle-border: #232F47;
-  --theme-toggle-bg: #121A2B;
-  --theme-toggle-color: #F97316;
-  --theme-toggle-hover-bg: #1A253D;
+  --theme-toggle-border: #232f47;
+  --theme-toggle-bg: #121a2b;
+  --theme-toggle-color: #f97316;
+  --theme-toggle-hover-bg: #1a253d;
   --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
 }
 

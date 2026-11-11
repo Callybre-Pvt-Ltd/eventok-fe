@@ -91,7 +91,8 @@ export const Thumb = styled.button<{ $active: boolean }>`
   overflow: hidden;
   border-radius: ${radii.md};
   border: 2px solid
-    ${({ $active }) => ($active ? 'var(--color-primary)' : 'var(--color-border)')};
+    ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
   background: var(--color-surface);
   cursor: pointer;
   transition: border-color 0.2s ease, transform 0.2s ease;

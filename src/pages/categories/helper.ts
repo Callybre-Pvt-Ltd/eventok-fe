@@ -23,7 +23,7 @@ const CATEGORY_PHOTOS: Record<string, string> = {
   'bride-makeup': IMG('1522337360788-8b13dee7a37e'), // Editorial bridal cosmetics & styling
   'bridal-entry': IMG('1544161515-4ab6ce6db874'), // Flowing drape floral entry path
   'entrance-welcome': IMG('1465495976277-4387d4b0b4c6'), // Grand entrance floral archway
-  'venues': IMG('1529636798458-92182e662485'), // Luxury banquet hall & fine dining setting
+  venues: IMG('1529636798458-92182e662485'), // Luxury banquet hall & fine dining setting
 
   // Birthdays & Celebrations
   'birthday-decoration': IMG('1530103862676-de8c9debad1d'), // Floating balloons with warm bokeh lights

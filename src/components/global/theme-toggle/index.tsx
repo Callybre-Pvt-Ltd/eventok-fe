@@ -33,7 +33,8 @@ const ToggleButton = styled.button<{
     border-color: var(--color-primary);
     background: var(--theme-toggle-hover-bg, var(--color-primary-light));
     color: var(--color-primary);
-    box-shadow: 0 4px 14px var(--theme-toggle-shadow, var(--color-shadow-strong));
+    box-shadow: 0 4px 14px
+      var(--theme-toggle-shadow, var(--color-shadow-strong));
   }
 
   &:focus-visible {

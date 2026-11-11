@@ -47,8 +47,7 @@ export const storefront = {
 
   recentCelebrations: 'HANDPICKED FOR YOUR OCCASIONS',
   trendingTitle: 'Trendiest Decorations',
-  trendingSubtitle:
-    'Loved by customers across every celebration this month',
+  trendingSubtitle: 'Loved by customers across every celebration this month',
 
   venuesEyebrow: 'Celebrate differently',
   venuesTitle: 'Select cafes & venues for EventOK',

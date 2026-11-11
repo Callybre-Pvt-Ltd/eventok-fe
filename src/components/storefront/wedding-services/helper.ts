@@ -88,7 +88,9 @@ export function useWeddingServices() {
     const matched = categories.find(
       cat =>
         cat.slug === curated.slug ||
-        cat.name.toLowerCase().includes(curated.name.toLowerCase().split(' ')[0]),
+        cat.name
+          .toLowerCase()
+          .includes(curated.name.toLowerCase().split(' ')[0]),
     );
     return {
       id: matched?.id || curated.id,
