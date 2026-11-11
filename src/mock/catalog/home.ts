@@ -11,12 +11,12 @@ const IMG = (id: string) =>
 export const mockHeroSlides: HeroSlide[] = [
   {
     id: 'hero-1',
-    eyebrow: 'We plan. You celebrate.',
+    eyebrow: 'We design. You celebrate.',
     titleLead: 'Perfect Events,',
     titleAccent: 'Beautiful',
     titleTrail: 'Memories',
     subtitle:
-      'Book verified decorators, photographers and caterers for your dream wedding and reception.',
+      'Browse decoration categories and book services created by verified vendors.',
     image: IMG('1519741497674-611481863552'),
     imageLight: IMG('1519741497674-611481863552'),
     imageDark: IMG('1511285560929-80b456fea0bc'),

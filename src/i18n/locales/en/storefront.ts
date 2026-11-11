@@ -4,7 +4,7 @@ export const storefront = {
   appBannerCta: 'Install',
   appBannerDismiss: 'Dismiss app banner',
 
-  setLocation: 'Dehradun',
+  setLocation: 'Location',
   searchPlaceholder: "Search for '{{term}}'",
   searchSubmit: 'Search services',
   voiceSearch: 'Search by voice',

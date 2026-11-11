@@ -1,4 +1,5 @@
 import { photography } from '@/design-system/tokens/photography';
+import { mockCatalogServices } from '@/mock/catalog/services';
 import {
   DEFAULT_PAGE_SIZE,
   marketplaceService,
@@ -150,6 +151,27 @@ export const catalogService = {
         };
       });
 
+      if (items.length === 0) {
+        items = mockCatalogServices;
+        if (filters.categorySlug) {
+          items = items.filter(
+            item =>
+              item.categorySlug === filters.categorySlug ||
+              item.tags.some(t =>
+                t.toLowerCase().includes(filters.categorySlug!.toLowerCase()),
+              ),
+          );
+        }
+        if (filters.search) {
+          const q = filters.search.toLowerCase();
+          items = items.filter(
+            item =>
+              item.title.toLowerCase().includes(q) ||
+              item.description.toLowerCase().includes(q),
+          );
+        }
+      }
+
       if (filters.eventType && filters.eventType !== 'all') {
         items = items.filter(item => item.eventType === filters.eventType);
       }
@@ -164,8 +186,12 @@ export const catalogService = {
 
   async getBySlug(slug: string): Promise<ServiceResponse<CatalogService>> {
     return wrap(async () => {
+      const mock = mockCatalogServices.find(
+        s => s.slug === slug || s.id === slug,
+      );
       const res = await marketplaceService.getService(slug);
       if (res.error || !res.data) {
+        if (mock) return mock;
         throw new Error(res.error ?? 'Service not found');
       }
       const d = res.data;
@@ -226,16 +252,16 @@ export const catalogService = {
       data: [
         {
           id: 'hero-1',
-          eyebrow: 'We plan. You celebrate.',
+          eyebrow: 'We design. You celebrate.',
           titleLead: 'Perfect Events,',
           titleAccent: 'Beautiful',
           titleTrail: 'Memories',
           subtitle:
-            'Book verified decorators, photographers and caterers for your dream wedding and reception.',
+            'Browse decoration categories and book services created by verified vendors.',
           image: photography.hero.wedding,
           imageLight: photography.hero.weddingLight,
           imageDark: photography.hero.weddingDark,
-          objectPosition: '75% 35%',
+          objectPosition: 'center 45%',
           ctaHref: '/shop?event=wedding',
         },
         {
@@ -249,7 +275,7 @@ export const catalogService = {
           image: photography.hero.venue,
           imageLight: photography.hero.venueLight,
           imageDark: photography.hero.venueDark,
-          objectPosition: '70% 40%',
+          objectPosition: 'center 40%',
           ctaHref: '/shop?category=venues',
         },
         {
@@ -263,7 +289,7 @@ export const catalogService = {
           image: photography.hero.birthday,
           imageLight: photography.hero.birthdayLight,
           imageDark: photography.hero.birthdayDark,
-          objectPosition: '75% 30%',
+          objectPosition: 'center 35%',
           ctaHref: '/shop?event=birthday',
         },
         {
@@ -277,7 +303,7 @@ export const catalogService = {
           image: photography.hero.corporate,
           imageLight: photography.hero.corporateLight,
           imageDark: photography.hero.corporateDark,
-          objectPosition: '75% 35%',
+          objectPosition: 'center 40%',
           ctaHref: '/shop?event=corporate',
         },
       ],

@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { catalogService } from '@/services';
 import type { HeroSlide } from '@/types/catalog';
 
-const ROTATE_MS = 6000;
+const ROTATE_MS = 3200;
 
 export function useHeroCarousel() {
   const { data } = useQuery({
@@ -23,11 +23,17 @@ export function useHeroCarousel() {
     );
   }, [slides.length]);
 
+  const goTo = useCallback((targetIndex: number) => {
+    setIndex(targetIndex);
+  }, []);
+
   useEffect(() => {
     if (slides.length < 2) return;
-    const id = window.setInterval(next, ROTATE_MS);
+    const id = window.setInterval(() => {
+      setIndex(prev => (prev + 1) % slides.length);
+    }, ROTATE_MS);
     return () => window.clearInterval(id);
-  }, [next, slides.length]);
+  }, [index, slides.length]);
 
-  return { slides, index, setIndex, next, prev };
+  return { slides, index, setIndex: goTo, next, prev };
 }

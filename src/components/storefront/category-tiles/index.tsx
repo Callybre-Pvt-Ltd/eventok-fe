@@ -5,15 +5,18 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from '@/components/storefront/shared/styled';
-import { categoryIcon } from '@/utils/storefront/icons';
+import { getCategoryCount, getCategoryPhoto } from '@/pages/categories/helper';
 import { useCategoryTiles } from './helper';
 import {
   Grid,
   HeaderWrap,
-  IconCircle,
   Tile,
+  TileBody,
+  TileImage,
+  TileMedia,
   TileMeta,
   TileName,
+  TileOverlay,
 } from './styled';
 
 interface CategoryTilesProps {
@@ -39,18 +42,26 @@ export function CategoryTiles({
         </HeaderWrap>
         <Grid>
           {categories.map(category => {
-            const Icon = categoryIcon(category.icon);
+            const photo = getCategoryPhoto(category.slug);
+            const count =
+              category.serviceCount > 0
+                ? category.serviceCount
+                : getCategoryCount(category.slug);
+
             return (
               <Tile key={category.id} to={`${hrefPrefix}/${category.slug}`}>
-                <IconCircle>
-                  <Icon size={22} />
-                </IconCircle>
-                <TileName>{category.name}</TileName>
-                <TileMeta>
-                  {t('storefront.builderServicesAvailable', {
-                    count: category.serviceCount,
-                  })}
-                </TileMeta>
+                <TileMedia>
+                  <TileImage src={photo} alt={category.name} loading="lazy" />
+                  <TileOverlay />
+                </TileMedia>
+                <TileBody>
+                  <TileName>{category.name}</TileName>
+                  <TileMeta>
+                    {t('storefront.builderServicesAvailable', {
+                      count,
+                    })}
+                  </TileMeta>
+                </TileBody>
               </Tile>
             );
           })}
