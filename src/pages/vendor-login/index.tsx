@@ -15,7 +15,8 @@ const Page = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background: ${brandColors.pink100};
+  background: var(--color-bg-alt);
+  color: var(--color-text);
   position: relative;
 
   ${media.belowMd} {
@@ -49,6 +50,12 @@ const Card = styled.div`
     grid-template-columns: 1fr;
     max-width: 440px;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
 `;
 
 const Left = styled.aside`
@@ -58,6 +65,11 @@ const Left = styled.aside`
 
   @media (max-width: 900px) {
     display: none;
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    color: var(--color-text);
   }
 `;
 
@@ -141,6 +153,10 @@ const Right = styled.div`
   ${media.belowMd} {
     padding: 1.15rem 1rem 1.5rem;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+  }
 `;
 
 const Title = styled.h2`
@@ -149,12 +165,20 @@ const Title = styled.h2`
   font-size: 1.5rem;
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 const Sub = styled.p`
   margin: 0 0 1.25rem;
   font-size: 0.875rem;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 const Toggle = styled.div`
@@ -165,6 +189,10 @@ const Toggle = styled.div`
   margin-bottom: 1.25rem;
   border-radius: 9999px;
   background: ${brandColors.pink50};
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+  }
 `;
 
 const ToggleBtn = styled.button<{ $active?: boolean }>`
@@ -181,6 +209,15 @@ const ToggleBtn = styled.button<{ $active?: boolean }>`
     $active ? brandColors.white : brandColors.gray600};
   box-shadow: ${({ $active }) =>
     $active ? '0 2px 8px rgba(232, 0, 111, 0.28)' : 'none'};
+
+  [data-theme='dark'] & {
+    color: ${({ $active }) =>
+      $active ? '#ffffff' : 'var(--color-text-secondary)'};
+    background: ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'transparent'};
+    box-shadow: ${({ $active }) =>
+      $active ? '0 2px 8px rgba(139, 92, 246, 0.35)' : 'none'};
+  }
 `;
 
 const Field = styled.label`
@@ -211,6 +248,25 @@ const Field = styled.label`
     outline: 2px solid rgba(232, 0, 111, 0.35);
     border-color: ${brandColors.pink500};
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+
+    input {
+      background: var(--color-surface-elevated);
+      border-color: var(--color-border);
+      color: var(--color-text);
+
+      &::placeholder {
+        color: var(--color-text-muted);
+      }
+
+      &:focus {
+        outline: 2px solid rgba(139, 92, 246, 0.35);
+        border-color: var(--color-primary);
+      }
+    }
+  }
 `;
 
 const PasswordWrap = styled.div`
@@ -231,6 +287,10 @@ const PasswordWrap = styled.div`
     color: ${brandColors.gray600};
     cursor: pointer;
     display: inline-flex;
+
+    [data-theme='dark'] & {
+      color: var(--color-text-secondary);
+    }
   }
 `;
 
@@ -280,6 +340,14 @@ const Foot = styled.p`
     font-weight: 700;
     text-decoration: none;
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+
+    a {
+      color: var(--color-primary);
+    }
+  }
 `;
 
 const ErrorText = styled.p`
@@ -296,6 +364,11 @@ const InfoCallout = styled.p`
   font-size: 0.8125rem;
   line-height: 1.45;
   color: ${brandColors.pink600};
+
+  [data-theme='dark'] & {
+    background: var(--color-primary-light);
+    color: var(--color-primary);
+  }
 `;
 
 const GoogleBtn = styled.button`
@@ -323,6 +396,16 @@ const GoogleBtn = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+
+    &:hover:not(:disabled) {
+      border-color: var(--color-primary);
+    }
+  }
 `;
 
 const OrRow = styled.div`
@@ -336,11 +419,19 @@ const OrRow = styled.div`
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 const OrLine = styled.span`
   height: 1px;
   background: ${brandColors.tan};
+
+  [data-theme='dark'] & {
+    background: var(--color-border);
+  }
 `;
 
 export default function VendorLoginPage() {

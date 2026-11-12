@@ -1,40 +1,29 @@
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { fontFamily, fontSizes, media, radii } from '@/theme';
-
-const floatSparkle = keyframes`
-  0%, 100% {
-    transform: translateY(0) scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: translateY(-4px) scale(1.1);
-    opacity: 1;
-  }
-`;
 
 export const Panel = styled.div`
   display: grid;
   gap: 2rem;
   align-items: center;
   padding: 2.5rem 1.5rem;
-  border-radius: ${radii.xxl};
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  background: linear-gradient(135deg, #6366f1 0%, #7c3aed 50%, #8b5cf6 100%);
-  color: #ffffff;
-  box-shadow: 0 20px 50px -12px rgba(124, 58, 237, 0.38);
+  border-radius: ${radii.xl};
+  border: 1px solid #fed7aa;
+  background: #ffffff;
+  color: var(--color-text);
+  box-shadow: 0 4px 24px rgba(234, 88, 12, 0.08);
   position: relative;
   overflow: hidden;
 
   [data-theme='light'] & {
-    background: linear-gradient(135deg, #6366f1 0%, #7c3aed 52%, #8b5cf6 100%);
-    border-color: rgba(255, 255, 255, 0.3);
-    box-shadow: 0 20px 50px -10px rgba(124, 58, 237, 0.38);
+    background: #ffffff;
+    border-color: #fed7aa;
+    box-shadow: 0 8px 30px rgba(60, 42, 25, 0.08);
   }
 
   [data-theme='dark'] & {
-    background: linear-gradient(135deg, #1e1b4b 0%, #2e1065 50%, #3b0764 100%);
-    border-color: rgba(167, 139, 250, 0.3);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   }
 
   ${media.md} {
@@ -48,17 +37,7 @@ export const Panel = styled.div`
 `;
 
 export const SparklesWrap = styled.div`
-  position: absolute;
-  top: 1.25rem;
-  right: 1.5rem;
-  pointer-events: none;
-  display: flex;
-  gap: 0.75rem;
-  animation: ${floatSparkle} 4s ease-in-out infinite;
-
-  ${media.belowMd} {
-    display: none;
-  }
+  display: none;
 `;
 
 export const Copy = styled.div`
@@ -72,14 +51,13 @@ export const Copy = styled.div`
 export const Pill = styled.span`
   padding: 0.35rem 0.95rem;
   border-radius: ${radii.full};
-  background: rgba(255, 255, 255, 0.22);
-  backdrop-filter: blur(8px);
-  color: #ffffff;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   font-size: 0.6875rem;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: 1px solid rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(234, 88, 12, 0.2);
 `;
 
 export const Title = styled.h2`
@@ -87,13 +65,13 @@ export const Title = styled.h2`
   font-size: clamp(1.75rem, 3.5vw, 2.5rem);
   font-weight: 800;
   line-height: 1.15;
-  color: #ffffff;
+  color: var(--color-text);
 `;
 
 export const Text = styled.p`
   font-size: ${fontSizes.md};
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--color-text-secondary);
   line-height: 1.6;
   max-width: 34rem;
 `;
@@ -101,22 +79,21 @@ export const Text = styled.p`
 export const Chips = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.625rem;
+  gap: 1.25rem;
   margin-top: 0.5rem;
 `;
 
 export const Chip = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.4rem 0.85rem;
-  border-radius: ${radii.full};
-  background: rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  font-size: ${fontSizes.xs};
+  gap: 0.5rem;
+  font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: #ffffff;
+  color: var(--color-text);
+
+  svg {
+    color: var(--color-primary);
+  }
 `;
 
 export const CodeCard = styled.div`
@@ -124,17 +101,20 @@ export const CodeCard = styled.div`
   gap: 0.875rem;
   padding: 1.75rem;
   border-radius: ${radii.xl};
-  background: #ffffff;
-  color: #0f172a;
-  border: 1px solid rgba(226, 232, 240, 0.85);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
   position: relative;
   z-index: 2;
 
+  [data-theme='light'] & {
+    background: #ffffff;
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 16px 40px rgba(60, 42, 25, 0.1);
+  }
+
   [data-theme='dark'] & {
-    background: #141a32;
+    background: var(--color-surface-elevated);
     color: #ffffff;
-    border-color: rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--color-border);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
   }
 `;
@@ -174,7 +154,7 @@ export const CopyButton = styled.button`
   padding: 0.75rem 1.25rem;
   border: none;
   border-radius: ${radii.md};
-  background: var(--button-primary-gradient);
+  background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
@@ -223,7 +203,7 @@ export const ReferButton = styled.button`
   padding: 0.85rem 1.25rem;
   border: none;
   border-radius: ${radii.md};
-  background: var(--button-primary-gradient);
+  background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;

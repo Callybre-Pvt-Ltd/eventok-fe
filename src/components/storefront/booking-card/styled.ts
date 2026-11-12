@@ -14,7 +14,13 @@ export const Card = styled.aside`
 
   ${media.lg} {
     position: sticky;
-    top: 10rem;
+    top: 5.5rem;
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: 0 8px 30px var(--color-shadow-strong);
   }
 `;
 
@@ -46,6 +52,13 @@ export const Option = styled.button<{ $active: boolean }>`
   background: ${({ $active }) =>
     $active ? brandColors.pink100 : brandColors.white};
   cursor: pointer;
+
+  [data-theme='dark'] & {
+    background: ${({ $active }) =>
+      $active ? 'var(--color-primary-light)' : 'var(--color-surface)'};
+    border-color: ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
+  }
 `;
 
 export const Radio = styled.span<{ $active: boolean }>`
@@ -59,6 +72,10 @@ export const Radio = styled.span<{ $active: boolean }>`
   background: ${({ $active }) =>
     $active ? brandColors.pink500 : 'transparent'};
   box-shadow: inset 0 0 0 2px ${brandColors.white};
+
+  [data-theme='dark'] & {
+    box-shadow: inset 0 0 0 2px var(--color-surface);
+  }
 `;
 
 export const OptionText = styled.span`
@@ -70,12 +87,20 @@ export const OptionTitle = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const OptionHint = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 500;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Callout = styled.div`
@@ -84,12 +109,20 @@ export const Callout = styled.div`
   padding: 0.875rem;
   border-radius: ${radii.md};
   background: ${brandColors.pink50};
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+  }
 `;
 
 export const CalloutTitle = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const CalloutText = styled.span`
@@ -97,6 +130,10 @@ export const CalloutText = styled.span`
   font-weight: 500;
   line-height: 1.6;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PrimaryButton = styled.button`
@@ -116,6 +153,11 @@ export const PrimaryButton = styled.button`
 
   &:hover {
     background: ${brandColors.pink600};
+  }
+
+  [data-theme='dark'] & {
+    background: var(--button-primary-gradient);
+    box-shadow: 0 4px 16px var(--button-primary-shadow);
   }
 `;
 
@@ -138,6 +180,17 @@ export const SecondaryButton = styled.button`
     border-color: ${brandColors.pink500};
     color: ${brandColors.pink500};
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+    color: var(--color-text);
+
+    &:hover {
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+  }
 `;
 
 export const WhatsAppButton = styled(SecondaryButton)`
@@ -149,6 +202,18 @@ export const WhatsAppButton = styled(SecondaryButton)`
     color: ${brandColors.success500};
     background: ${brandColors.success50};
   }
+
+  [data-theme='dark'] & {
+    background: transparent;
+    border-color: #10b981;
+    color: #34d399;
+
+    &:hover {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: #10b981;
+      color: #34d399;
+    }
+  }
 `;
 
 export const TrustRow = styled.div`
@@ -157,6 +222,10 @@ export const TrustRow = styled.div`
   grid-template-columns: repeat(3, minmax(0, 1fr));
   padding-top: 0.75rem;
   border-top: 1px solid ${brandColors.tan};
+
+  [data-theme='dark'] & {
+    border-top-color: var(--color-border);
+  }
 `;
 
 export const TrustItem = styled.div`
@@ -167,6 +236,10 @@ export const TrustItem = styled.div`
   font-size: 0.6875rem;
   font-weight: 700;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PartnerNote = styled.p`
@@ -174,4 +247,8 @@ export const PartnerNote = styled.p`
   font-weight: 500;
   line-height: 1.6;
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;

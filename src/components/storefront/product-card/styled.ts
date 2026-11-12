@@ -8,30 +8,40 @@ export const Card = styled.article<{ $width?: string }>`
   width: ${({ $width }) => $width ?? '100%'};
   height: 100%;
   overflow: hidden;
-  border-radius: ${radii.xl};
+  border-radius: ${radii.md};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 4px 14px var(--color-shadow);
-  transition: box-shadow 0.25s ease, transform 0.25s ease,
-    border-color 0.25s ease;
+  box-shadow: 0 1px 4px var(--color-shadow);
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    box-shadow: 0 10px 28px var(--color-shadow-strong);
+    box-shadow: 0 6px 18px var(--color-shadow-strong);
     border-color: var(--color-primary);
     transform: translateY(-2px);
   }
 
   [data-theme='light'] & {
     background: #ffffff;
-    border-color: rgba(226, 232, 240, 0.85);
-    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07),
-      0 2px 8px rgba(0, 0, 0, 0.02);
+    border-color: var(--color-border);
+    box-shadow: 0 2px 10px rgba(60, 42, 25, 0.05);
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(60, 42, 25, 0.12);
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
   }
 
   [data-theme='dark'] & {
-    background: #141a32;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      border-color: var(--color-primary);
+      transform: translateY(-2px);
+    }
   }
 `;
 
@@ -49,7 +59,16 @@ export const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.35s ease;
+  object-position: center 35%;
+  transition: transform 0.35s ease, filter 0.35s ease;
+
+  [data-theme='light'] & {
+    filter: brightness(0.99) contrast(1.03) saturate(1.04);
+  }
+
+  [data-theme='dark'] & {
+    filter: brightness(0.94) contrast(1.06) saturate(1.02);
+  }
 
   ${Card}:hover & {
     transform: scale(1.04);
@@ -72,15 +91,15 @@ export const Ribbon = styled.span`
   position: absolute;
   top: 0.625rem;
   left: 0.625rem;
-  padding: 0.25rem 0.625rem;
-  border-radius: ${radii.full};
-  background: rgba(11, 17, 32, 0.75);
-  backdrop-filter: blur(8px);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: var(--color-primary);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  font-size: 0.625rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 `;
 
 export const NewChip = styled.span`
@@ -167,7 +186,7 @@ export const Price = styled.span`
 export const RatingText = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 700;
-  color: var(--color-text-secondary);
+  color: var(--color-gold);
 `;
 
 export const Strike = styled.span`
@@ -204,6 +223,26 @@ export const OffChip = styled.span`
   }
 `;
 
-export const BookButton = styled.button`
-  display: none;
+export const BookButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  margin-top: 0.5rem;
+  border-radius: ${radii.full};
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: ${fontSizes.xs};
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  text-decoration: none;
+  box-shadow: 0 2px 6px var(--button-primary-shadow);
+  transition: background 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    background: var(--color-primary-hover);
+    transform: translateY(-1px);
+  }
 `;

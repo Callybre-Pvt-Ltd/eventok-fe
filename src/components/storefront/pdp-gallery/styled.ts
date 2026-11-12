@@ -6,15 +6,26 @@ export const Frame = styled.div`
   position: relative;
   overflow: hidden;
   border-radius: ${radii.xl};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.pink50};
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
   aspect-ratio: 4 / 3;
+  box-shadow: 0 4px 20px var(--color-shadow);
 `;
 
 export const Image = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 35%;
+  transition: filter 0.3s ease;
+
+  [data-theme='light'] & {
+    filter: brightness(0.99) contrast(1.03) saturate(1.04);
+  }
+
+  [data-theme='dark'] & {
+    filter: brightness(0.94) contrast(1.06) saturate(1.02);
+  }
 `;
 
 export const EmptyFrame = styled.div`
@@ -23,14 +34,10 @@ export const EmptyFrame = styled.div`
   width: 100%;
   height: 100%;
   min-height: 12rem;
-  color: ${brandColors.gray600};
+  color: var(--color-text-muted);
   font-size: ${fontSizes.sm};
   font-weight: 650;
-  background: linear-gradient(
-    145deg,
-    ${brandColors.pink50} 0%,
-    rgba(${brandRgb.chocolate}, 0.06) 100%
-  );
+  background: var(--color-bg-alt);
 `;
 
 export const BadgeRow = styled.div`
@@ -77,22 +84,30 @@ export const Thumbs = styled.div`
 `;
 
 export const Thumb = styled.button<{ $active: boolean }>`
-  width: 5rem;
-  height: 4rem;
+  width: 5.5rem;
+  height: 4.25rem;
   flex: 0 0 auto;
   padding: 0;
   overflow: hidden;
   border-radius: ${radii.md};
   border: 2px solid
-    ${({ $active }) => ($active ? brandColors.pink500 : brandColors.tan)};
-  background: transparent;
+    ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
+  background: var(--color-surface);
   cursor: pointer;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
 `;
 
 export const ThumbImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 35%;
 `;
 
 export const Chips = styled.div`

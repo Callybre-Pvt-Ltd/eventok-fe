@@ -1,88 +1,97 @@
-/** EventOK brand palette — modern soft gradient theme (lavender, violet, periwinkle, peach) */
+/**
+ * EventOK brand palette — vibrant celebratory orange & clean modern neutrals.
+ * Solid colors only — zero gradients anywhere.
+ * Matches exact UI reference:
+ * - Primary Action: Vibrant EventOK Orange (#EA580C / #F97316)
+ * - Canvas: Pure White (#FFFFFF) & Crisp Light Grey (#F8FAFC)
+ * - Text: High contrast Slate/Charcoal (#0F172A) & Muted (#64748B)
+ * - Borders: Crisp Slate (#E2E8F0)
+ */
 export const brandColors = {
   white: '#FFFFFF',
-  ivory: '#FAFAFE',
-  cream: '#F5F3FF',
-  tan: '#DDD6FE',
-  sand: '#C4B5FD',
-  taupe: '#A78BFA',
-  /** Primary brand (Bright Violet & Deep Violet) */
-  gold: '#7C3AED',
-  brown: '#5B21B6',
-  chocolate: '#0A0D18',
-  offWhite: '#FAFAFE',
-  gray100: '#F5F5FA',
-  gray200: '#E8E8F2',
-  gray400: '#94A3B8',
-  gray600: '#64748B',
-  black: '#070913',
-  charcoal: '#0F1123',
-  /** Violet & Lavender spectrum */
-  violet50: '#F5F3FF',
-  violet100: '#EDE9FE',
-  violet200: '#DDD6FE',
-  violet300: '#C4B5FD',
-  violet400: '#A78BFA',
-  violet500: '#8B5CF6',
-  violet600: '#7C3AED',
-  violet700: '#6D28D9',
-  violet800: '#5B21B6',
-  violet900: '#4C1D95',
-  midnight: '#1E1042',
-  /** Periwinkle & Light Blue */
-  periwinkle: '#818CF8',
-  periwinkleLight: '#E0E7FF',
-  lightBlue: '#93C5FD',
-  lightBlueLight: '#EFF6FF',
-  sky500: '#38BDF8',
-  /** Soft Peach & Warm Pink */
-  peach: '#FDA4AF',
-  peachLight: '#FFF1F2',
-  pinkSoft: '#FBCFE8',
-  rose400: '#FB7185',
-  /** Brand Violet Aliases for legacy tokens */
-  pink500: '#7C3AED',
-  pink600: '#6D28D9',
-  pink400: '#8B5CF6',
-  pink100: '#EDE9FE',
-  pink50: '#F5F3FF',
-  /** Accent Periwinkle / Lavender */
-  accent500: '#6366F1',
-  accent600: '#4F46E5',
-  accent100: '#E0E7FF',
+  ivory: '#FAF7F2',
+  cream: '#F3ECE2',
+  tan: '#E8E1D5',
+  sand: '#D5CBBB',
+  taupe: '#8C827A',
+  gold: '#F59E0B',
+  brown: '#C2410C',
+  chocolate: '#1C1917',
+  offWhite: '#FAF7F2',
+  gray100: '#F5EFE6',
+  gray200: '#E8E1D5',
+  gray400: '#8C827A',
+  gray600: '#57534E',
+  black: '#090D16',
+  charcoal: '#1C1917',
+  /** Vibrant Celebration Orange Spectrum (Primary Brand) */
+  orange50: '#FFF7ED',
+  orange100: '#FFEDD5',
+  orange200: '#FED7AA',
+  orange300: '#FDBA74',
+  orange400: '#FB923C',
+  orange500: '#F97316',
+  orange600: '#EA580C',
+  orange700: '#C2410C',
+  orange800: '#9A3412',
+  orange900: '#7C2D12',
+  midnight: '#090D16',
+  /** Teal / Cyan Accents */
+  teal50: '#F0FDFA',
+  teal100: '#CCFBF1',
+  teal500: '#14B8A6',
+  teal700: '#0F766E',
+  teal800: '#115E59',
+  teal900: '#0369A1',
+  /** Warm Amber / Gold for ratings */
+  amber50: '#FFFBEB',
+  amber100: '#FEF3C7',
+  amber500: '#F59E0B',
+  amber600: '#D97706',
+  amber700: '#B45309',
+  /** Brand Aliases for legacy tokens — map cleanly to Vibrant Orange */
+  pink500: '#EA580C',
+  pink600: '#C2410C',
+  pink400: '#FB923C',
+  pink100: '#FFEDD5',
+  pink50: '#FFF7ED',
+  /** Accent aliases */
+  accent500: '#EA580C',
+  accent600: '#C2410C',
+  accent100: '#FFEDD5',
   /** Ink / Dark Background */
-  ink900: '#0A0D18',
-  ink800: '#0F1123',
-  heroBg: '#0A0D18',
+  ink900: '#0F172A',
+  ink800: '#1E293B',
+  heroBg: '#0F172A',
   /** Semantic */
-  success500: '#10B981',
-  success50: '#ECFDF5',
+  success500: '#16A34A',
+  success50: '#F0FDF4',
   warning500: '#F59E0B',
   danger500: '#EF4444',
-  info500: '#6366F1',
-  info50: '#EEF2FF',
+  info500: '#0284C7',
+  info50: '#F0F9FF',
   /** Legacy aliases */
   sage: '#FFFFFF',
-  green: '#F5F3FF',
-  forest: '#0A0D18',
+  green: '#F0FDF4',
+  forest: '#0F172A',
 } as const;
 
 export const brandRgb = {
   white: '255, 255, 255',
-  ivory: '250, 250, 254',
-  brown: '91, 33, 182',
-  chocolate: '10, 13, 24',
-  black: '7, 9, 19',
-  charcoal: '15, 17, 35',
-  pink: '124, 58, 237',
-  accent: '99, 102, 241',
-  ink: '10, 13, 24',
+  ivory: '255, 255, 255',
+  brown: '194, 65, 12',
+  chocolate: '15, 23, 42',
+  black: '2, 6, 23',
+  charcoal: '15, 23, 42',
+  pink: '234, 88, 12',
+  accent: '234, 88, 12',
+  ink: '15, 23, 42',
   sage: '255, 255, 255',
-  green: '245, 243, 255',
-  forest: '10, 13, 24',
-  lavender: '196, 181, 253',
-  periwinkle: '129, 140, 248',
-  peach: '253, 164, 175',
+  green: '240, 253, 244',
+  forest: '15, 23, 42',
+  lavender: '226, 232, 240',
+  periwinkle: '2, 132, 199',
+  peach: '254, 215, 170',
 } as const;
 
 const {
@@ -97,10 +106,7 @@ const {
   pink100,
   pink50,
   ink900,
-  heroBg,
-  accent100,
 } = brandColors;
-const { pink: pk, ink: ik, accent: ac, lavender: lv, peach: pc } = brandRgb;
 
 export const brandScale = {
   50: pink50,
@@ -108,37 +114,34 @@ export const brandScale = {
   200: tan,
   300: gray400,
   400: brandColors.pink400,
-  500: gold,
-  600: brown,
+  500: brandColors.pink500,
+  600: brandColors.pink600,
   700: chocolate,
   800: ink900,
   900: black,
 } as const;
 
+/**
+ * SOLID COLORS ONLY — All gradients strictly removed per design rules.
+ */
 export const brandGradients = {
-  primary: 'linear-gradient(135deg, #7C3AED 0%, #6366F1 50%, #818CF8 100%)',
-  hero: `linear-gradient(135deg, ${heroBg} 0%, #070913 55%, #141732 100%)`,
-  dusk: ink900,
-  dawn: pink100,
-  warm: `linear-gradient(180deg, ${accent100} 0%, ${white} 100%)`,
-  celebration: `linear-gradient(135deg, ${accent100} 0%, ${white} 100%)`,
-  card: `linear-gradient(180deg, rgba(${ik}, 0) 0%, rgba(${ik}, 0.7) 100%)`,
-  cardDark: `linear-gradient(180deg, rgba(${ik}, 0) 0%, rgba(${ik}, 0.85) 100%)`,
-  photoOverlay: `linear-gradient(105deg, rgba(${ik}, 0.78) 0%, rgba(${ik}, 0.42) 45%, rgba(${ik}, 0.08) 100%)`,
-  photoOverlayLight: `linear-gradient(180deg, rgba(${ik}, 0.08) 0%, rgba(${ik}, 0.55) 100%)`,
-  heroScrim: `linear-gradient(90deg, rgba(${ik}, 0.92) 0%, rgba(${ik}, 0.65) 52%, rgba(${ik}, 0.15) 100%)`,
-  heroGlow: `radial-gradient(65% 85% at 85% 20%, rgba(${pk}, 0.35) 0%, rgba(${ac}, 0.2) 40%, transparent 75%)`,
-  forestRadial: `radial-gradient(ellipse 90% 75% at 50% 20%, ${white} 0%, ${pink100} 65%, ${cream} 100%)`,
-  venueBanner: 'linear-gradient(135deg, #1E1042 0%, #4C1D95 50%, #6D28D9 100%)',
-  referBanner: 'linear-gradient(135deg, #6366F1 0%, #7C3AED 50%, #8B5CF6 100%)',
-  accentGlow: `radial-gradient(60% 80% at 15% 80%, rgba(${ac}, 0.3) 0%, transparent 70%)`,
-  softAmbientOrbs: `
-    radial-gradient(circle at 10% 15%, rgba(${lv}, 0.32) 0%, transparent 45%),
-    radial-gradient(circle at 90% 20%, rgba(147, 197, 253, 0.3) 0%, transparent 42%),
-    radial-gradient(circle at 50% 50%, rgba(${pc}, 0.18) 0%, transparent 40%),
-    radial-gradient(circle at 15% 75%, rgba(${ac}, 0.2) 0%, transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(${lv}, 0.28) 0%, transparent 48%)
-  `,
+  primary: '#EA580C',
+  hero: '#0F172A',
+  dusk: '#0F172A',
+  dawn: '#FFFFFF',
+  warm: '#FFFFFF',
+  celebration: '#FFFFFF',
+  card: 'transparent',
+  cardDark: 'transparent',
+  photoOverlay: 'rgba(15, 23, 42, 0.45)',
+  photoOverlayLight: 'rgba(15, 23, 42, 0.25)',
+  heroScrim: 'rgba(15, 23, 42, 0.55)',
+  heroGlow: 'transparent',
+  forestRadial: '#FFFFFF',
+  venueBanner: '#EA580C',
+  referBanner: '#FFF7ED',
+  accentGlow: 'transparent',
+  softAmbientOrbs: 'transparent',
 } as const;
 
 export const luxuryColors = {
@@ -152,6 +155,6 @@ export const luxuryColors = {
   chocolate,
   textOnDark: white,
   textMutedOnDark: 'rgba(255, 255, 255, 0.75)',
-  glass: 'rgba(255, 255, 255, 0.92)',
-  glassBorder: 'rgba(255, 255, 255, 0.35)',
+  glass: '#FFFFFF',
+  glassBorder: brandColors.tan,
 } as const;

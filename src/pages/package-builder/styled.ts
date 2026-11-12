@@ -17,6 +17,10 @@ export const Title = styled.h1`
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Subtitle = styled.p`
@@ -24,6 +28,10 @@ export const Subtitle = styled.p`
   font-size: ${fontSizes.sm};
   font-weight: 500;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Steps = styled.ol`
@@ -40,14 +48,14 @@ export const StepItem = styled.li<{ $active: boolean }>`
   font-size: ${fontSizes.xs};
   font-weight: 700;
   color: ${({ $active }) =>
-    $active ? brandColors.pink500 : brandColors.gray400};
+    $active ? 'var(--color-primary)' : 'var(--color-text-secondary)'};
 
   &::before {
     content: '';
     height: 4px;
     border-radius: ${radii.full};
     background: ${({ $active }) =>
-      $active ? brandColors.pink500 : brandColors.tan};
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
   }
 `;
 
@@ -66,15 +74,17 @@ export const CategoryTile = styled.button<{ $active: boolean }>`
   gap: 0.25rem;
   padding: 1rem 0.75rem;
   text-align: left;
-  border-radius: ${radii.lg};
+  border-radius: ${radii.md};
   border: 1.5px solid
-    ${({ $active }) => ($active ? brandColors.pink500 : brandColors.tan)};
+    ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
   background: ${({ $active }) =>
-    $active ? brandColors.pink100 : brandColors.white};
+    $active ? 'var(--color-primary-light)' : 'var(--color-surface)'};
   cursor: pointer;
+  transition: all 0.15s ease;
 
   &:hover {
-    border-color: ${brandColors.pink500};
+    border-color: var(--color-primary);
   }
 `;
 
@@ -82,6 +92,10 @@ export const TileName = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const TileMeta = styled.span`
@@ -101,17 +115,24 @@ export const ServiceRow = styled.label<{ $active: boolean }>`
   align-items: center;
   gap: 0.875rem;
   padding: 0.75rem;
-  border-radius: ${radii.lg};
+  border-radius: ${radii.md};
   border: 1.5px solid
-    ${({ $active }) => ($active ? brandColors.pink500 : brandColors.tan)};
-  background: ${brandColors.white};
+    ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
+  background: var(--color-surface);
+  color: var(--color-text);
   cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
 `;
 
 export const Checkbox = styled.input`
   width: 1.125rem;
   height: 1.125rem;
-  accent-color: ${brandColors.pink500};
+  accent-color: var(--color-primary);
 `;
 
 export const RowImage = styled.img`
@@ -124,22 +145,22 @@ export const RowImage = styled.img`
 export const RowTitle = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const RowPrice = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 800;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const ReviewCard = styled.div`
   display: grid;
   gap: 0.75rem;
   padding: 1.25rem;
-  border-radius: ${radii.lg};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
+  border-radius: ${radii.md};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
 `;
 
 export const ReviewRow = styled.div`
@@ -149,7 +170,7 @@ export const ReviewRow = styled.div`
   gap: 1rem;
   font-size: ${fontSizes.sm};
   font-weight: 600;
-  color: ${brandColors.gray600};
+  color: var(--color-text-secondary);
 `;
 
 export const StickyBar = styled.div`
@@ -163,8 +184,8 @@ export const StickyBar = styled.div`
   justify-content: space-between;
   gap: 1rem;
   padding: 0.875rem 1rem;
-  background: ${brandColors.white};
-  border-top: 1px solid ${brandColors.tan};
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
   box-shadow: ${shadows.lg};
 
   ${media.lg} {
@@ -179,14 +200,14 @@ export const TotalBlock = styled.div`
 export const TotalLabel = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 700;
-  color: ${brandColors.gray400};
+  color: var(--color-text-secondary);
 `;
 
 export const TotalValue = styled.span`
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.xl};
   font-weight: 800;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const BarActions = styled.div`
@@ -196,24 +217,35 @@ export const BarActions = styled.div`
 
 export const GhostButton = styled.button`
   padding: 0.75rem 1.25rem;
-  border-radius: ${radii.full};
-  border: 1px solid ${brandColors.tan};
-  background: ${brandColors.white};
+  border-radius: ${radii.md};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
 `;
 
 export const PrimaryButton = styled.button`
   padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  border-radius: ${radii.md};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.92;
+  }
 
   &:disabled {
     opacity: 0.5;

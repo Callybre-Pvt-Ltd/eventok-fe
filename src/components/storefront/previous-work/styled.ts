@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { brandColors, brandGradients, brandRgb } from '@/theme/brand';
 import { fontSizes, media, radii } from '@/theme';
 
 export const Card = styled.article`
@@ -23,7 +22,7 @@ export const Image = styled.img`
 export const Overlay = styled.div`
   position: absolute;
   inset: 0;
-  background: ${brandGradients.cardDark};
+  background: rgba(14, 16, 23, 0.35);
 `;
 
 export const Caption = styled.span`
@@ -33,7 +32,7 @@ export const Caption = styled.span`
   right: 0.875rem;
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.white};
+  color: #ffffff;
 `;
 
 export const Play = styled.button`
@@ -47,11 +46,15 @@ export const Play = styled.button`
   justify-content: center;
   border: none;
   border-radius: ${radii.full};
-  background: rgba(${brandRgb.white}, 0.92);
-  color: ${brandColors.pink500};
+  background: #ffffff;
+  color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+  transition: all 0.2s ease;
 
   &:hover {
-    background: ${brandColors.white};
+    background: var(--color-primary);
+    color: #ffffff;
+    transform: scale(1.08);
   }
 `;

@@ -15,12 +15,14 @@ function StatItem({
   labelKey,
   active,
   palette,
+  variant = 'secondary',
 }: {
   value: number;
   suffix: string;
   labelKey: string;
   active: boolean;
   palette: ReturnType<typeof useTheme>['palette'];
+  variant?: 'primary' | 'secondary';
 }) {
   const { t } = useTranslation();
   const count = useStatCount(value, active);
@@ -28,12 +30,14 @@ function StatItem({
     value % 1 !== 0 ? count.toFixed(1) : Math.round(count).toLocaleString();
 
   return (
-    <StatCard $palette={palette}>
-      <StatValue $palette={palette}>
+    <StatCard $palette={palette} $variant={variant}>
+      <StatValue $palette={palette} $variant={variant}>
         {display}
         {suffix}
       </StatValue>
-      <StatLabel $palette={palette}>{t(labelKey)}</StatLabel>
+      <StatLabel $palette={palette} $variant={variant}>
+        {t(labelKey)}
+      </StatLabel>
     </StatCard>
   );
 }
@@ -41,6 +45,7 @@ function StatItem({
 export function Statistics() {
   const { palette } = useTheme();
   const { ref, active, stats } = useStatistics();
+  const visibleStats = stats.slice(0, 2);
 
   return (
     <Section $palette={palette} ref={ref}>
@@ -52,7 +57,7 @@ export function Statistics() {
           viewport={viewportOnce}
         >
           <Grid>
-            {stats.map(stat => (
+            {visibleStats.map((stat, idx) => (
               <MotionDiv key={stat.key} variants={fadeUp}>
                 <StatItem
                   value={stat.value}
@@ -60,6 +65,7 @@ export function Statistics() {
                   labelKey={stat.labelKey}
                   active={active}
                   palette={palette}
+                  variant={idx === 0 ? 'primary' : 'secondary'}
                 />
               </MotionDiv>
             ))}

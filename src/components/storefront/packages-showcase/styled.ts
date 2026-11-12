@@ -4,15 +4,11 @@ import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Grid = styled.div`
   display: grid;
-  gap: 1.5rem;
-  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1.75rem;
+  grid-template-columns: 1fr;
 
-  ${media.sm} {
+  ${media.md} {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  ${media.lg} {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 `;
 
@@ -21,39 +17,49 @@ export const Card = styled(Link)`
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  border-radius: ${radii.lg};
+  border-radius: ${radii.xl};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 2px 10px var(--color-shadow);
+  box-shadow: 0 4px 16px var(--color-shadow);
   text-decoration: none;
   transition: box-shadow 0.25s ease, transform 0.25s ease,
     border-color 0.25s ease;
 
   &:hover {
-    box-shadow: 0 16px 36px -8px var(--color-shadow-strong);
+    box-shadow: 0 10px 30px var(--color-shadow-strong);
     border-color: var(--color-primary);
     transform: translateY(-3px);
   }
 
-  [data-theme='light'] & {
-    background: #ffffff;
-    border-color: rgba(226, 232, 240, 0.85);
-    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07),
-      0 2px 6px rgba(0, 0, 0, 0.02);
+  ${media.lg} {
+    flex-direction: row;
+    align-items: stretch;
   }
+`;
 
-  [data-theme='dark'] & {
-    background: #141a32;
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+export const ImageWrap = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--color-bg-alt);
+  flex-shrink: 0;
+
+  ${media.lg} {
+    width: 42%;
+    aspect-ratio: auto;
   }
 `;
 
 export const Image = styled.img`
   width: 100%;
-  aspect-ratio: 16 / 10;
+  height: 100%;
   object-fit: cover;
-  background: var(--color-bg-alt);
+  transition: transform 0.4s ease;
+
+  ${Card}:hover & {
+    transform: scale(1.05);
+  }
 `;
 
 export const ImageFallback = styled.div`
@@ -61,12 +67,8 @@ export const ImageFallback = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  aspect-ratio: 16 / 10;
-  background: linear-gradient(
-    135deg,
-    var(--color-primary-light),
-    var(--color-accent-soft)
-  );
+  height: 100%;
+  background: var(--color-bg-alt);
   color: var(--color-primary);
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.xxl};
@@ -77,46 +79,66 @@ export const ImageFallback = styled.div`
 export const Body = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
-  padding: 1.15rem;
-  flex: 1 1 auto;
+  padding: 1.5rem;
+  flex: 1;
 `;
 
 export const VendorLine = styled.span`
   font-size: ${fontSizes.xs};
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-primary);
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  margin-bottom: 0.25rem;
 `;
 
 export const Name = styled.h3`
+  font-family: ${fontFamily.display};
   font-size: ${fontSizes.md};
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-text);
   line-height: 1.35;
+  margin-bottom: 0.5rem;
 `;
 
 export const Description = styled.p`
   font-size: ${fontSizes.xs};
   font-weight: 500;
   color: var(--color-text-secondary);
-  line-height: 1.5;
+  line-height: 1.55;
+  margin-bottom: 0.875rem;
+`;
+
+export const IncludesRow = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 1.25rem;
+`;
+
+export const IncludeTag = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border-radius: ${radii.sm};
+  background: var(--color-bg-alt);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border);
 `;
 
 export const SavingsTag = styled.span`
   align-self: flex-start;
-  padding: 0.2rem 0.55rem;
+  padding: 0.25rem 0.625rem;
   border-radius: ${radii.full};
-  background: rgba(34, 197, 94, 0.15);
-  color: #16a34a;
-  font-size: ${fontSizes.xs};
-  font-weight: 700;
-
-  [data-theme='dark'] & {
-    color: #4ade80;
-    background: rgba(74, 222, 128, 0.2);
-  }
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.03em;
+  margin-bottom: 1rem;
 `;
 
 export const Foot = styled.div`
@@ -125,15 +147,17 @@ export const Foot = styled.div`
   justify-content: space-between;
   gap: 0.75rem;
   margin-top: auto;
-  padding-top: 0.75rem;
-  border-top: 1px solid var(--color-border-light);
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border);
 `;
 
 export const PriceLabel = styled.span`
   display: block;
-  font-size: ${fontSizes.xs};
+  font-size: 0.6875rem;
   font-weight: 600;
   color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 `;
 
 export const Price = styled.span`
@@ -146,23 +170,22 @@ export const Price = styled.span`
 export const GoButton = styled.span`
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
   border-radius: ${radii.full};
-  background: var(--color-primary-light);
-  color: var(--color-primary);
-  transition: transform 0.2s ease, background 0.2s ease;
+  background: var(--color-primary);
+  color: #ffffff;
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  transition: background 0.18s ease;
 
   ${Card}:hover & {
-    transform: translateX(3px);
-    background: var(--color-primary);
-    color: #ffffff;
+    background: var(--color-primary-dark, #c2410c);
   }
 `;
 
 export const ViewAllRow = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 2.5rem;
+  margin-top: 2rem;
 `;

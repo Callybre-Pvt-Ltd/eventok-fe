@@ -31,6 +31,10 @@ export const Title = styled.h1`
   line-height: 1.25;
   color: ${brandColors.chocolate};
   margin-bottom: 1rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const DescriptionCard = styled.section`
@@ -39,6 +43,11 @@ export const DescriptionCard = styled.section`
   border-radius: ${radii.lg};
   border: 1px solid ${brandColors.tan};
   background: ${brandColors.white};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
 `;
 
 export const DescriptionTitle = styled.h2`
@@ -46,6 +55,10 @@ export const DescriptionTitle = styled.h2`
   font-weight: 800;
   color: ${brandColors.chocolate};
   margin-bottom: 0.5rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const DescriptionText = styled.p`
@@ -53,6 +66,10 @@ export const DescriptionText = styled.p`
   font-weight: 500;
   line-height: 1.7;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const RelatedSection = styled.section`
@@ -65,6 +82,10 @@ export const RelatedTitle = styled.h2`
   font-weight: 800;
   color: ${brandColors.chocolate};
   margin-bottom: 1rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const RelatedRail = styled.div`
@@ -102,6 +123,10 @@ export const RelatedLabel = styled.span`
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const RelatedPrice = styled.span`
@@ -119,6 +144,10 @@ export const NotFound = styled.div`
   font-size: ${fontSizes.md};
   font-weight: 700;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const BackLink = styled(Link)`
@@ -139,4 +168,8 @@ export const Loading = styled.div`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;

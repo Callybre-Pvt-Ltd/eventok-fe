@@ -19,6 +19,10 @@ export const Title = styled.h1`
   font-weight: 800;
   color: ${brandColors.chocolate};
   margin-bottom: 1.25rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Layout = styled.div`
@@ -50,6 +54,12 @@ export const LineCard = styled.article`
   ${media.sm} {
     grid-template-columns: 7.5rem 1fr;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 4px 16px var(--color-shadow);
+  }
 `;
 
 export const LineImage = styled.img`
@@ -68,11 +78,11 @@ export const LineBody = styled.div`
 export const LineTitle = styled(Link)`
   font-size: ${fontSizes.md};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   text-decoration: none;
 
   &:hover {
-    color: ${brandColors.pink500};
+    color: var(--color-primary);
   }
 `;
 
@@ -80,6 +90,10 @@ export const LineMeta = styled.span`
   font-size: ${fontSizes.xs};
   font-weight: 600;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const LineFoot = styled.div`
@@ -97,6 +111,11 @@ export const Stepper = styled.div`
   padding: 0.25rem 0.5rem;
   border-radius: ${radii.full};
   border: 1px solid ${brandColors.tan};
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+    background: var(--color-surface-elevated);
+  }
 `;
 
 export const StepButton = styled.button`
@@ -108,12 +127,12 @@ export const StepButton = styled.button`
   border: none;
   border-radius: ${radii.full};
   background: transparent;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   cursor: pointer;
 
   &:hover {
-    background: ${brandColors.pink100};
-    color: ${brandColors.pink500};
+    background: var(--color-primary-light);
+    color: var(--color-primary);
   }
 `;
 
@@ -122,14 +141,14 @@ export const Quantity = styled.span`
   text-align: center;
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const LinePrice = styled.span`
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.lg};
   font-weight: 800;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const RemoveButton = styled.button`
@@ -157,12 +176,22 @@ export const Summary = styled.aside`
     position: sticky;
     top: 10rem;
   }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: 0 8px 30px var(--color-shadow-strong);
+  }
 `;
 
 export const SummaryTitle = styled.h2`
   font-size: ${fontSizes.md};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const SummaryRow = styled.div<{ $strong?: boolean }>`
@@ -174,6 +203,11 @@ export const SummaryRow = styled.div<{ $strong?: boolean }>`
   font-weight: ${({ $strong }) => ($strong ? 800 : 600)};
   color: ${({ $strong }) =>
     $strong ? brandColors.chocolate : brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: ${({ $strong }) =>
+      $strong ? 'var(--color-text)' : 'var(--color-text-secondary)'};
+  }
 `;
 
 export const SaveRow = styled(SummaryRow)`
@@ -197,7 +231,21 @@ export const CouponInput = styled.input`
   outline: none;
 
   &:focus {
-    border-color: ${brandColors.pink500};
+    border-color: var(--color-primary);
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    &:focus {
+      border-color: var(--color-primary);
+    }
   }
 `;
 
@@ -205,11 +253,16 @@ export const CouponButton = styled.button`
   padding: 0.625rem 1rem;
   border: none;
   border-radius: ${radii.md};
-  background: ${brandColors.chocolate};
-  color: ${brandColors.white};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.xs};
   font-weight: 700;
   cursor: pointer;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
 `;
 
 export const CheckoutButton = styled(Link)`
@@ -218,15 +271,17 @@ export const CheckoutButton = styled(Link)`
   justify-content: center;
   gap: 0.5rem;
   padding: 0.875rem 1rem;
-  border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  border-radius: ${radii.md};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.15s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
+    opacity: 0.92;
   }
 `;
 
@@ -238,15 +293,20 @@ export const Empty = styled.div`
   text-align: center;
   font-size: ${fontSizes.md};
   font-weight: 700;
-  color: ${brandColors.gray600};
+  color: var(--color-text-secondary);
 `;
 
 export const EmptyLink = styled(Link)`
   padding: 0.625rem 1.5rem;
-  border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  border-radius: ${radii.md};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
+  transition: opacity 0.15s ease;
+
+  &:hover {
+    opacity: 0.92;
+  }
 `;

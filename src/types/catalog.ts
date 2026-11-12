@@ -66,6 +66,9 @@ export interface HeroSlide {
   titleTrail: string;
   subtitle: string;
   image: string;
+  imageLight?: string;
+  imageDark?: string;
+  objectPosition?: string;
   ctaHref: string;
 }
 

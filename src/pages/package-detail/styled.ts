@@ -19,11 +19,11 @@ export const BackLink = styled(Link)`
   gap: 0.35rem;
   font-size: ${fontSizes.sm};
   font-weight: 600;
-  color: ${brandColors.gray600};
+  color: var(--color-text-secondary);
   text-decoration: none;
 
   &:hover {
-    color: ${brandColors.pink500};
+    color: var(--color-primary);
   }
 `;
 
@@ -60,6 +60,10 @@ export const Title = styled.h1`
   font-weight: 800;
   line-height: 1.15;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const Description = styled.p`
@@ -68,6 +72,10 @@ export const Description = styled.p`
   font-size: ${fontSizes.md};
   line-height: 1.6;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const SectionTitle = styled.h2`
@@ -76,6 +84,10 @@ export const SectionTitle = styled.h2`
   font-size: ${fontSizes.xl};
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const ServiceList = styled.ul`
@@ -89,12 +101,13 @@ export const ServiceCard = styled.li`
   grid-template-columns: 5.5rem minmax(0, 1fr);
   gap: 0.9rem;
   padding: 0.75rem;
-  border: 1px solid ${brandColors.tan};
+  border: 1px solid var(--color-border);
   border-radius: ${radii.md};
-  background: ${brandColors.white};
+  background: var(--color-surface);
+  transition: all 0.15s ease;
 
   &:hover {
-    border-color: ${brandColors.pink500};
+    border-color: var(--color-primary);
   }
 `;
 
@@ -103,7 +116,7 @@ export const ServiceThumb = styled.img`
   aspect-ratio: 1;
   object-fit: cover;
   border-radius: ${radii.sm};
-  background: ${brandColors.gray100};
+  background: var(--color-bg-alt);
 `;
 
 export const ThumbFallback = styled.div`
@@ -113,12 +126,8 @@ export const ThumbFallback = styled.div`
   width: 100%;
   aspect-ratio: 1;
   border-radius: ${radii.sm};
-  background: linear-gradient(
-    135deg,
-    ${brandColors.pink100},
-    ${brandColors.accent100}
-  );
-  color: ${brandColors.pink600};
+  background: var(--color-bg-alt);
+  color: var(--color-primary);
   font-family: ${fontFamily.display};
   font-size: ${fontSizes.lg};
   font-weight: 800;
@@ -134,24 +143,24 @@ export const ServiceBody = styled.div`
 export const ServiceName = styled(Link)`
   font-size: ${fontSizes.md};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
   text-decoration: none;
 
   &:hover {
-    color: ${brandColors.pink500};
+    color: var(--color-primary);
   }
 `;
 
 export const ServiceMeta = styled.span`
   font-size: ${fontSizes.xs};
-  color: ${brandColors.gray600};
+  color: var(--color-text-secondary);
   overflow-wrap: anywhere;
 `;
 
 export const ServicePrice = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: 700;
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const Inclusions = styled.ul`
@@ -165,8 +174,8 @@ export const Inclusions = styled.ul`
 export const InclusionTag = styled.li`
   padding: 0.1rem 0.5rem;
   border-radius: ${radii.full};
-  background: ${brandColors.pink50};
-  color: ${brandColors.pink600};
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   font-size: ${fontSizes.xs};
   font-weight: 600;
 `;
@@ -182,6 +191,12 @@ export const Aside = styled.aside`
   border-radius: ${radii.lg};
   background: ${brandColors.white};
   box-shadow: ${shadows.sm};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: 0 8px 30px var(--color-shadow-strong);
+  }
 `;
 
 export const PriceLabel = styled.span`
@@ -197,6 +212,10 @@ export const PriceValue = styled.span`
   font-size: clamp(1.75rem, 4vw, 2.25rem);
   font-weight: 800;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const PriceRow = styled.div`
@@ -206,6 +225,10 @@ export const PriceRow = styled.div`
   gap: 1rem;
   font-size: ${fontSizes.sm};
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Strike = styled.span`
@@ -226,15 +249,17 @@ export const BookButton = styled.button`
   margin-top: 0.5rem;
   padding: 0.75rem 1.25rem;
   border: none;
-  border-radius: ${radii.full};
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
+  border-radius: ${radii.md};
+  background: var(--color-primary);
+  color: #ffffff;
   font-size: ${fontSizes.md};
   font-weight: 700;
   cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition: opacity 0.15s ease;
 
   &:hover {
-    background: ${brandColors.pink600};
+    opacity: 0.92;
   }
 
   &:disabled {
@@ -248,10 +273,18 @@ export const Note = styled.p`
   font-size: ${fontSizes.xs};
   line-height: 1.5;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const StateWrap = styled.div`
   padding: 3rem 1rem;
   text-align: center;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;

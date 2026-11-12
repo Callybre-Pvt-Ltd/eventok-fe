@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import type { ThemePalette } from '@/theme';
 import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
-import { brandColors, brandRgb } from '@/theme/brand';
+import { brandColors } from '@/theme/brand';
 
 export const PageTitle = styled.h1<{ $palette: ThemePalette }>`
   margin: 0 0 0.35rem;
@@ -19,6 +19,10 @@ export const PageEyebrow = styled.p`
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PageLead = styled.p<{ $palette: ThemePalette }>`
@@ -37,15 +41,19 @@ export const PageHeader = styled.div`
   gap: 1rem;
   margin-bottom: 1.65rem;
   padding-bottom: 1.15rem;
-  border-bottom: 1px solid rgba(${brandRgb.pink}, 0.12);
+  border-bottom: 1px solid var(--color-border);
 `;
 
 export const Card = styled.div<{ $palette: ThemePalette }>`
   background: ${({ $palette }) => $palette.surface};
-  border-radius: 1rem;
-  border: 1px solid ${brandColors.tan};
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
   padding: 1.5rem;
-  box-shadow: 0 8px 24px rgba(${brandRgb.ink}, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 
   ${media.belowMd} {
     padding: 1rem;
@@ -54,7 +62,7 @@ export const Card = styled.div<{ $palette: ThemePalette }>`
 
 export const StatsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
   margin-bottom: 1.5rem;
 
@@ -67,12 +75,11 @@ export const StatCard = styled.div<{ $palette: ThemePalette }>`
   position: relative;
   overflow: hidden;
   background: ${({ $palette }) => $palette.surface};
-  border-radius: 1rem;
-  border: 1px solid rgba(${brandRgb.pink}, 0.12);
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
   padding: 1.25rem 1.5rem;
-  box-shadow: 0 8px 22px rgba(${brandRgb.ink}, 0.04);
-  transition: box-shadow 0.25s ease, transform 0.25s ease,
-    border-color 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, border-color 0.2s ease;
 
   &::before {
     content: '';
@@ -81,16 +88,11 @@ export const StatCard = styled.div<{ $palette: ThemePalette }>`
     left: 0;
     right: 0;
     height: 3px;
-    background: linear-gradient(
-      90deg,
-      ${brandColors.pink500},
-      ${brandColors.accent500}
-    );
+    background: var(--color-primary);
   }
 
   &:hover {
-    box-shadow: 0 14px 28px rgba(${brandRgb.pink}, 0.12);
-    border-color: rgba(${brandRgb.pink}, 0.28);
+    border-color: var(--color-primary);
     transform: translateY(-2px);
   }
 `;
@@ -108,7 +110,7 @@ export const StatValue = styled.p<{ $palette: ThemePalette }>`
   font-family: ${fontFamily.display};
   font-size: clamp(1.25rem, 3vw, ${fontSizes.xxl});
   font-weight: 800;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
   letter-spacing: -0.02em;
   overflow-wrap: anywhere;
 `;
@@ -122,14 +124,17 @@ export const List = styled.div`
 export const ListItem = styled.div<{ $palette: ThemePalette }>`
   padding: 1rem 1.25rem;
   background: ${({ $palette }) => $palette.surface};
-  border-radius: 0.9rem;
-  border: 1px solid ${brandColors.tan};
-  box-shadow: 0 4px 14px rgba(${brandRgb.ink}, 0.03);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  transition: border-color 0.2s ease;
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 
   &:hover {
-    border-color: rgba(${brandRgb.pink}, 0.35);
-    box-shadow: 0 8px 20px rgba(${brandRgb.pink}, 0.08);
+    border-color: var(--color-primary);
   }
 `;
 
@@ -150,9 +155,9 @@ export const ItemMeta = styled.p<{ $palette: ThemePalette }>`
 `;
 
 export const Banner = styled.div<{ $palette: ThemePalette }>`
-  background: ${brandColors.accent100};
-  color: ${brandColors.accent600};
-  border: 1px solid rgba(${brandRgb.accent}, 0.35);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
   padding: 0.85rem 1.1rem;
   border-radius: ${radii.md};
   margin-bottom: 1.5rem;
@@ -180,10 +185,10 @@ export const Messages = styled.div<{ $palette: ThemePalette }>`
   flex-direction: column;
   gap: 0.75rem;
   padding: 1rem;
-  background: ${brandColors.pink50};
+  background: var(--color-bg-alt);
   border-radius: ${radii.lg};
   margin-bottom: 1rem;
-  border: 1px solid rgba(${brandRgb.pink}, 0.12);
+  border: 1px solid var(--color-border);
 `;
 
 export const MessageBubble = styled.div<{
@@ -195,13 +200,12 @@ export const MessageBubble = styled.div<{
   padding: 0.625rem 0.875rem;
   border-radius: ${radii.md};
   background: ${({ $own, $palette }) =>
-    $own ? brandColors.pink500 : $palette.surface};
-  color: ${({ $own, $palette }) => ($own ? brandColors.white : $palette.text)};
+    $own ? 'var(--color-primary)' : $palette.surface};
+  color: ${({ $own, $palette }) => ($own ? '#ffffff' : $palette.text)};
   font-size: ${fontSizes.sm};
   border: 1px solid
-    ${({ $own, $palette }) => ($own ? brandColors.pink600 : $palette.border)};
-  box-shadow: ${({ $own }) =>
-    $own ? `0 6px 16px rgba(${brandRgb.pink}, 0.25)` : shadows.sm};
+    ${({ $own, $palette }) => ($own ? 'var(--color-primary)' : $palette.border)};
+  box-shadow: ${shadows.sm};
 `;
 
 export const ChatInput = styled.div`
@@ -231,6 +235,10 @@ export const FieldLabel = styled.span`
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PendingWrap = styled.div`
@@ -242,13 +250,12 @@ export const PendingIcon = styled.div<{ $palette: ThemePalette }>`
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background: ${brandColors.pink100};
-  color: ${brandColors.pink500};
+  background: var(--color-primary-light);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto 1.5rem;
-  box-shadow: 0 10px 24px rgba(${brandRgb.pink}, 0.18);
 `;
 
 export const Grid = styled.div`
@@ -265,5 +272,5 @@ export const MediaCard = styled.div<{ $palette: ThemePalette; $url: string }>`
   aspect-ratio: 1;
   border-radius: ${radii.md};
   background: url(${({ $url }) => $url}) center/cover;
-  border: 1px solid rgba(${brandRgb.pink}, 0.14);
+  border: 1px solid var(--color-border);
 `;

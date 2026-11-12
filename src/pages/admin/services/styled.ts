@@ -1,5 +1,4 @@
 import styled, { keyframes } from 'styled-components';
-import { brandColors } from '@/theme/brand';
 import { fontFamily, fontSizes } from '@/theme';
 
 const fadeUp = keyframes`
@@ -33,7 +32,7 @@ export const HeaderEyebrow = styled.span`
   font-weight: 800;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const HeaderTitle = styled.h1`
@@ -43,6 +42,10 @@ export const HeaderTitle = styled.h1`
   font-weight: 800;
   letter-spacing: -0.02em;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const HeaderSubtitle = styled.p`
@@ -51,6 +54,10 @@ export const HeaderSubtitle = styled.p`
   color: #64748b;
   max-width: 38rem;
   line-height: 1.5;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const ControlsBar = styled.div`
@@ -79,6 +86,10 @@ export const StatusPillGroup = styled.div`
   padding: 0.25rem;
   border-radius: 8px;
   overflow-x: auto;
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+  }
 `;
 
 export const StatusFilterBtn = styled.button<{ $active: boolean }>`
@@ -97,6 +108,17 @@ export const StatusFilterBtn = styled.button<{ $active: boolean }>`
 
   &:hover {
     color: #0f172a;
+  }
+
+  [data-theme='dark'] & {
+    background: ${({ $active }) =>
+      $active ? 'var(--color-surface)' : 'transparent'};
+    color: ${({ $active }) =>
+      $active ? 'var(--color-text)' : 'var(--color-text-secondary)'};
+
+    &:hover {
+      color: var(--color-text);
+    }
   }
 `;
 
@@ -127,6 +149,26 @@ export const TableWrapper = styled.div`
 
   .ant-table-tbody > tr:hover > td {
     background: #f8fafc;
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+
+    .ant-table-thead > tr > th {
+      background: var(--color-bg-alt);
+      color: var(--color-text-secondary);
+      border-bottom-color: var(--color-border);
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom-color: var(--color-border);
+      color: var(--color-text);
+    }
+
+    .ant-table-tbody > tr:hover > td {
+      background: var(--color-bg-alt);
+    }
   }
 `;
 
@@ -218,11 +260,19 @@ export const ServiceTitleText = styled.span`
   font-weight: 600;
   color: #0f172a;
   font-size: ${fontSizes.sm};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const ServiceSubtext = styled.span`
   font-size: ${fontSizes.xs};
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const DrawerContent = styled.div`
@@ -237,6 +287,10 @@ export const DrawerHeader = styled.div`
   gap: 0.5rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid #f1f5f9;
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const DrawerCategory = styled.span`
@@ -244,7 +298,7 @@ export const DrawerCategory = styled.span`
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
 `;
 
 export const DrawerTitle = styled.h2`
@@ -253,6 +307,10 @@ export const DrawerTitle = styled.h2`
   font-size: 1.35rem;
   font-weight: 800;
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const DrawerDescription = styled.p`
@@ -260,6 +318,10 @@ export const DrawerDescription = styled.p`
   font-size: ${fontSizes.sm};
   color: #475569;
   line-height: 1.6;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const GalleryStrip = styled.div`
@@ -274,6 +336,10 @@ export const GalleryThumb = styled.img`
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 `;
 
 export const SectionBlock = styled.section`
@@ -289,6 +355,10 @@ export const SectionTitle = styled.h3`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PricingBreakdownTable = styled.div`
@@ -298,6 +368,10 @@ export const PricingBreakdownTable = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+  }
 `;
 
 export const PricingRow = styled.div<{ $highlight?: boolean }>`
@@ -314,6 +388,12 @@ export const PricingRow = styled.div<{ $highlight?: boolean }>`
     padding-top: 0.5rem;
     border-top: 1px dashed #cbd5e1;
   `}
+
+  [data-theme='dark'] & {
+    color: ${({ $highlight }) =>
+      $highlight ? 'var(--color-text)' : 'var(--color-text-secondary)'};
+    border-top-color: var(--color-border);
+  }
 `;
 
 export const BulletList = styled.ul`
@@ -324,6 +404,10 @@ export const BulletList = styled.ul`
   gap: 0.35rem;
   font-size: ${fontSizes.sm};
   color: #334155;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const AddonList = styled.div`
@@ -340,6 +424,11 @@ export const AddonRow = styled.div`
   background: #f8fafc;
   border-radius: 8px;
   font-size: ${fontSizes.sm};
+
+  [data-theme='dark'] & {
+    background: var(--color-bg-alt);
+    color: var(--color-text);
+  }
 `;
 
 export const DrawerActions = styled.div`
@@ -349,4 +438,8 @@ export const DrawerActions = styled.div`
   padding-top: 1.25rem;
   border-top: 1px solid #e2e8f0;
   flex-wrap: wrap;
+
+  [data-theme='dark'] & {
+    border-top-color: var(--color-border);
+  }
 `;

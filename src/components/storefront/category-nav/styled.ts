@@ -10,16 +10,6 @@ export const NavBar = styled.nav`
   overflow: visible;
   transition: background 0.25s ease, border-color 0.25s ease;
   z-index: 10;
-
-  [data-theme='light'] & {
-    background: rgba(255, 255, 255, 0.95);
-    border-color: rgba(124, 58, 237, 0.08);
-  }
-
-  [data-theme='dark'] & {
-    background: rgba(10, 13, 24, 0.95);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
 `;
 
 export const NavScroller = styled.div`
@@ -81,28 +71,16 @@ export const Flyout = styled.div`
   z-index: 30;
   min-width: 16rem;
   padding: 0.75rem;
-  border-radius: ${radii.lg};
+  border-radius: ${radii.md};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 12px 32px var(--color-shadow-strong);
+  box-shadow: 0 8px 28px var(--color-shadow-strong);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);
   transition: opacity 0.18s ease, transform 0.18s ease;
   display: grid;
   gap: 0.125rem;
-
-  [data-theme='light'] & {
-    background: #ffffff;
-    border-color: rgba(124, 58, 237, 0.12);
-    box-shadow: 0 16px 40px rgba(99, 102, 241, 0.12);
-  }
-
-  [data-theme='dark'] & {
-    background: #141a32;
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-  }
 `;
 
 export const FlyoutLink = styled(Link)`

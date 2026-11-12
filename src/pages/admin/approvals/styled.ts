@@ -23,6 +23,10 @@ export const KycLabel = styled.span`
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const KycValue = styled.span`
@@ -43,9 +47,16 @@ export const DocThumb = styled.a`
   align-items: center;
   gap: 0.35rem;
   padding: 0.5rem 0.75rem;
-  border: 1px solid ${brandColors.tan};
+  border: 1px solid var(--color-border);
   border-radius: 0.6rem;
   font-size: ${fontSizes.xs};
   text-decoration: none;
-  color: ${brandColors.pink500};
+  color: var(--color-primary);
+  background: var(--color-surface);
+  transition: all 0.15s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background: var(--color-bg-alt);
+  }
 `;

@@ -5,6 +5,7 @@ import { fontFamily, fontSizes, radii } from '@/theme';
 export const MenuRoot = styled.div`
   position: relative;
   flex-shrink: 0;
+  z-index: 50;
 `;
 
 export const MenuButton = styled.button<{
@@ -62,7 +63,7 @@ export const MenuPanel = styled.div`
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  z-index: 80;
+  z-index: 100;
   min-width: 13.5rem;
   padding: 0.4rem;
   border-radius: 0.9rem;

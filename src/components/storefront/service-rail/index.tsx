@@ -66,8 +66,13 @@ export function ServiceRail() {
 
         <Rail ref={rail.railRef}>
           {rail.services.length === 0 ? (
-            <SectionSubtitle>
-              No vendor services yet. Categories stay available — vendors can
+            <SectionSubtitle
+              style={{
+                marginTop: '0.5rem',
+                color: 'var(--color-text-secondary)',
+              }}
+            >
+              No vendor services yet. Categories are available — vendors can
               publish listings from their dashboard.
             </SectionSubtitle>
           ) : (

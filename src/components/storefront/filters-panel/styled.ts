@@ -9,6 +9,11 @@ export const Panel = styled.aside`
   padding: 1rem;
   align-self: start;
 
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+
   ${media.lg} {
     position: sticky;
     top: 10rem;
@@ -21,6 +26,10 @@ export const Head = styled.div`
   justify-content: space-between;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid ${brandColors.tan};
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const HeadTitle = styled.h2`
@@ -32,6 +41,10 @@ export const HeadTitle = styled.h2`
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const ResetButton = styled.button`
@@ -50,6 +63,15 @@ export const ResetButton = styled.button`
     background: ${brandColors.pink100};
     color: ${brandColors.pink500};
   }
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+
+    &:hover {
+      background: var(--color-surface-elevated);
+      color: var(--color-primary);
+    }
+  }
 `;
 
 export const Group = styled.div`
@@ -58,6 +80,10 @@ export const Group = styled.div`
 
   &:last-child {
     border-bottom: none;
+  }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
   }
 `;
 
@@ -74,6 +100,10 @@ export const GroupTitle = styled.h3`
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const GroupValue = styled.span`
@@ -88,7 +118,7 @@ export const Slider = styled.input<{ $fill: number }>`
   height: 6px;
   border-radius: ${radii.full};
   background: ${({ $fill }) =>
-    `linear-gradient(to right, ${brandColors.pink500} 0%, ${brandColors.accent500} ${$fill}%, ${brandColors.tan} ${$fill}%, ${brandColors.tan} 100%)`};
+    `linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) ${$fill}%, var(--color-border) ${$fill}%, var(--color-border) 100%)`};
   outline: none;
   cursor: pointer;
 
@@ -130,6 +160,10 @@ export const RangeLabels = styled.div`
   font-size: ${fontSizes.xs};
   font-weight: 600;
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const TagList = styled.div`
@@ -170,6 +204,14 @@ export const TagRow = styled.label`
 
   &:hover {
     background: ${brandColors.pink50};
+  }
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+
+    &:hover {
+      background: var(--color-surface-elevated);
+    }
   }
 `;
 

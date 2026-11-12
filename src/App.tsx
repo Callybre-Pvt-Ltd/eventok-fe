@@ -46,21 +46,21 @@ function ThemedApp() {
           colorPrimaryBg: palette.primaryLight,
           controlOutline:
             mode === 'dark'
-              ? 'rgba(139, 92, 246, 0.25)'
-              : 'rgba(124, 58, 237, 0.18)',
+              ? 'rgba(249, 115, 22, 0.25)'
+              : 'rgba(234, 88, 12, 0.18)',
         },
         components: {
           Button: {
             primaryShadow:
               mode === 'dark'
-                ? '0 6px 16px rgba(124, 58, 237, 0.35)'
-                : '0 6px 16px rgba(124, 58, 237, 0.28)',
-            borderRadius: 10,
-            fontWeight: 600,
+                ? '0 4px 12px rgba(249, 115, 22, 0.25)'
+                : '0 4px 12px rgba(234, 88, 12, 0.22)',
+            borderRadius: 8,
+            fontWeight: 700,
           },
           Table: {
             headerBg: palette.primaryLight,
-            headerColor: palette.primaryDark,
+            headerColor: mode === 'dark' ? '#FFFFFF' : palette.primaryDark,
             rowHoverBg: palette.backgroundTint,
             borderColor: palette.border,
             colorBgContainer: palette.surface,
@@ -78,7 +78,7 @@ function ThemedApp() {
           },
           Tag: {
             defaultBg: palette.primaryLight,
-            defaultColor: palette.primaryDark,
+            defaultColor: mode === 'dark' ? '#FDBA74' : palette.primaryDark,
           },
           Modal: {
             borderRadiusLG: 20,
@@ -105,6 +105,19 @@ function ThemedApp() {
             colorBgContainer: palette.surface,
             colorText: palette.text,
             colorBorder: palette.border,
+          },
+          DatePicker: {
+            borderRadius: 10,
+            controlHeight: 42,
+            colorBgContainer: palette.surface,
+            colorBgElevated: palette.surfaceElevated,
+            colorText: palette.text,
+            colorTextPlaceholder: palette.textMuted,
+            colorBorder: palette.border,
+            activeBorderColor: palette.primary,
+            hoverBorderColor: palette.primary,
+            cellActiveWithRangeBg: palette.primaryLight,
+            cellHoverWithRangeBg: palette.backgroundTint,
           },
           Select: {
             borderRadius: 10,

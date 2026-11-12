@@ -1,6 +1,5 @@
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { ROUTES } from '@/constants/routes';
 import {
   OutlinePill,
@@ -20,6 +19,9 @@ import {
   Grid,
   Image,
   ImageFallback,
+  ImageWrap,
+  IncludeTag,
+  IncludesRow,
   Name,
   Price,
   PriceLabel,
@@ -29,12 +31,9 @@ import {
 } from './styled';
 
 interface PackagesShowcaseProps {
-  /** On the dedicated Packages page an empty catalogue must still say something;
-   *  inside the home page the whole section is simply skipped. */
   showEmptyState?: boolean;
 }
 
-/** Up to two letters standing in for a missing cover photo. */
 const initialsOf = (name: string) =>
   name
     .split(/\s+/)
@@ -66,31 +65,44 @@ export function PackagesShowcase({ showEmptyState }: PackagesShowcaseProps) {
         <Grid>
           {packages.map(item => (
             <Card key={item.id} to={`${ROUTES.PACKAGES}/${item.id}`}>
-              {item.image ? (
-                <Image src={item.image} alt={item.name} loading="lazy" />
-              ) : (
-                <ImageFallback aria-hidden="true">
-                  {initialsOf(item.name)}
-                </ImageFallback>
-              )}
+              <ImageWrap>
+                {item.image ? (
+                  <Image src={item.image} alt={item.name} loading="lazy" />
+                ) : (
+                  <ImageFallback aria-hidden="true">
+                    {initialsOf(item.name)}
+                  </ImageFallback>
+                )}
+              </ImageWrap>
               <Body>
                 {item.vendorName && <VendorLine>{item.vendorName}</VendorLine>}
                 <Name>{item.name}</Name>
                 <Description>{item.description}</Description>
+
+                {item.serviceSlugs && item.serviceSlugs.length > 0 && (
+                  <IncludesRow>
+                    {item.serviceSlugs.map(slug => (
+                      <IncludeTag key={slug}>
+                        <Check size={11} color="var(--color-primary)" />
+                        {slug.replace(/-/g, ' ')}
+                      </IncludeTag>
+                    ))}
+                  </IncludesRow>
+                )}
+
                 {item.savings > 0 && (
                   <SavingsTag>
-                    {t('storefront.packagesSaving', {
-                      amount: formatPrice(item.savings),
-                    })}
+                    Save {formatPrice(item.savings)} on Bundle
                   </SavingsTag>
                 )}
+
                 <Foot>
-                  <span>
+                  <div>
                     <PriceLabel>{t('storefront.startingFrom')}</PriceLabel>
                     <Price>{formatPrice(item.startingPrice)}</Price>
-                  </span>
+                  </div>
                   <GoButton aria-hidden="true">
-                    <ChevronRight size={18} />
+                    View Package <ArrowRight size={14} />
                   </GoButton>
                 </Foot>
               </Body>
@@ -98,9 +110,8 @@ export function PackagesShowcase({ showEmptyState }: PackagesShowcaseProps) {
           ))}
         </Grid>
         <ViewAllRow>
-          <OutlinePill as={Link} to={ROUTES.PACKAGES}>
-            {t('storefront.packagesViewAll')}
-            <ArrowRight size={16} />
+          <OutlinePill to={ROUTES.PACKAGES}>
+            Explore All Bundles <ArrowRight size={16} />
           </OutlinePill>
         </ViewAllRow>
       </SectionInner>

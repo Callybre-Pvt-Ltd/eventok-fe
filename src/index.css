@@ -9,109 +9,111 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --color-bg: #fafafe;
-  --color-bg-alt: #f4f4fd;
-  --color-bg-tint: #f5f3ff;
+  --color-bg: #faf7f2;
+  --color-bg-alt: #f3ece2;
+  --color-bg-tint: #fff3e6;
   --color-surface: #ffffff;
-  --color-surface-elevated: #ffffff;
-  --color-text: #0f172a;
-  --color-text-secondary: #64748b;
-  --color-text-muted: #94a3b8;
-  --color-primary: #7c3aed;
-  --color-primary-hover: #6d28d9;
-  --color-primary-dark: #5b21b6;
-  --color-primary-light: #ede9fe;
-  --color-primary-subtle: #f5f3ff;
-  --color-accent: #6366f1;
-  --color-accent-soft: #e0e7ff;
-  --color-highlight: #c4b5fd;
-  --color-peach: #fda4af;
-  --color-border: rgba(226, 232, 240, 0.85);
-  --color-border-light: rgba(241, 245, 249, 0.9);
-  --color-border-hover: rgba(124, 58, 237, 0.4);
-  --color-shadow: rgba(99, 102, 241, 0.05);
-  --color-shadow-strong: rgba(99, 102, 241, 0.12);
-  --color-overlay: rgba(15, 23, 42, 0.55);
-  --color-glass: rgba(255, 255, 255, 0.92);
+  --color-surface-elevated: #fffdfb;
+  --color-surface-warm: #faf2e8;
+  --color-text: #1c1917;
+  --color-text-secondary: #57534e;
+  --color-text-muted: #8c827a;
+  --color-primary: #ea580c;
+  --color-primary-hover: #c2410c;
+  --color-primary-dark: #9a3412;
+  --color-primary-light: #fff7ed;
+  --color-primary-subtle: #ffedd5;
+  --color-accent: #0284c7;
+  --color-accent-soft: #f0f9ff;
+  --color-highlight: #fef3c7;
+  --color-gold: #f59e0b;
+  --color-gold-light: #fef3c7;
+  --color-peach: #fed7aa;
+  --color-border: #e8e1d5;
+  --color-border-light: #f2ece1;
+  --color-border-hover: #ea580c;
+  --color-shadow: rgba(60, 42, 25, 0.06);
+  --color-shadow-strong: rgba(60, 42, 25, 0.14);
+  --color-shadow-subtle: rgba(60, 42, 25, 0.03);
+  --color-overlay: rgba(28, 25, 23, 0.6);
+  --color-glass: rgba(255, 253, 250, 0.95);
 
   /* Nav & Header */
-  --nav-scrolled-bg: rgba(255, 255, 255, 0.92);
-  --nav-scrolled-border: rgba(124, 58, 237, 0.08);
-  --nav-scrolled-shadow: 0 10px 40px rgba(99, 102, 241, 0.06);
+  --nav-topbar-bg: #faf7f2;
+  --nav-topbar-text: #1c1917;
+  --nav-scrolled-bg: rgba(250, 247, 242, 0.96);
+  --nav-scrolled-border: #e8e1d5;
+  --nav-scrolled-shadow: 0 4px 20px rgba(60, 42, 25, 0.07);
 
   /* Footer */
-  --footer-bg: #f7f7fd;
-  --footer-text: #0f172a;
-  --footer-watermark: rgba(124, 58, 237, 0.04);
+  --footer-bg: #f3ece2;
+  --footer-text: #1c1917;
+  --footer-watermark: rgba(234, 88, 12, 0.05);
 
-  /* Button gradients & glow */
-  --button-primary-gradient: linear-gradient(
-    135deg,
-    #7c3aed 0%,
-    #6366f1 50%,
-    #818cf8 100%
-  );
-  --button-primary-shadow: rgba(124, 58, 237, 0.28);
+  /* Solid button - strictly NO gradients */
+  --button-primary-gradient: #ea580c;
+  --button-primary-shadow: rgba(234, 88, 12, 0.25);
 
   /* Theme Toggle */
-  --theme-toggle-border: rgba(124, 58, 237, 0.2);
-  --theme-toggle-bg: rgba(255, 255, 255, 0.95);
-  --theme-toggle-color: #7c3aed;
-  --theme-toggle-hover-bg: #ede9fe;
-  --theme-toggle-shadow: rgba(124, 58, 237, 0.15);
+  --theme-toggle-border: #e8e1d5;
+  --theme-toggle-bg: #ffffff;
+  --theme-toggle-color: #ea580c;
+  --theme-toggle-hover-bg: #fff7ed;
+  --theme-toggle-shadow: rgba(60, 42, 25, 0.08);
 }
 
 [data-theme='dark'] {
   color-scheme: dark;
-  --color-bg: #0a0d18;
-  --color-bg-alt: #0f1426;
-  --color-bg-tint: #141a32;
-  --color-surface: #141a32;
-  --color-surface-elevated: #1a2242;
-  --color-text: #ffffff;
-  --color-text-secondary: #94a3b8;
-  --color-text-muted: #64748b;
-  --color-primary: #8b5cf6;
-  --color-primary-hover: #a78bfa;
-  --color-primary-dark: #7c3aed;
-  --color-primary-light: #1e1838;
-  --color-primary-subtle: #15122b;
-  --color-accent: #818cf8;
-  --color-accent-soft: #1e2045;
-  --color-highlight: #c4b5fd;
-  --color-peach: #fda4af;
-  --color-border: rgba(255, 255, 255, 0.08);
-  --color-border-light: rgba(255, 255, 255, 0.05);
-  --color-border-hover: rgba(167, 139, 250, 0.35);
+  --color-bg: #090d16;
+  --color-bg-alt: #0e1424;
+  --color-bg-tint: #141c30;
+  --color-surface: #121a2b;
+  --color-surface-elevated: #1a253d;
+  --color-surface-warm: #1e2b44;
+  --color-text: #f8fafc;
+  --color-text-secondary: #cbd5e1;
+  --color-text-muted: #8896ab;
+  --color-primary: #f97316;
+  --color-primary-hover: #ea580c;
+  --color-primary-dark: #c2410c;
+  --color-primary-light: #2c150a;
+  --color-primary-subtle: #2c150a;
+  --color-accent: #38bdf8;
+  --color-accent-soft: #082f49;
+  --color-highlight: #1a253d;
+  --color-gold: #f59e0b;
+  --color-gold-light: #451a03;
+  --color-peach: #fdba74;
+  --color-border: #232f47;
+  --color-border-light: #162032;
+  --color-border-hover: #f97316;
   --color-shadow: rgba(0, 0, 0, 0.45);
-  --color-shadow-strong: rgba(0, 0, 0, 0.65);
-  --color-overlay: rgba(7, 9, 19, 0.8);
-  --color-glass: rgba(20, 26, 50, 0.88);
+  --color-shadow-strong: rgba(0, 0, 0, 0.7);
+  --color-shadow-subtle: rgba(0, 0, 0, 0.25);
+  --color-overlay: rgba(4, 7, 14, 0.85);
+  --color-glass: #121a2b;
 
   /* Nav & Header */
-  --nav-scrolled-bg: rgba(10, 13, 24, 0.92);
-  --nav-scrolled-border: rgba(255, 255, 255, 0.08);
-  --nav-scrolled-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  --nav-topbar-bg: #090d16;
+  --nav-topbar-text: #f8fafc;
+  --nav-scrolled-bg: rgba(9, 13, 22, 0.96);
+  --nav-scrolled-border: #232f47;
+  --nav-scrolled-shadow: 0 4px 24px rgba(0, 0, 0, 0.55);
 
   /* Footer */
-  --footer-bg: #080b14;
-  --footer-text: #ffffff;
-  --footer-watermark: rgba(255, 255, 255, 0.03);
+  --footer-bg: #060910;
+  --footer-text: #f8fafc;
+  --footer-watermark: rgba(249, 115, 22, 0.04);
 
-  /* Button gradients & glow */
-  --button-primary-gradient: linear-gradient(
-    135deg,
-    #7c3aed 0%,
-    #8b5cf6 50%,
-    #6366f1 100%
-  );
-  --button-primary-shadow: rgba(124, 58, 237, 0.35);
+  /* Solid button - strictly NO gradients */
+  --button-primary-gradient: #f97316;
+  --button-primary-shadow: rgba(249, 115, 22, 0.3);
 
   /* Theme Toggle */
-  --theme-toggle-border: rgba(167, 139, 250, 0.3);
-  --theme-toggle-bg: rgba(20, 26, 50, 0.9);
-  --theme-toggle-color: #c4b5fd;
-  --theme-toggle-hover-bg: #1e1838;
+  --theme-toggle-border: #232f47;
+  --theme-toggle-bg: #121a2b;
+  --theme-toggle-color: #f97316;
+  --theme-toggle-hover-bg: #1a253d;
   --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
 }
 

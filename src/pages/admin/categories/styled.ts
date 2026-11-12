@@ -27,7 +27,7 @@ export const ToolbarSearch = styled.div`
 
 export const NameText = styled.span`
   font-weight: ${fontWeight.bold};
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;
 
 export const StatusTag = styled.span<{ $active: boolean }>`
@@ -41,6 +41,13 @@ export const StatusTag = styled.span<{ $active: boolean }>`
     $active ? brandColors.success500 : brandColors.gray600};
   background: ${({ $active }) =>
     $active ? brandColors.success50 : brandColors.gray100};
+
+  [data-theme='dark'] & {
+    background: ${({ $active }) =>
+      $active ? 'rgba(16, 185, 129, 0.2)' : 'rgba(148, 163, 184, 0.2)'};
+    color: ${({ $active }) =>
+      $active ? '#34d399' : 'var(--color-text-secondary)'};
+  }
 `;
 
 export const RowActions = styled.div`
@@ -64,5 +71,5 @@ export const FormRow = styled.label`
 export const FormLabel = styled.span`
   font-size: ${fontSizes.sm};
   font-weight: ${fontWeight.medium};
-  color: ${brandColors.chocolate};
+  color: var(--color-text);
 `;

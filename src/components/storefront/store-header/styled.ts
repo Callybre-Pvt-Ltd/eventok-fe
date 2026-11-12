@@ -9,7 +9,13 @@ export const HeaderRoot = styled.header`
   width: 100%;
 `;
 
+export const TopAnnouncementBar = styled.div`
+  display: none;
+`;
+
 export const MainBar = styled.div`
+  position: relative;
+  z-index: 20;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -26,18 +32,6 @@ export const MainBar = styled.div`
   ${media.lg} {
     gap: 1.25rem;
     padding: 0.75rem 2.5rem;
-  }
-
-  [data-theme='light'] & {
-    background: rgba(255, 255, 255, 0.94);
-    border-color: rgba(124, 58, 237, 0.08);
-    backdrop-filter: blur(12px);
-  }
-
-  [data-theme='dark'] & {
-    background: rgba(10, 13, 24, 0.94);
-    border-color: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(12px);
   }
 `;
 
@@ -105,14 +99,14 @@ export const SearchForm = styled.form`
   border-radius: ${radii.full};
 
   [data-theme='light'] & {
-    background: #ffffff;
-    border-color: rgba(226, 232, 240, 0.9);
-    box-shadow: 0 2px 10px rgba(99, 102, 241, 0.04);
+    background: var(--color-bg);
+    border-color: var(--color-border);
+    box-shadow: inset 0 1px 2px rgba(60, 42, 25, 0.04);
   }
 
   [data-theme='dark'] & {
-    background: #141a32;
-    border-color: rgba(255, 255, 255, 0.1);
+    background: var(--color-surface);
+    border-color: var(--color-border);
   }
 
   ${media.belowSm} {
@@ -153,13 +147,13 @@ export const SearchSubmit = styled.button`
   flex: 0 0 auto;
   border: none;
   border-radius: ${radii.full};
-  background: var(--button-primary-gradient);
+  background: var(--color-primary);
   color: #ffffff;
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    opacity: 0.92;
+    background: var(--color-primary-hover);
     transform: scale(1.04);
   }
 `;
@@ -303,18 +297,18 @@ export const LoginButton = styled(Link)`
   gap: 0.375rem;
   padding: 0.5rem 1.125rem;
   border-radius: ${radii.full};
-  background: var(--button-primary-gradient);
+  background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 4px 14px var(--button-primary-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 6px var(--button-primary-shadow);
+  transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {
+    background: var(--color-primary-hover);
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px var(--button-primary-shadow);
   }
 `;
 

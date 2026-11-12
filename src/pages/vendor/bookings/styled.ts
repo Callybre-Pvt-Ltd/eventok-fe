@@ -24,6 +24,10 @@ export const MetaRow = styled.div`
   font-size: 0.75rem;
   color: #64748b;
   margin-top: 0.15rem;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const ActionRow = styled.div`
@@ -42,6 +46,10 @@ export const DrawerSection = styled.div`
   &:last-child {
     border-bottom: none;
   }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const DrawerLabel = styled.span`
@@ -50,11 +58,19 @@ export const DrawerLabel = styled.span`
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #64748b;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const DrawerValue = styled.span`
   font-size: ${fontSizes.sm};
   color: #0f172a;
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const ContactNotice = styled.div<{ $revealed?: boolean }>`
@@ -64,6 +80,15 @@ export const ContactNotice = styled.div<{ $revealed?: boolean }>`
   border: 1px solid ${({ $revealed }) => ($revealed ? '#bbf7d0' : '#e2e8f0')};
   font-size: ${fontSizes.xs};
   color: ${({ $revealed }) => ($revealed ? '#166534' : '#64748b')};
+
+  [data-theme='dark'] & {
+    background: ${({ $revealed }) =>
+      $revealed ? 'rgba(16, 185, 129, 0.15)' : 'var(--color-surface-elevated)'};
+    border-color: ${({ $revealed }) =>
+      $revealed ? 'rgba(16, 185, 129, 0.35)' : 'var(--color-border)'};
+    color: ${({ $revealed }) =>
+      $revealed ? '#34d399' : 'var(--color-text-secondary)'};
+  }
 `;
 
 export const RefundNotice = styled.div`
@@ -74,4 +99,10 @@ export const RefundNotice = styled.div`
   font-size: ${fontSizes.xs};
   color: #991b1b;
   line-height: 1.4;
+
+  [data-theme='dark'] & {
+    background: rgba(239, 68, 68, 0.15);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: #fca5a5;
+  }
 `;

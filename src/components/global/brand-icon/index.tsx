@@ -29,20 +29,7 @@ export const BrandIcon: React.FC<BrandIconProps> = ({
       }}
       aria-hidden="true"
     >
-      <defs>
-        <linearGradient
-          id="brandIconGradient"
-          x1="0"
-          y1="0"
-          x2="48"
-          y2="48"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#5B21B6" />
-          <stop offset="1" stopColor="#7C3AED" />
-        </linearGradient>
-      </defs>
-      <rect width="48" height="48" rx="12" fill="url(#brandIconGradient)" />
+      <rect width="48" height="48" rx="12" fill="#EA580C" />
       {variant === 'favicon' ? (
         <>
           <path
@@ -54,7 +41,7 @@ export const BrandIcon: React.FC<BrandIconProps> = ({
           />
           <path
             d="M20 25L24.5 29.5L34 19"
-            stroke="#C4B5FD"
+            stroke="#FFFFFF"
             strokeWidth="5.5"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -71,7 +58,7 @@ export const BrandIcon: React.FC<BrandIconProps> = ({
           />
           <path
             d="M19.5 24.5L24.5 29.5L34.5 18"
-            stroke="#C4B5FD"
+            stroke="#FFFFFF"
             strokeWidth="5"
             strokeLinecap="round"
             strokeLinejoin="round"

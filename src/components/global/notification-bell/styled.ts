@@ -20,6 +20,12 @@ export const BellButton = styled.button<{ $palette: ThemePalette }>`
   &:hover {
     background: ${brandColors.gray100};
   }
+
+  [data-theme='dark'] & {
+    &:hover {
+      background: var(--color-surface-elevated);
+    }
+  }
 `;
 
 export const Badge = styled.span`
@@ -49,6 +55,10 @@ export const Panel = styled.div<{ $palette: ThemePalette }>`
   box-shadow: ${shadows.lg};
   overflow: hidden;
 
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
+
   ${media.belowSm} {
     width: 18rem;
   }
@@ -61,6 +71,10 @@ export const PanelHeader = styled.div`
   gap: 0.75rem;
   padding: 0.85rem 1rem;
   border-bottom: 1px solid ${brandColors.gray200};
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const PanelTitle = styled.span<{ $palette: ThemePalette }>`
@@ -108,6 +122,16 @@ export const Item = styled.li<{ $unread: boolean; $clickable: boolean }>`
   &:hover {
     background: ${brandColors.gray100};
   }
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+    background: ${({ $unread }) =>
+      $unread ? 'rgba(139, 92, 246, 0.12)' : 'transparent'};
+
+    &:hover {
+      background: var(--color-surface-elevated);
+    }
+  }
 `;
 
 export const Dot = styled.span<{ $unread: boolean }>`
@@ -138,11 +162,19 @@ export const ItemText = styled.span`
   line-height: 1.5;
   color: ${brandColors.gray600};
   overflow-wrap: anywhere;
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const ItemTime = styled.span`
   font-size: ${fontSizes.xs};
   color: ${brandColors.gray400};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-muted);
+  }
 `;
 
 export const EmptyRow = styled.p`
@@ -151,4 +183,8 @@ export const EmptyRow = styled.p`
   text-align: center;
   font-size: ${fontSizes.sm};
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;

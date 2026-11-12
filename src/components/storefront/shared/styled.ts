@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
 
 export const Section = styled.section<{ $tint?: boolean; $dark?: boolean }>`
@@ -74,13 +75,13 @@ export const SectionSubtitle = styled.p<{ $onDark?: boolean }>`
   color: var(--color-text-secondary);
 `;
 
-export const PillLink = styled.a`
+export const PillLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
+  padding: 0.75rem 1.75rem;
   border-radius: ${radii.full};
-  background: var(--button-primary-gradient);
+  background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
@@ -88,15 +89,16 @@ export const PillLink = styled.a`
   cursor: pointer;
   text-decoration: none;
   box-shadow: ${shadows.sm};
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: background 0.2s ease, transform 0.2s ease;
 
   &:hover {
+    background: var(--color-primary-hover);
     transform: translateY(-1px);
     box-shadow: ${shadows.md};
   }
 `;
 
-export const OutlinePill = styled.button`
+export const OutlinePill = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -107,6 +109,7 @@ export const OutlinePill = styled.button`
   border: 1px solid var(--color-border);
   font-size: ${fontSizes.sm};
   font-weight: 700;
+  text-decoration: none;
   cursor: pointer;
   transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
 
@@ -179,12 +182,13 @@ export const TabRow = styled.div`
 `;
 
 export const TabItem = styled.button<{ $active: boolean }>`
-  padding: 0.5rem 1.125rem;
+  padding: 0.5rem 1.25rem;
   border-radius: ${radii.full};
   border: 1px solid
-    ${({ $active }) => ($active ? 'transparent' : 'var(--color-border)')};
+    ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
   background: ${({ $active }) =>
-    $active ? 'var(--button-primary-gradient)' : 'var(--color-surface)'};
+    $active ? 'var(--color-primary)' : 'var(--color-surface)'};
   color: ${({ $active }) =>
     $active ? '#ffffff' : 'var(--color-text-secondary)'};
   font-size: ${fontSizes.sm};
@@ -192,11 +196,11 @@ export const TabItem = styled.button<{ $active: boolean }>`
   cursor: pointer;
   white-space: nowrap;
   box-shadow: ${({ $active }) =>
-    $active ? '0 4px 14px var(--button-primary-shadow)' : 'none'};
+    $active ? '0 2px 8px var(--button-primary-shadow)' : 'none'};
   transition: all 0.2s ease;
 
   &:hover {
     border-color: var(--color-primary);
-    color: ${({ $active }) => ($active ? '#ffffff' : 'var(--color-text)')};
+    color: ${({ $active }) => ($active ? '#ffffff' : 'var(--color-primary)')};
   }
 `;

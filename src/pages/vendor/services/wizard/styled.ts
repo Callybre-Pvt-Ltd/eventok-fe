@@ -91,6 +91,10 @@ export const StepRail = styled.ol`
   border-radius: ${radii.full};
   background: ${brandColors.gray100};
 
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+  }
+
   ${media.belowSm} {
     display: none;
   }
@@ -117,6 +121,13 @@ export const StepItem = styled.li<{
     $state === 'active' ? fontWeight.bold : fontWeight.body};
   letter-spacing: 0.01em;
   transition: background 0.18s ease, color 0.18s ease;
+
+  [data-theme='dark'] & {
+    background: ${({ $state }) =>
+      $state === 'active' ? 'var(--color-surface-elevated)' : 'transparent'};
+    color: ${({ $state }) =>
+      $state === 'upcoming' ? 'var(--color-text-muted)' : 'var(--color-text)'};
+  }
 `;
 
 export const StepDot = styled.span<{ $state: 'done' | 'active' | 'upcoming' }>`
@@ -177,6 +188,10 @@ export const StepBody = styled.section<{ $palette: ThemePalette }>`
   background: ${({ $palette }) => $palette.surface};
   box-shadow: ${shadows.sm};
 
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
+
   ${media.belowSm} {
     padding: 1.25rem;
     gap: 1.5rem;
@@ -189,6 +204,10 @@ export const StepIntro = styled.div`
   gap: 0.4rem;
   padding-bottom: 1.25rem;
   border-bottom: 1px solid ${brandColors.gray200};
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 `;
 
 export const StepHeading = styled.h2<{ $palette: ThemePalette }>`
@@ -215,12 +234,20 @@ export const FieldHint = styled.p`
   font-size: ${fontSizes.xs};
   line-height: 1.5;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const Divider = styled.div`
   height: 1px;
   background: ${brandColors.gray200};
   margin: 0 0 1.5rem;
+
+  [data-theme='dark'] & {
+    background: var(--color-border);
+  }
 `;
 
 export const FooterBar = styled.div<{ $palette: ThemePalette }>`
@@ -237,6 +264,10 @@ export const FooterBar = styled.div<{ $palette: ThemePalette }>`
   border: 1px solid ${brandColors.gray200};
   box-shadow: ${shadows.md};
   z-index: 10;
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 `;
 
 export const FooterActions = styled.div`
@@ -257,6 +288,10 @@ export const PriceRow = styled.div<{ $final?: boolean }>`
     $final ? `1px solid ${brandColors.gray200}` : 'none'};
   margin-top: ${({ $final }) => ($final ? '0.5rem' : '0')};
   padding-top: ${({ $final }) => ($final ? '0.75rem' : '0.5rem')};
+
+  [data-theme='dark'] & {
+    border-top-color: var(--color-border);
+  }
 `;
 
 export const PriceRowLabel = styled.span<{ $palette: ThemePalette }>`
@@ -273,6 +308,10 @@ export const EstimateNote = styled.p`
   font-size: ${fontSizes.xs};
   line-height: 1.5;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const CategoryGrid = styled.div`
@@ -302,6 +341,13 @@ export const CategoryTile = styled.button<{ $active: boolean }>`
     transform: translateY(-2px);
     box-shadow: ${shadows.md};
   }
+
+  [data-theme='dark'] & {
+    border-color: ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
+    background: ${({ $active }) =>
+      $active ? 'rgba(139, 92, 246, 0.15)' : 'var(--color-surface-elevated)'};
+  }
 `;
 
 export const CatIconWrap = styled.div<{ $active?: boolean }>`
@@ -323,6 +369,10 @@ export const CatName = styled.span`
   font-weight: ${fontWeight.bold};
   line-height: 1.3;
   color: ${brandColors.chocolate};
+
+  [data-theme='dark'] & {
+    color: var(--color-text);
+  }
 `;
 
 export const CatBlurb = styled.span`
@@ -330,6 +380,10 @@ export const CatBlurb = styled.span`
   font-weight: ${fontWeight.regular};
   line-height: 1.45;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const CharCount = styled.span`
@@ -360,6 +414,15 @@ export const UploadZone = styled.label`
   &:hover {
     border-color: ${brandColors.pink500};
     background: ${brandColors.pink50};
+  }
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+
+    &:hover {
+      background: rgba(139, 92, 246, 0.15);
+    }
   }
 
   input {
@@ -457,6 +520,10 @@ export const PolicySubhead = styled.h3`
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const PolicyWindowSelector = styled.div`
@@ -483,6 +550,15 @@ export const WindowOptionBtn = styled.button<{ $selected: boolean }>`
   &:hover {
     border-color: ${brandColors.pink500};
   }
+
+  [data-theme='dark'] & {
+    border-color: ${({ $selected }) =>
+      $selected ? 'var(--color-primary)' : 'var(--color-border)'};
+    background: ${({ $selected }) =>
+      $selected ? 'rgba(139, 92, 246, 0.15)' : 'var(--color-surface-elevated)'};
+    color: ${({ $selected }) =>
+      $selected ? 'var(--color-primary)' : 'var(--color-text)'};
+  }
 `;
 
 export const ReviewPreviewWrap = styled.div`
@@ -493,6 +569,11 @@ export const ReviewPreviewWrap = styled.div`
   background: ${brandColors.cream};
   border-radius: ${radii.md};
   border: 1px solid ${brandColors.gray200};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+  }
 `;
 
 export const ReviewCover = styled.div`
@@ -522,6 +603,10 @@ export const ReviewImg = styled.img`
   object-fit: cover;
   border-radius: ${radii.sm};
   border: 1px solid ${brandColors.gray200};
+
+  [data-theme='dark'] & {
+    border-color: var(--color-border);
+  }
 `;
 
 export const ReviewBlock = styled.div`
@@ -530,6 +615,10 @@ export const ReviewBlock = styled.div`
   gap: 0.35rem;
   padding-bottom: 0.9rem;
   border-bottom: 1px solid ${brandColors.gray200};
+
+  [data-theme='dark'] & {
+    border-bottom-color: var(--color-border);
+  }
 
   &:last-child {
     border-bottom: none;
@@ -543,6 +632,10 @@ export const ReviewLabel = styled.span`
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: ${brandColors.gray600};
+
+  [data-theme='dark'] & {
+    color: var(--color-text-secondary);
+  }
 `;
 
 export const ReviewValue = styled.span<{ $palette: ThemePalette }>`
@@ -579,11 +672,20 @@ export const PricePanel = styled.div`
   border-radius: ${radii.md};
   border: 1px solid ${brandColors.gray200};
   background: ${brandColors.cream};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface-elevated);
+    border-color: var(--color-border);
+  }
 `;
 
 export const ReviewPricePanel = styled(PricePanel)`
   margin-top: 0.5rem;
   background: ${brandColors.white};
+
+  [data-theme='dark'] & {
+    background: var(--color-surface);
+  }
 `;
 
 export const UploadHint = styled.span`
