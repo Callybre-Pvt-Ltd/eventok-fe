@@ -5,7 +5,8 @@ import { fontFamily, fontSizes, media, radii } from '@/theme';
 export const HeroWrap = styled.section`
   position: relative;
   width: 100%;
-  min-height: clamp(36rem, 78vh, 48rem);
+  min-height: calc(100vh - 72px);
+  min-height: calc(100svh - 72px);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -22,7 +23,7 @@ export const Slide = styled.div<{ $active: boolean }>`
   height: 100%;
   opacity: ${({ $active }) => ($active ? 1 : 0)};
   pointer-events: ${({ $active }) => ($active ? 'auto' : 'none')};
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.5s ease-in-out;
   display: flex;
   align-items: center;
   z-index: ${({ $active }) => ($active ? 1 : 0)};
@@ -34,8 +35,8 @@ export const SlideImage = styled.img<{ $position?: string }>`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: ${({ $position }) => $position ?? 'center right'};
-  transition: opacity 0.5s ease, filter 0.5s ease;
+  object-position: ${({ $position }) => $position ?? 'center center'};
+  transition: opacity 0.5s ease;
 
   [data-theme='light'] & {
     filter: brightness(1.02) contrast(1.04) saturate(1.06);
@@ -53,11 +54,11 @@ export const Scrim = styled.div`
   transition: background-color 0.3s ease;
 
   [data-theme='light'] & {
-    background: rgba(28, 22, 16, 0.28);
+    background: rgba(20, 16, 12, 0.28);
   }
 
   [data-theme='dark'] & {
-    background: rgba(8, 12, 20, 0.42);
+    background: rgba(8, 12, 20, 0.45);
   }
 `;
 
@@ -67,7 +68,7 @@ export const Content = styled.div`
   max-width: 1320px;
   width: 100%;
   margin: 0 auto;
-  padding: clamp(3.25rem, 7.5vh, 5.25rem) clamp(1.25rem, 4vw, 3rem);
+  padding: clamp(2.5rem, 6vh, 4.5rem) clamp(1.25rem, 4vw, 3rem);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -315,27 +316,33 @@ export const SearchSubmitBtn = styled.button`
 export const Buttons = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 0.875rem;
-  margin-top: 1.75rem;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2.25rem;
 `;
 
 export const PrimaryCta = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.875rem 2rem;
+  padding: 0.85rem 1.85rem;
   border-radius: ${radii.full};
   background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 4px 14px var(--button-primary-shadow);
-  transition: transform 0.2s ease, background 0.2s ease;
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
     background: var(--color-primary-hover);
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -343,19 +350,44 @@ export const GhostCta = styled(Link)`
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.875rem 1.75rem;
+  padding: 0.85rem 1.85rem;
   border-radius: ${radii.full};
-  border: 1.5px solid rgba(255, 255, 255, 0.7);
-  background: transparent;
-  color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
-  transition: background 0.2s ease, border-color 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
+    color 0.2s ease, box-shadow 0.2s ease;
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: #ffffff;
+  [data-theme='light'] & {
+    background: rgba(255, 253, 250, 0.92);
+    border: 1px solid rgba(225, 218, 205, 0.95);
+    color: #1c1917;
+    box-shadow: 0 4px 14px rgba(40, 25, 10, 0.12);
+
+    &:hover {
+      background: #ffffff;
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(40, 25, 10, 0.18);
+    }
+  }
+
+  [data-theme='dark'] & {
+    background: rgba(22, 28, 42, 0.75);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.45);
+      transform: translateY(-2px);
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -404,19 +436,27 @@ export const Dots = styled.div`
   bottom: 2rem;
   transform: translateX(-50%);
   display: flex;
+  align-items: center;
   gap: 0.5rem;
-  z-index: 3;
+  z-index: 25;
+  pointer-events: auto;
 `;
 
 export const Dot = styled.button<{ $active: boolean }>`
   width: ${({ $active }) => ($active ? '2rem' : '0.5rem')};
   height: 0.5rem;
+  padding: 0;
   border: none;
   border-radius: ${radii.full};
   background: ${({ $active }) =>
-    $active ? 'var(--color-primary)' : 'rgba(255, 255, 255, 0.35)'};
+    $active ? 'var(--color-primary)' : 'rgba(255, 255, 255, 0.45)'};
   cursor: pointer;
   transition: all 0.3s ease;
+
+  &:hover {
+    background: ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'rgba(255, 255, 255, 0.75)'};
+  }
 `;
 
 export const Arrows = styled.div`
@@ -424,8 +464,10 @@ export const Arrows = styled.div`
   right: clamp(1.25rem, 4vw, 3rem);
   bottom: 1.75rem;
   display: flex;
-  gap: 0.5rem;
-  z-index: 3;
+  align-items: center;
+  gap: 0.625rem;
+  z-index: 25;
+  pointer-events: auto;
 `;
 
 export const Arrow = styled.button`
@@ -435,31 +477,47 @@ export const Arrow = styled.button`
   width: 2.75rem;
   height: 2.75rem;
   border-radius: ${radii.full};
+  border: none;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  user-select: none;
+  pointer-events: auto;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
+    box-shadow 0.2s ease;
 
   [data-theme='light'] & {
-    background: rgba(255, 253, 250, 0.9);
-    border: 1px solid rgba(232, 226, 213, 0.9);
+    background: rgba(255, 253, 250, 0.95);
+    border: 1px solid rgba(225, 218, 205, 0.95);
     color: #1c1917;
-    box-shadow: 0 4px 12px rgba(60, 42, 25, 0.12);
+    box-shadow: 0 4px 14px rgba(40, 25, 10, 0.15);
 
     &:hover {
       background: var(--color-primary);
       border-color: var(--color-primary);
       color: #ffffff;
+      transform: scale(1.06);
+    }
+
+    &:active {
+      transform: scale(0.96);
     }
   }
 
   [data-theme='dark'] & {
-    background: rgba(14, 20, 32, 0.75);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    background: rgba(18, 26, 43, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
     color: #ffffff;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 
     &:hover {
       background: var(--color-primary);
       border-color: var(--color-primary);
+      color: #ffffff;
+      transform: scale(1.06);
+    }
+
+    &:active {
+      transform: scale(0.96);
     }
   }
 `;

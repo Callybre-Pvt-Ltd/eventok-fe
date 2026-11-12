@@ -10,15 +10,27 @@ const CATEGORY_PHOTOS: Record<string, string> = {
   // Weddings & Traditional
   'mandap-decoration': IMG('1519741497674-611481863552'), // Royal wedding mandap with gold florals
   'wedding-decorations': IMG('1519741497674-611481863552'),
+  'wedding-decoration': IMG('1519741497674-611481863552'),
+  wedding: IMG('1519741497674-611481863552'),
+  'mandap-stage-decor': IMG('1519225421980-715cb0215aed'),
+  'mandap-and-stage-decor': IMG('1519225421980-715cb0215aed'),
   'stage-decoration': IMG('1511285560929-80b456fea0bc'), // Grand reception stage with floral chandeliers
   'stage-backdrop': IMG('1511285560929-80b456fea0bc'),
   'engagement-decor': IMG('1605100804763-247f67b3557e'), // Sparkling rings on luxury velvet with petals
+  'engagement-ring-ceremony': IMG('1605100804763-247f67b3557e'),
+  'engagement-and-ring-ceremony': IMG('1605100804763-247f67b3557e'),
   'haldi-decoration': IMG('1583939003579-730e3918a45a'), // Golden marigold canopy & brass urlis
   'haldi-mehendi': IMG('1583939003579-730e3918a45a'),
+  'haldi-mehndi': IMG('1583939003579-730e3918a45a'),
+  'haldi-and-mehndi': IMG('1583939003579-730e3918a45a'),
   'venue-decoration': IMG('1519167758481-83f550bb49b3'), // Banquet fairy light lounge
+  'social-outdoor-events': IMG('1519167758481-83f550bb49b3'),
   'tent-outdoor': IMG('1464366400600-7168b8af9bc3'), // Luxury outdoor canopy marquee on lawn
   'mehendi-decoration': IMG('1544077960-604201fe74bc'), // Henna hands & colorful bohemian decor
   'lighting-and-sound': IMG('1470225620780-dba8ba36b745'), // Warm golden ceiling canopy & laser party
+  'lighting-sound': IMG('1470225620780-dba8ba36b745'),
+  'light-sound': IMG('1470225620780-dba8ba36b745'),
+  'light-and-sound': IMG('1470225620780-dba8ba36b745'),
   'lighting-ambiance': IMG('1470225620780-dba8ba36b745'),
   'bride-makeup': IMG('1522337360788-8b13dee7a37e'), // Editorial bridal cosmetics & styling
   'bridal-entry': IMG('1544161515-4ab6ce6db874'), // Flowing drape floral entry path
@@ -28,15 +40,19 @@ const CATEGORY_PHOTOS: Record<string, string> = {
   // Birthdays & Celebrations
   'birthday-decoration': IMG('1530103862676-de8c9debad1d'), // Floating balloons with warm bokeh lights
   'birthday-decorations': IMG('1530103862676-de8c9debad1d'),
+  birthday: IMG('1530103862676-de8c9debad1d'),
   'first-birthday': IMG('1464349095431-e9a21285b5f3'), // 1st birthday milestone props & dessert bar
   'balloon-decoration': IMG('1492684223066-81342ee5ff30'), // Shimmer wall organic balloon garland
   'balloon-decor': IMG('1492684223066-81342ee5ff30'),
+  balloons: IMG('1492684223066-81342ee5ff30'),
   'kids-theme-party': IMG('1513151233558-d860c5398176'), // Kids party celebration props
+  'kids-themes': IMG('1513151233558-d860c5398176'),
   'theme-parties': IMG('1513151233558-d860c5398176'),
 
   // Anniversaries & Romance
   'anniversary-decoration': IMG('1517457373958-b7bdd4587205'), // Candlelight petals & champagne room
   'anniversary-decor': IMG('1517457373958-b7bdd4587205'),
+  anniversary: IMG('1517457373958-b7bdd4587205'),
   'silver-anniversary': IMG('1518709766631-a6a7f45921c3'), // Elegant silver jubilee banquet
   'romantic-room-decor': IMG('1522673607200-164d1b6ce486'), // Candlelight petals & sheer drapes
   'candle-light-dinner': IMG('1414235077428-338989a2e8c0'), // Rooftop dining at sunset
@@ -44,25 +60,35 @@ const CATEGORY_PHOTOS: Record<string, string> = {
   // Baby Showers & New Beginnings
   'baby-shower': IMG('1516627145497-ae6968895b74'), // Dreamy boho baby shower with pampas grass
   'baby-shower-decoration': IMG('1516627145497-ae6968895b74'),
+  'baby-shower-naming': IMG('1516627145497-ae6968895b74'),
+  'baby-shower-and-naming': IMG('1516627145497-ae6968895b74'),
   'naming-ceremony': IMG('1526047932273-341f2a7631f9'), // Traditional cradle floral decor
   'welcome-baby-decor': IMG('1519657337289-077653f724ed'), // New-born home teddy & clouds
 
   // Corporate & Conferences
   'corporate-events': IMG('1511578314322-379afb476865'), // Executive keynote stage & LED wall
+  'corporate-office-events': IMG('1511578314322-379afb476865'),
+  'corporate-and-office-events': IMG('1511578314322-379afb476865'),
   'corporate-stage-setup': IMG('1511578314322-379afb476865'),
   'conference-decor': IMG('1505373877841-8d25f39d466c'), // Formal summit conference hall
   'office-party-decor': IMG('1540575467063-178a50c2df87'), // Office celebration & balloon arch
+  corporate: IMG('1511578314322-379afb476865'),
 
   // Home & Festive Celebrations
   'home-decoration': IMG('1566552881560-0be862a7c445'), // Festive pooja & Diwali florals
   'festival-decoration': IMG('1566552881560-0be862a7c445'),
   'home-floral-decor': IMG('1546484475-7f7bd55792da'), // Jasmine entrance toran & rangoli
   'floral-decor': IMG('1520854221256-17451cc331bf'), // Luxury floral arrangements & centerpieces
+  'flower-decor': IMG('1520854221256-17451cc331bf'),
+  'flower-decorations': IMG('1520854221256-17451cc331bf'),
   'house-drapes-decoration': IMG('1528605248644-14dd04022da1'), // Flowing fabric drapes & warm ceiling fairy lights
 
   // Photography, Catering & Services
   'photography-setup': IMG('1516035069371-29a1b244cc32'), // Professional studio camera lighting & gear
+  'photo-booth-props': IMG('1516035069371-29a1b244cc32'),
+  'photo-booth-and-props': IMG('1516035069371-29a1b244cc32'),
   photographer: IMG('1537633552985-df8429e8048b'), // Candid wedding photographer in action
+  photography: IMG('1537633552985-df8429e8048b'),
   catering: IMG('1555244162-803834f70033'), // Gourmet multi-cuisine buffet
   anchor: IMG('1465847899084-d164df4dedc6'), // Stage host with mic
   'pandit-ji': IMG('1591604466107-ec97de577aff'), // Sacred rituals & traditional pooja
@@ -107,11 +133,58 @@ const CATEGORY_COUNTS: Record<string, number> = {
 };
 
 export function getCategoryPhoto(slug: string): string {
-  return CATEGORY_PHOTOS[slug] ?? IMG('1519741497674-611481863552');
+  if (CATEGORY_PHOTOS[slug]) return CATEGORY_PHOTOS[slug];
+  const s = slug.toLowerCase();
+  if (s.includes('wedding') || s.includes('mandap'))
+    return CATEGORY_PHOTOS['mandap-decoration'];
+  if (s.includes('stage')) return CATEGORY_PHOTOS['stage-decoration'];
+  if (s.includes('engagement') || s.includes('ring'))
+    return CATEGORY_PHOTOS['engagement-decor'];
+  if (s.includes('haldi') || s.includes('mehendi') || s.includes('mehndi'))
+    return CATEGORY_PHOTOS['haldi-decoration'];
+  if (s.includes('birthday')) return CATEGORY_PHOTOS['birthday-decoration'];
+  if (s.includes('balloon')) return CATEGORY_PHOTOS['balloon-decoration'];
+  if (
+    s.includes('anniversary') ||
+    s.includes('romance') ||
+    s.includes('candle')
+  )
+    return CATEGORY_PHOTOS['anniversary-decoration'];
+  if (s.includes('baby') || s.includes('naming'))
+    return CATEGORY_PHOTOS['baby-shower'];
+  if (
+    s.includes('corporate') ||
+    s.includes('office') ||
+    s.includes('conference')
+  )
+    return CATEGORY_PHOTOS['corporate-events'];
+  if (s.includes('photo') || s.includes('booth') || s.includes('camera'))
+    return CATEGORY_PHOTOS['photography-setup'];
+  if (s.includes('light') || s.includes('sound') || s.includes('dj'))
+    return CATEGORY_PHOTOS['lighting-and-sound'];
+  if (s.includes('flower') || s.includes('floral'))
+    return CATEGORY_PHOTOS['floral-decor'];
+  if (s.includes('venue') || s.includes('outdoor') || s.includes('tent'))
+    return CATEGORY_PHOTOS['venue-decoration'];
+  if (s.includes('kid')) return CATEGORY_PHOTOS['kids-theme-party'];
+  return (
+    CATEGORY_PHOTOS['wedding-decorations'] ?? IMG('1519741497674-611481863552')
+  );
 }
 
 export function getCategoryCount(slug: string): number {
-  return CATEGORY_COUNTS[slug] ?? 12;
+  if (CATEGORY_COUNTS[slug]) return CATEGORY_COUNTS[slug];
+  const s = slug.toLowerCase();
+  if (s.includes('wedding')) return 42;
+  if (s.includes('birthday')) return 36;
+  if (s.includes('balloon')) return 48;
+  if (s.includes('anniversary')) return 28;
+  if (s.includes('baby')) return 24;
+  if (s.includes('corporate')) return 19;
+  if (s.includes('haldi')) return 22;
+  if (s.includes('light')) return 16;
+  if (s.includes('photo')) return 31;
+  return 18;
 }
 
 export function useCategoriesPage() {
