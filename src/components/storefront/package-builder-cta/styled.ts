@@ -117,7 +117,6 @@ export const ActionButton = styled(Link)`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 4px 14px var(--button-primary-shadow);
   transition: transform 0.2s ease, background 0.2s ease;
   align-self: flex-start;
   margin-top: 0.75rem;
@@ -133,7 +132,6 @@ export const RightInteractivePreview = styled.div`
   border: 1px solid var(--color-border);
   border-radius: ${radii.xl};
   padding: 1.75rem;
-  box-shadow: 0 8px 30px var(--color-shadow);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;

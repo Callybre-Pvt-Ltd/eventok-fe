@@ -72,7 +72,7 @@ export function ServiceRail() {
                 color: 'var(--color-text-secondary)',
               }}
             >
-              No vendor services yet. Categories are available — vendors can
+              No vendor services yet. Categories are available, and vendors can
               publish listings from their dashboard.
             </SectionSubtitle>
           ) : (

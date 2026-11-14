@@ -188,9 +188,7 @@ export const ConsultCta = styled(Link)`
   font-weight: 700;
   letter-spacing: 0.01em;
   background: var(--button-primary-gradient);
-  box-shadow: 0 6px 20px var(--button-primary-shadow);
-  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.35s ease;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 
   svg {
     transition: transform 0.35s ease;
@@ -374,7 +372,6 @@ export const MobileCta = styled(Link)`
   font-size: 1rem;
   font-weight: 700;
   background: var(--button-primary-gradient);
-  box-shadow: 0 8px 24px var(--button-primary-shadow);
 
   &:focus-visible {
     outline: 2px solid var(--color-primary);

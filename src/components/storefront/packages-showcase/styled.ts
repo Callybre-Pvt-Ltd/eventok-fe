@@ -20,13 +20,10 @@ export const Card = styled(Link)`
   border-radius: ${radii.xl};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 4px 16px var(--color-shadow);
   text-decoration: none;
-  transition: box-shadow 0.25s ease, transform 0.25s ease,
-    border-color 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 
   &:hover {
-    box-shadow: 0 10px 30px var(--color-shadow-strong);
     border-color: var(--color-primary);
     transform: translateY(-3px);
   }

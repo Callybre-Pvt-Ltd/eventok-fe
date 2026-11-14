@@ -26,15 +26,12 @@ const ToggleButton = styled.button<{
   cursor: pointer;
   padding: 0;
   transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
-  box-shadow: 0 2px 8px var(--theme-toggle-shadow, var(--color-shadow));
 
   &:hover {
     transform: translateY(-2px) scale(1.05);
     border-color: var(--color-primary);
     background: var(--theme-toggle-hover-bg, var(--color-primary-light));
     color: var(--color-primary);
-    box-shadow: 0 4px 14px
-      var(--theme-toggle-shadow, var(--color-shadow-strong));
   }
 
   &:focus-visible {
@@ -55,7 +52,6 @@ const ToggleButton = styled.button<{
     --theme-toggle-bg: #ffffff;
     --theme-toggle-color: var(--color-primary);
     --theme-toggle-hover-bg: #fff7ed;
-    --theme-toggle-shadow: rgba(60, 42, 25, 0.08);
   }
 
   [data-theme='dark'] & {
@@ -63,7 +59,6 @@ const ToggleButton = styled.button<{
     --theme-toggle-bg: var(--color-surface);
     --theme-toggle-color: var(--color-primary);
     --theme-toggle-hover-bg: var(--color-surface-elevated);
-    --theme-toggle-shadow: rgba(0, 0, 0, 0.4);
   }
 `;
 

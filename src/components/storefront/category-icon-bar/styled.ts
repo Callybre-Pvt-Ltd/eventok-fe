@@ -18,7 +18,6 @@ export const BarInner = styled.div`
   border-radius: ${radii.xl};
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 20px var(--color-shadow);
   overflow-x: auto;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
@@ -94,7 +93,6 @@ export const IconBox = styled.div`
   ${CategoryItem}:hover & {
     background: var(--color-primary);
     color: #ffffff;
-    box-shadow: 0 4px 12px var(--button-primary-shadow);
   }
 
   [data-theme='dark'] & {

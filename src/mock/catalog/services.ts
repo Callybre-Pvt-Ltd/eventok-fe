@@ -154,7 +154,7 @@ const seeds: Seed[] = [
     originalPrice: 24999,
     images: [
       IMG('1519167758481-83f550bb49b3'), // Mehndi fairy light lounge
-      IMG('1544161515-4ab6ce6db874'), // Banquet lounge seating
+      IMG('1544077960-604201fe74bc'), // Bohemian colorful floor seating
     ],
     tags: ['Backdrop for Mehendi', 'Canopy Decoration', 'Boho'],
     attributes: ['Mehendi', 'Boho', 'Colourful', 'Outdoor Decoration'],

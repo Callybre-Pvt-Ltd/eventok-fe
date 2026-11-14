@@ -8,10 +8,10 @@ const IMG = (id: string) => `${UNSPLASH}${id}?auto=format&fit=crop&w=800&q=85`;
 /** Complete, non-repeating, ultra-aesthetic image database for all EventOK categories */
 const CATEGORY_PHOTOS: Record<string, string> = {
   // Weddings & Traditional
-  'mandap-decoration': IMG('1519741497674-611481863552'), // Royal wedding mandap with gold florals
-  'wedding-decorations': IMG('1519741497674-611481863552'),
-  'wedding-decoration': IMG('1519741497674-611481863552'),
-  wedding: IMG('1519741497674-611481863552'),
+  'mandap-decoration': IMG('1519225421980-715cb0215aed'), // Royal wedding mandap with gold florals
+  'wedding-decorations': IMG('1519225421980-715cb0215aed'),
+  'wedding-decoration': IMG('1519225421980-715cb0215aed'),
+  wedding: IMG('1519225421980-715cb0215aed'),
   'mandap-stage-decor': IMG('1519225421980-715cb0215aed'),
   'mandap-and-stage-decor': IMG('1519225421980-715cb0215aed'),
   'stage-decoration': IMG('1511285560929-80b456fea0bc'), // Grand reception stage with floral chandeliers
@@ -33,7 +33,8 @@ const CATEGORY_PHOTOS: Record<string, string> = {
   'light-and-sound': IMG('1470225620780-dba8ba36b745'),
   'lighting-ambiance': IMG('1470225620780-dba8ba36b745'),
   'bride-makeup': IMG('1522337360788-8b13dee7a37e'), // Editorial bridal cosmetics & styling
-  'bridal-entry': IMG('1544161515-4ab6ce6db874'), // Flowing drape floral entry path
+  'bridal-entry': IMG('1519741497674-611481863552'), // Bride walking down wedding floral aisle
+  'bridal-walkway': IMG('1519741497674-611481863552'),
   'entrance-welcome': IMG('1465495976277-4387d4b0b4c6'), // Grand entrance floral archway
   venues: IMG('1529636798458-92182e662485'), // Luxury banquet hall & fine dining setting
 

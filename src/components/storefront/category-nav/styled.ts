@@ -74,7 +74,6 @@ export const Flyout = styled.div`
   border-radius: ${radii.md};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 8px 28px var(--color-shadow-strong);
   opacity: 0;
   visibility: hidden;
   transform: translateY(-4px);

@@ -88,7 +88,6 @@ export const MasterFeatureCard = styled.div`
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 20px var(--color-shadow);
   display: flex;
   flex-direction: column;
 `;
@@ -212,7 +211,6 @@ export const MiniCard = styled(Link)`
   border-radius: ${radii.lg};
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 2px 8px var(--color-shadow);
   text-decoration: none;
   transition: transform 0.2s ease, border-color 0.2s ease;
 
@@ -275,7 +273,6 @@ export const TrioCard = styled(Link)`
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 16px var(--color-shadow);
   text-decoration: none;
   transition: transform 0.2s ease, border-color 0.2s ease;
 

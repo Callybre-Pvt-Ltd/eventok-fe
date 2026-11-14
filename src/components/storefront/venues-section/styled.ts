@@ -11,13 +11,11 @@ export const Banner = styled.div`
   border-radius: ${radii.xl};
   background: #0d5c75;
   border: 1px solid #0f766e;
-  box-shadow: 0 4px 16px rgba(13, 92, 117, 0.15);
   margin-bottom: 2.5rem;
 
   [data-theme='dark'] & {
     background: #0a3f50;
     border-color: #115e59;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   }
 
   ${media.lg} {
@@ -57,7 +55,6 @@ export const BannerCta = styled.a`
   font-size: ${fontSizes.sm};
   font-weight: 800;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {
@@ -106,14 +103,11 @@ export const VenueCard = styled.article`
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   overflow: hidden;
-  box-shadow: 0 2px 10px var(--color-shadow);
   display: flex;
   flex-direction: column;
-  transition: box-shadow 0.25s ease, transform 0.25s ease,
-    border-color 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 
   &:hover {
-    box-shadow: 0 16px 36px -8px var(--color-shadow-strong);
     border-color: var(--color-primary);
     transform: translateY(-3px);
   }
@@ -121,14 +115,11 @@ export const VenueCard = styled.article`
   [data-theme='light'] & {
     background: #ffffff;
     border-color: rgba(226, 232, 240, 0.85);
-    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.07),
-      0 2px 6px rgba(0, 0, 0, 0.02);
   }
 
   [data-theme='dark'] & {
     background: #141a32;
     border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
   }
 `;
 
@@ -208,7 +199,6 @@ export const VenueButton = styled.a`
   font-size: ${fontSizes.xs};
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 4px 12px var(--button-primary-shadow);
   transition: transform 0.2s ease;
 
   &:hover {

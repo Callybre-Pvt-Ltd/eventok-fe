@@ -55,10 +55,14 @@ export const storefront = {
   venuesListTitle: 'Explore Cafes near you',
   venuesView: 'View',
 
-  weddingEyebrow: 'Wedding specials',
+  weddingEyebrow: 'Wedding Specials & Inspiration',
   weddingTitle: 'Everything for Your Perfect Wedding',
-  weddingChooseService: 'Choose media',
+  weddingSubtitle:
+    'From sacred mandaps and grand reception stages to intimate haldi ceremonies, explore verified wedding decor crafted by top artisans.',
+  weddingViewAll: 'Explore All Wedding Services',
   weddingExplore: 'Explore Decorations',
+  weddingStartingAt: 'Starts at',
+  weddingView: 'View Services',
 
   builderTitle: 'Select a Category to Build Your Package',
   builderSubtitle:
@@ -87,7 +91,7 @@ export const storefront = {
     'The vendor confirms your date before any payment is collected.',
   addonsTitle: 'Optional add-ons',
   addonsSubtitle: 'Extras you can request from this vendor when you book.',
-  packagesEmpty: 'No packages are published yet — check back soon.',
+  packagesEmpty: 'No packages are published yet. Check back soon.',
   packagesIncludes: 'Includes',
 
   previousWorkEyebrow: 'Our recent celebrations',
@@ -126,7 +130,7 @@ export const storefront = {
   shopTags: 'Tags',
   shopResults: '{{count}} services',
   shopEmpty:
-    'No vendor services published yet. Categories are ready — vendors can create and publish listings to appear here.',
+    'No vendor services published yet. Categories are ready, and vendors can create and publish listings to appear here.',
   shopEmptyAction: 'Clear filters',
   shopOpenFilters: 'Show filters',
 
@@ -139,7 +143,7 @@ export const storefront = {
   pdpTabExperience: 'About This Experience',
   pdpTabCancellation: 'Cancellation Policy',
   pdpIncludedIntro:
-    'Everything below arrives with your booking — nothing to arrange yourself.',
+    'Everything below arrives with your booking, with nothing to arrange yourself.',
   pdpIncludedChip: 'Included',
   pdpRelated: 'You may also like',
   pdpTotalPrice: 'Total price',
@@ -157,7 +161,7 @@ export const storefront = {
   pdpTrustVerified: 'Vendor Verified',
   pdpTrustRefund: 'Easy Refunds',
   pdpPartnerNote:
-    'Fulfilled by an EventOK verified partner team. Partner details stay private — EventOK coordinates the setup for you.',
+    'Fulfilled by an EventOK verified partner team. Partner details stay private, as EventOK coordinates the setup for you.',
   pdpNotFound: 'We could not find that service.',
   pdpBackToShop: 'Back to all services',
 

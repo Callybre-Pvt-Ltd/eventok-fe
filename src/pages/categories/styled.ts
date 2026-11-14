@@ -112,7 +112,6 @@ export const MasterCard = styled(Link)`
   text-decoration: none;
   background: #0f172a;
   border: 1px solid var(--color-border);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
@@ -209,7 +208,6 @@ export const SubItem = styled(Link)`
   border: 1px solid var(--color-border);
   border-radius: ${radii.sm};
   text-decoration: none;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
   transition: all 0.15s ease;
 
   &:hover {
@@ -267,7 +265,6 @@ export const CategoryCard = styled(Link)`
   border-radius: ${radii.md};
   overflow: hidden;
   text-decoration: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {

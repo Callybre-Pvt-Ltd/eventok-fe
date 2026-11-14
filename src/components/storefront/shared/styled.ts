@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Section = styled.section<{ $tint?: boolean; $dark?: boolean }>`
   width: 100%;
@@ -41,21 +41,12 @@ export const SectionHead = styled.div`
 export const Eyebrow = styled.span<{ $onDark?: boolean }>`
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
   font-family: ${fontFamily.body};
   font-size: ${fontSizes.xs};
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-primary);
-
-  &::before {
-    content: '';
-    width: 1.75rem;
-    height: 2px;
-    border-radius: ${radii.full};
-    background: currentColor;
-  }
 `;
 
 export const SectionTitle = styled.h2<{ $onDark?: boolean }>`
@@ -88,13 +79,11 @@ export const PillLink = styled(Link)`
   border: none;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: ${shadows.sm};
   transition: background 0.2s ease, transform 0.2s ease;
 
   &:hover {
     background: var(--color-primary-hover);
     transform: translateY(-1px);
-    box-shadow: ${shadows.md};
   }
 `;
 
@@ -195,8 +184,6 @@ export const TabItem = styled.button<{ $active: boolean }>`
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: ${({ $active }) =>
-    $active ? '0 2px 8px var(--button-primary-shadow)' : 'none'};
   transition: all 0.2s ease;
 
   &:hover {

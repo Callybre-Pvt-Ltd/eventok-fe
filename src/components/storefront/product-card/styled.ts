@@ -11,11 +11,9 @@ export const Card = styled.article<{ $width?: string }>`
   border-radius: ${radii.md};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
-  box-shadow: 0 1px 4px var(--color-shadow);
-  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    box-shadow: 0 6px 18px var(--color-shadow-strong);
     border-color: var(--color-primary);
     transform: translateY(-2px);
   }
@@ -23,10 +21,8 @@ export const Card = styled.article<{ $width?: string }>`
   [data-theme='light'] & {
     background: #ffffff;
     border-color: var(--color-border);
-    box-shadow: 0 2px 10px rgba(60, 42, 25, 0.05);
 
     &:hover {
-      box-shadow: 0 8px 24px rgba(60, 42, 25, 0.12);
       border-color: var(--color-primary);
       transform: translateY(-2px);
     }
@@ -35,10 +31,8 @@ export const Card = styled.article<{ $width?: string }>`
   [data-theme='dark'] & {
     background: var(--color-surface);
     border-color: var(--color-border);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
 
     &:hover {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
       border-color: var(--color-primary);
       transform: translateY(-2px);
     }
@@ -99,7 +93,6 @@ export const Ribbon = styled.span`
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
 `;
 
 export const NewChip = styled.span`
@@ -128,7 +121,6 @@ export const WishButton = styled.button<{ $active: boolean }>`
   background: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(8px);
   color: ${({ $active }) => ($active ? '#e11d48' : '#0f172a')};
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   cursor: pointer;
   transition: color 0.2s ease, transform 0.2s ease, background 0.2s ease;
 
@@ -238,7 +230,6 @@ export const BookButton = styled(Link)`
   text-transform: uppercase;
   letter-spacing: 0.06em;
   text-decoration: none;
-  box-shadow: 0 2px 6px var(--button-primary-shadow);
   transition: background 0.15s ease, transform 0.15s ease;
 
   &:hover {

@@ -53,20 +53,15 @@ export const radii = {
   full: '9999px',
 } as const;
 
-import { brandRgb } from '@/theme/brand';
-
-const c = brandRgb.charcoal;
-const f = brandRgb.forest;
-
 export const shadows = {
   none: 'none',
-  sm: `0 1px 3px rgba(${c}, 0.06)`,
-  md: `0 4px 20px rgba(${c}, 0.08)`,
-  lg: `0 12px 40px rgba(${c}, 0.1)`,
-  xl: `0 24px 64px rgba(${c}, 0.12)`,
-  photo: `0 20px 50px rgba(${c}, 0.2)`,
-  glow: `0 0 48px rgba(${f}, 0.2)`,
-  inner: `inset 0 1px 2px rgba(${c}, 0.06)`,
+  sm: 'none',
+  md: 'none',
+  lg: 'none',
+  xl: 'none',
+  photo: 'none',
+  glow: 'none',
+  inner: 'none',
 } as const;
 
 export const zIndex = {

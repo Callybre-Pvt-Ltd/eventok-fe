@@ -179,10 +179,10 @@ export default function AboutPage() {
             <h2>{t('marketplace.aboutTimeline')}</h2>
             <Timeline $palette={palette}>
               {[
-                '2020 — Founded in Mumbai',
-                '2022 — 500+ events hosted',
-                '2024 — Pan-India expansion',
-                '2026 — 12,000+ happy hosts',
+                '2020: Founded in Mumbai',
+                '2022: 500+ events hosted',
+                '2024: Pan-India expansion',
+                '2026: 12,000+ happy hosts',
               ].map(item => (
                 <TimelineItem
                   key={item}

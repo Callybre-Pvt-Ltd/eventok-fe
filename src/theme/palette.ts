@@ -39,8 +39,8 @@ export const lightPalette = {
   borderLight: '#F2ECE1',
   overlay: 'rgba(28, 25, 23, 0.6)',
   glass: 'rgba(255, 253, 250, 0.95)',
-  shadow: 'rgba(60, 42, 25, 0.06)',
-  shadowStrong: 'rgba(60, 42, 25, 0.14)',
+  shadow: 'none',
+  shadowStrong: 'none',
   // Solid colors only — zero gradients
   gradientHero: '#FAF7F2',
   gradientPrimary: '#EA580C',
@@ -84,8 +84,8 @@ export const darkPalette = {
   borderLight: '#162032',
   overlay: 'rgba(4, 7, 14, 0.85)',
   glass: '#121A2B',
-  shadow: 'rgba(0, 0, 0, 0.45)',
-  shadowStrong: 'rgba(0, 0, 0, 0.7)',
+  shadow: 'none',
+  shadowStrong: 'none',
   // Solid colors only — zero gradients
   gradientHero: '#0E1424',
   gradientPrimary: '#F97316',

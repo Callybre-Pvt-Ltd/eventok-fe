@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { brandColors } from '@/theme/brand';
-import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Card = styled.aside`
   display: grid;
@@ -9,7 +9,6 @@ export const Card = styled.aside`
   border-radius: ${radii.lg};
   border: 1px solid ${brandColors.tan};
   background: ${brandColors.white};
-  box-shadow: ${shadows.md};
   align-self: start;
 
   ${media.lg} {
@@ -20,7 +19,6 @@ export const Card = styled.aside`
   [data-theme='dark'] & {
     background: var(--color-surface);
     border-color: var(--color-border);
-    box-shadow: 0 8px 30px var(--color-shadow-strong);
   }
 `;
 
@@ -157,7 +155,6 @@ export const PrimaryButton = styled.button`
 
   [data-theme='dark'] & {
     background: var(--button-primary-gradient);
-    box-shadow: 0 4px 16px var(--button-primary-shadow);
   }
 `;
 

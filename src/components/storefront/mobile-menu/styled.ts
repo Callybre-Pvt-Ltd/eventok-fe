@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { brandColors, brandRgb } from '@/theme/brand';
-import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const Overlay = styled.div<{ $open: boolean }>`
   position: fixed;
@@ -27,7 +27,7 @@ export const Drawer = styled.aside<{ $open: boolean }>`
   display: flex;
   flex-direction: column;
   background: ${brandColors.white};
-  box-shadow: ${shadows.xl};
+  border-left: 1px solid var(--color-border);
   transform: translateX(${({ $open }) => ($open ? '0' : '100%')});
   transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   overflow-y: auto;

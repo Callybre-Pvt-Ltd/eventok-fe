@@ -1,78 +1,88 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
-import {
-  Eyebrow,
-  PillLink,
-  Section,
-  SectionInner,
-  SectionTitle,
-} from '@/components/storefront/shared/styled';
+import { Section, SectionInner } from '@/components/storefront/shared/styled';
 import { getCategoryPhoto } from '@/pages/categories/helper';
 import { useWeddingServices } from './helper';
 import {
-  Actions,
-  ChooseLabel,
-  Collage,
-  CollageImage,
-  Layout,
-  Left,
-  Thumb,
-  Tile,
-  TileGrid,
-  TileLabel,
+  CardBody,
+  CardDescription,
+  CardFooter,
+  CardImage,
+  CardMedia,
+  CardTag,
+  CardTitle,
+  ExploreButton,
+  ExploreLink,
+  Eyebrow,
+  HeaderAction,
+  HeaderContent,
+  HeaderRow,
+  MediaOverlay,
+  PricePrefix,
+  PriceTag,
+  PriceValue,
+  SectionSubtitle,
+  SectionTitle,
+  WeddingCard,
+  WeddingGrid,
 } from './styled';
 
 export function WeddingServices() {
   const { t } = useTranslation();
-  const { tiles, collage } = useWeddingServices();
+  const { tiles } = useWeddingServices();
 
   return (
     <Section $tint>
       <SectionInner>
-        <Layout>
-          <Left>
-            <Eyebrow>{t('storefront.weddingEyebrow')}</Eyebrow>
+        <HeaderRow>
+          <HeaderContent>
+            <Eyebrow>
+              <Sparkles size={14} />
+              <span>{t('storefront.weddingEyebrow')}</span>
+            </Eyebrow>
             <SectionTitle>{t('storefront.weddingTitle')}</SectionTitle>
-            {tiles.length > 0 && (
-              <>
-                <ChooseLabel>
-                  {t('storefront.weddingChooseService')}
-                </ChooseLabel>
-                <TileGrid>
-                  {tiles.map(tile => (
-                    <Tile key={tile.id} to={`/category/${tile.slug}`}>
-                      <Thumb
-                        src={tile.photo || getCategoryPhoto(tile.slug)}
-                        alt={tile.name}
-                        loading="lazy"
-                      />
-                      <TileLabel>{tile.name}</TileLabel>
-                    </Tile>
-                  ))}
-                </TileGrid>
-              </>
-            )}
-            <Actions>
-              <PillLink to={`${ROUTES.SHOP}?event=wedding`}>
-                {t('storefront.weddingViewAll')}
-                <ArrowRight size={16} />
-              </PillLink>
-            </Actions>
-          </Left>
+            <SectionSubtitle>{t('storefront.weddingSubtitle')}</SectionSubtitle>
+          </HeaderContent>
+          <HeaderAction>
+            <ExploreButton to={`${ROUTES.SHOP}?event=wedding`}>
+              <span>{t('storefront.weddingViewAll')}</span>
+              <ArrowRight size={16} />
+            </ExploreButton>
+          </HeaderAction>
+        </HeaderRow>
 
-          <Collage>
-            {collage.map((src, index) => (
-              <CollageImage
-                key={src}
-                src={src}
-                alt=""
-                $tall={index === 0 || index === 3}
-                loading="lazy"
-              />
-            ))}
-          </Collage>
-        </Layout>
+        <WeddingGrid>
+          {tiles.map(tile => (
+            <WeddingCard key={tile.id} to={`/category/${tile.slug}`}>
+              <CardMedia>
+                <CardImage
+                  src={tile.photo || getCategoryPhoto(tile.slug)}
+                  alt={tile.name}
+                  loading="lazy"
+                />
+                <MediaOverlay />
+                {tile.tag && <CardTag>{tile.tag}</CardTag>}
+              </CardMedia>
+              <CardBody>
+                <CardTitle>{tile.name}</CardTitle>
+                <CardDescription>{tile.description}</CardDescription>
+                <CardFooter>
+                  <PriceTag>
+                    <PricePrefix>
+                      {t('storefront.weddingStartingAt', 'Starts at')}
+                    </PricePrefix>
+                    <PriceValue>{tile.startingPrice}</PriceValue>
+                  </PriceTag>
+                  <ExploreLink aria-hidden>
+                    <span>{t('storefront.weddingView', 'View Services')}</span>
+                    <ArrowRight size={14} />
+                  </ExploreLink>
+                </CardFooter>
+              </CardBody>
+            </WeddingCard>
+          ))}
+        </WeddingGrid>
       </SectionInner>
     </Section>
   );

@@ -85,7 +85,6 @@ export const SearchWidget = styled.div`
   border: 1px solid var(--color-border);
   border-radius: ${radii.xl};
   padding: 1rem;
-  box-shadow: 0 8px 30px var(--color-shadow);
   display: grid;
   gap: 0.75rem;
   grid-template-columns: 1fr;
@@ -96,10 +95,6 @@ export const SearchWidget = styled.div`
     padding: 0.75rem 1rem;
     gap: 0.75rem;
     border-radius: ${radii.full};
-  }
-
-  [data-theme='light'] & {
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
   }
 `;
 
@@ -172,7 +167,6 @@ export const SearchAction = styled.button`
   font-weight: 700;
   border: none;
   cursor: pointer;
-  box-shadow: 0 4px 14px var(--button-primary-shadow);
   transition: transform 0.18s ease, background 0.18s ease;
   white-space: nowrap;
 
@@ -218,7 +212,6 @@ export const MainCard = styled.div`
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 8px 30px var(--color-shadow);
 `;
 
 export const CardMedia = styled.div`
@@ -308,7 +301,6 @@ export const FloatingPill = styled(Link)`
   border-radius: ${radii.lg};
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 16px var(--color-shadow);
   text-decoration: none;
   transition: transform 0.2s ease, border-color 0.2s ease;
 

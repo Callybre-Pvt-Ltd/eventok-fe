@@ -4,7 +4,7 @@ export const landing = {
   categoryProducts: 'offerings',
   heroTitle: 'Plan unforgettable events',
   heroSubtitle:
-    'Explore our services, view real celebrations, and book with confidence — all in one place.',
+    'Explore our services, view real celebrations, and book with confidence, all in one place.',
   heroCta: 'Explore Services',
   exploreCategories: 'View All Services',
   heroSecondary: 'How It Works',
@@ -35,7 +35,7 @@ export const landing = {
   contactSuccess: 'Message sent! We will get back to you soon.',
   aboutTitle: 'About EventOK',
   aboutContent:
-    'EventOK is your trusted event partner — offering curated services for weddings, celebrations, and corporate occasions. Every enquiry, booking, and payment is supervised for your safety.',
+    'EventOK is your trusted event partner, offering curated services for weddings, celebrations, and corporate occasions. Every enquiry, booking, and payment is supervised for your safety.',
   howItWorksTitle: 'How EventOK works',
   howItWorksSubtitle: 'From discovery to celebration in four simple steps',
   step1Title: 'Discover',
@@ -86,9 +86,9 @@ export const landing = {
 
   luxuryHeroTitle: 'Curated events,\ncrafted with care',
   luxuryHeroCta: "Let's Get Started",
-  luxuryHeroTag: '# EventOK Services',
+  luxuryHeroTag: 'EventOK Services',
   luxuryHeroSubtitle:
-    'Discover what we provide — bespoke experiences and celebrations designed to leave a lasting impression.',
+    'Discover what we provide, bespoke experiences and celebrations designed to leave a lasting impression.',
   luxurySocialProof: '12K+ Happy Hosts',
   luxuryFeatureCardTitle: 'Beautiful in every detail',
   luxuryReadMore: 'Read More',
@@ -111,7 +111,7 @@ export const landing = {
 
   luxuryCollectionTitle: 'What We Provide',
   luxuryCollectionLead:
-    'Explore our signature services — each crafted for exceptional quality, care, and style.',
+    'Explore our signature services, each crafted for exceptional quality, care, and style.',
   luxurySeeMore: 'See All Services',
 
   luxuryChooseType: 'Choose the occasion',

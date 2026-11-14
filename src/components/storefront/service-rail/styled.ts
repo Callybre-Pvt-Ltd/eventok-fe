@@ -22,17 +22,14 @@ export const SpotlightCard = styled.div`
   border: 1px solid var(--color-border);
   border-radius: ${radii.xl};
   overflow: hidden;
-  box-shadow: 0 4px 16px var(--color-shadow);
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 
   [data-theme='light'] & {
     background: #ffffff;
-    box-shadow: 0 4px 20px rgba(60, 42, 25, 0.08);
   }
 
   [data-theme='dark'] & {
     background: var(--color-surface);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
   }
 
   &:hover {
@@ -82,7 +79,6 @@ export const SpotlightBadge = styled.span`
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 `;
 
 export const SpotlightBody = styled.div`

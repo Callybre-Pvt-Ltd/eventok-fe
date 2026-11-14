@@ -65,12 +65,11 @@ export const StoryCard = styled.div`
   overflow: hidden;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  box-shadow: 0 4px 18px var(--color-shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 28px var(--color-shadow-strong);
+    border-color: var(--color-primary);
   }
 `;
 
