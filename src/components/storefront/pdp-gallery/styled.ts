@@ -9,7 +9,6 @@ export const Frame = styled.div`
   border: 1px solid var(--color-border);
   background: var(--color-bg-alt);
   aspect-ratio: 4 / 3;
-  box-shadow: 0 4px 20px var(--color-shadow);
 `;
 
 export const Image = styled.img`

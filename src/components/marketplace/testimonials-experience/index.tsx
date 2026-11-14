@@ -135,7 +135,7 @@ export function TestimonialsExperience() {
                   <Star size={14} fill="currentColor" /> {s.rating}
                 </div>
                 <p>&ldquo;{s.comment}&rdquo;</p>
-                <cite>— {s.customerName}</cite>
+                <cite>{s.customerName}</cite>
               </ReviewCard>
             ))}
           </CarouselInner>

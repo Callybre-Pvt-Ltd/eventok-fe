@@ -73,7 +73,6 @@ export const NavArrowButton = styled.button`
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   color: var(--color-text);
-  box-shadow: 0 2px 6px var(--color-shadow);
   cursor: pointer;
   transition: all 0.2s ease;
 

@@ -77,21 +77,11 @@ export const Content = styled.div`
 export const Eyebrow = styled.span`
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
   font-size: ${fontSizes.xs};
   font-weight: 800;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #ff8a3d;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-
-  &::before {
-    content: '';
-    width: 1.75rem;
-    height: 2px;
-    border-radius: ${radii.full};
-    background: currentColor;
-  }
 `;
 
 export const Title = styled.h1`
@@ -103,14 +93,12 @@ export const Title = styled.h1`
   line-height: 1.12;
   letter-spacing: -0.025em;
   color: #ffffff;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.75), 0 1px 3px rgba(0, 0, 0, 0.9);
 `;
 
 export const Accent = styled.span`
   color: #ff8a3d;
   font-family: ${fontFamily.display};
   font-weight: 800;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
 `;
 
 export const Subtitle = styled.p`
@@ -120,7 +108,6 @@ export const Subtitle = styled.p`
   line-height: 1.6;
   color: #ffffff;
   font-weight: 450;
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.75), 0 1px 2px rgba(0, 0, 0, 0.9);
 `;
 
 export const SearchWidget = styled.form`
@@ -133,15 +120,12 @@ export const SearchWidget = styled.form`
   align-items: center;
   gap: 0.75rem;
   box-sizing: border-box;
-  transition: background-color 0.25s ease, border-color 0.25s ease,
-    box-shadow 0.25s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 
   [data-theme='light'] & {
     background: rgba(255, 253, 250, 0.94);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(232, 226, 213, 0.95);
-    box-shadow: 0 16px 40px rgba(60, 42, 25, 0.16),
-      0 4px 12px rgba(60, 42, 25, 0.08);
     color: #1c1917;
   }
 
@@ -149,7 +133,6 @@ export const SearchWidget = styled.form`
     background: rgba(18, 26, 43, 0.9);
     backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     color: #f8fafc;
   }
 
@@ -332,13 +315,11 @@ export const PrimaryCta = styled(Link)`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.35);
-  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {
     transform: translateY(-2px);
     background: var(--color-primary-hover);
-    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
   }
 
   &:active {
@@ -356,20 +337,18 @@ export const GhostCta = styled(Link)`
   font-weight: 700;
   text-decoration: none;
   transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
-    color 0.2s ease, box-shadow 0.2s ease;
+    color 0.2s ease;
 
   [data-theme='light'] & {
     background: rgba(255, 253, 250, 0.92);
     border: 1px solid rgba(225, 218, 205, 0.95);
     color: #1c1917;
-    box-shadow: 0 4px 14px rgba(40, 25, 10, 0.12);
 
     &:hover {
       background: #ffffff;
       border-color: var(--color-primary);
       color: var(--color-primary);
       transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(40, 25, 10, 0.18);
     }
   }
 
@@ -401,7 +380,6 @@ export const TrustRow = styled.div`
   font-size: ${fontSizes.xs};
   font-weight: 650;
   letter-spacing: 0.02em;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.85);
 
   ${media.belowMd} {
     gap: 0.75rem;
@@ -481,14 +459,12 @@ export const Arrow = styled.button`
   cursor: pointer;
   user-select: none;
   pointer-events: auto;
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease,
-    box-shadow 0.2s ease;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 
   [data-theme='light'] & {
     background: rgba(255, 253, 250, 0.95);
     border: 1px solid rgba(225, 218, 205, 0.95);
     color: #1c1917;
-    box-shadow: 0 4px 14px rgba(40, 25, 10, 0.15);
 
     &:hover {
       background: var(--color-primary);
@@ -507,7 +483,6 @@ export const Arrow = styled.button`
     border: 1px solid rgba(255, 255, 255, 0.2);
     backdrop-filter: blur(8px);
     color: #ffffff;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
 
     &:hover {
       background: var(--color-primary);

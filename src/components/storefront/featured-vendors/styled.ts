@@ -23,13 +23,10 @@ export const VendorCardRoot = styled.article`
   border: 1px solid var(--color-border);
   border-radius: ${radii.xl};
   overflow: hidden;
-  box-shadow: 0 2px 10px var(--color-shadow);
-  transition: transform 0.25s ease, box-shadow 0.25s ease,
-    border-color 0.25s ease;
+  transition: transform 0.25s ease, border-color 0.25s ease;
 
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px var(--color-shadow-strong);
     border-color: var(--color-primary);
   }
 `;

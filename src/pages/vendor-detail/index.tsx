@@ -216,7 +216,7 @@ export default function VendorDetailPage() {
                       <Star size={14} fill="currentColor" /> {r.rating}
                     </div>
                     <p>&ldquo;{r.comment}&rdquo;</p>
-                    <cite>— {r.customerName}</cite>
+                    <cite>{r.customerName}</cite>
                   </ReviewBody>
                 </ReviewCard>
               ))}

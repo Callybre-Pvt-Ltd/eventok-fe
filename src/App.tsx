@@ -44,6 +44,9 @@ function ThemedApp() {
           colorText: palette.text,
           colorBorder: palette.border,
           colorPrimaryBg: palette.primaryLight,
+          boxShadow: 'none',
+          boxShadowSecondary: 'none',
+          boxShadowTertiary: 'none',
           controlOutline:
             mode === 'dark'
               ? 'rgba(249, 115, 22, 0.25)'
@@ -51,10 +54,7 @@ function ThemedApp() {
         },
         components: {
           Button: {
-            primaryShadow:
-              mode === 'dark'
-                ? '0 4px 12px rgba(249, 115, 22, 0.25)'
-                : '0 4px 12px rgba(234, 88, 12, 0.22)',
+            primaryShadow: 'none',
             borderRadius: 8,
             fontWeight: 700,
           },

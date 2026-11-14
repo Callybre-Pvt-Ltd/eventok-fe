@@ -48,7 +48,6 @@ export const Play = styled.button`
   border-radius: ${radii.full};
   background: #ffffff;
   color: var(--color-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   transition: all 0.2s ease;
 

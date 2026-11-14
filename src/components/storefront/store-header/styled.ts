@@ -101,7 +101,6 @@ export const SearchForm = styled.form`
   [data-theme='light'] & {
     background: var(--color-bg);
     border-color: var(--color-border);
-    box-shadow: inset 0 1px 2px rgba(60, 42, 25, 0.04);
   }
 
   [data-theme='dark'] & {
@@ -303,7 +302,6 @@ export const LoginButton = styled(Link)`
   font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
-  box-shadow: 0 2px 6px var(--button-primary-shadow);
   transition: transform 0.2s ease, background 0.2s ease;
 
   &:hover {

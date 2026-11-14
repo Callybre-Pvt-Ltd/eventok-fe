@@ -96,9 +96,7 @@ export function WedluxProcess() {
               <Step key={step.id} data-how-step $flip={index % 2 === 1}>
                 <StepCopy>
                   <StepNumber data-how-copy>
-                    {step.number}
-                    <span aria-hidden>—</span>
-                    {t('landing.wedluxHowStepLabel')}
+                    {step.number} · {t('landing.wedluxHowStepLabel')}
                   </StepNumber>
                   <StepTitle data-how-copy>{t(step.titleKey)}</StepTitle>
                   <StepBody data-how-copy>{t(step.bodyKey)}</StepBody>

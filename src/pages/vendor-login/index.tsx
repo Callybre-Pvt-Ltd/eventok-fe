@@ -559,7 +559,7 @@ export default function VendorLoginPage() {
           <Rule />
           <Lead>
             Manage bookings, connect with clients, and take full control of your
-            event business — all in one place.
+            event business, all in one place.
           </Lead>
           <Quote>“Making every event extraordinary.”</Quote>
         </Left>
@@ -568,7 +568,7 @@ export default function VendorLoginPage() {
           <Title>Vendor Partner Portal</Title>
           <Sub>
             {signedInPanel
-              ? 'You are signed in — continue to your portal'
+              ? 'You are signed in: continue to your portal'
               : 'Select your preferred method below'}
           </Sub>
 

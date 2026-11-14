@@ -5,7 +5,7 @@ export function useHomePage() {
   const { t } = useTranslation();
 
   useEffect(() => {
-    document.title = `${t('common.appName')} — ${t(
+    document.title = `${t('common.appName')} · ${t(
       'storefront.trendingTitle',
     )}`;
   }, [t]);

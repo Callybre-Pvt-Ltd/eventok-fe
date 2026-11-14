@@ -48,8 +48,7 @@ export const StatCard = styled.div<{
   background: ${({ $variant }) =>
     $variant === 'primary' ? 'var(--color-primary)' : '#ffedd5'};
   color: ${({ $variant }) => ($variant === 'primary' ? '#ffffff' : '#9a3412')};
-  box-shadow: 0 4px 16px var(--color-shadow);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition: transform 0.25s ease;
 
   [data-theme='dark'] & {
     background: ${({ $variant }) =>
@@ -62,7 +61,6 @@ export const StatCard = styled.div<{
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px var(--color-shadow-strong);
   }
 `;
 

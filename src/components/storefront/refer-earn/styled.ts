@@ -10,20 +10,17 @@ export const Panel = styled.div`
   border: 1px solid #fed7aa;
   background: #ffffff;
   color: var(--color-text);
-  box-shadow: 0 4px 24px rgba(234, 88, 12, 0.08);
   position: relative;
   overflow: hidden;
 
   [data-theme='light'] & {
     background: #ffffff;
     border-color: #fed7aa;
-    box-shadow: 0 8px 30px rgba(60, 42, 25, 0.08);
   }
 
   [data-theme='dark'] & {
     background: var(--color-surface);
     border-color: var(--color-border);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
   }
 
   ${media.md} {

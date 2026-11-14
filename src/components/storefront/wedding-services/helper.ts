@@ -6,72 +6,107 @@ export interface WeddingTileItem {
   name: string;
   slug: string;
   photo: string;
+  tag: string;
+  description: string;
+  startingPrice: string;
+  count: number;
 }
 
 const CURATED_WEDDING_TILES: WeddingTileItem[] = [
   {
     id: 'w-1',
-    name: 'Engagement / Ring Ceremony',
-    slug: 'engagement-decor',
+    name: 'Royal Mandap Decoration',
+    slug: 'mandap-decoration',
+    tag: 'Mandap & Pheras',
+    description: 'Sacred Vedic setups, fresh floral canopies & royal seating',
+    startingPrice: '₹24,999',
+    count: 42,
     photo:
-      'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-2',
-    name: 'Haldi Ceremony',
-    slug: 'haldi-decoration',
+    name: 'Varmala & Reception Stage',
+    slug: 'stage-decoration',
+    tag: 'Stage Decor',
+    description:
+      'Grand floral backdrops, crystal chandeliers & ambient lighting',
+    startingPrice: '₹19,999',
+    count: 38,
     photo:
-      'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-3',
-    name: 'Mehendi & Sangeet Night',
-    slug: 'mehendi-decoration',
+    name: 'Haldi & Marigold Ceremony',
+    slug: 'haldi-decoration',
+    tag: 'Haldi Celebration',
+    description:
+      'Traditional yellow marigold canopies, brass urlis & photo backdrops',
+    startingPrice: '₹7,999',
+    count: 24,
     photo:
-      'https://images.unsplash.com/photo-1544077960-604201fe74bc?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-4',
-    name: 'Varmala Stage',
-    slug: 'stage-decoration',
+    name: 'Mehendi & Sangeet Night',
+    slug: 'mehendi-decoration',
+    tag: 'Sangeet & Dance',
+    description:
+      'Bohemian Rajasthani drapes, low seating, fairy lights & DJ stage',
+    startingPrice: '₹9,999',
+    count: 22,
     photo:
-      'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1544077960-604201fe74bc?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-5',
-    name: 'Mandap Decor',
-    slug: 'mandap-decoration',
+    name: 'Engagement & Ring Ceremony',
+    slug: 'engagement-decor',
+    tag: 'Ring Ceremony',
+    description:
+      'Modern pastel floral walls, neon typography & romantic arches',
+    startingPrice: '₹12,999',
+    count: 27,
     photo:
-      'https://images.unsplash.com/photo-1520854221256-17451b9916eb?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-6',
-    name: 'Reception & Cocktail',
-    slug: 'venue-decoration',
+    name: 'Bridal Entry & Floral Walkway',
+    slug: 'bride-makeup',
+    tag: 'Bridal Walkway',
+    description:
+      'Phoolon ki chaadar, fireworks entry & candlelit floral carpet',
+    startingPrice: '₹6,999',
+    count: 18,
     photo:
-      'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-7',
-    name: 'Wedding Drone Setup',
-    slug: 'lighting-and-sound',
+    name: 'Luxury Banquets & Lawns',
+    slug: 'venue-decoration',
+    tag: 'Venues & Lawns',
+    description: 'Royal farmhouses, AC banquets & open-air garden properties',
+    startingPrice: '₹45,000',
+    count: 33,
     photo:
-      'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=800&q=85',
   },
   {
     id: 'w-8',
-    name: 'Bridal Entry Decor',
-    slug: 'bride-makeup',
+    name: 'Wedding Drone & Photography',
+    slug: 'photography-setup',
+    tag: 'Photo & Film',
+    description:
+      'Cinematic 4K wedding films, candid photography & aerial drone',
+    startingPrice: '₹29,999',
+    count: 32,
     photo:
-      'https://images.unsplash.com/photo-1544161515-4ab6ce6db874?auto=format&fit=crop&w=400&q=85',
+      'https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&w=800&q=85',
   },
-];
-
-const COLLAGE = [
-  'https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=800&q=85', // Romantic Veil
-  'https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&w=800&q=85', // Rustic Floral Banquet
-  'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?auto=format&fit=crop&w=800&q=85', // Festive Evening Lights
-  'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=800&q=85', // Petal Toss Aisle
 ];
 
 export function useWeddingServices() {
@@ -97,8 +132,12 @@ export function useWeddingServices() {
       name: curated.name,
       slug: matched?.slug || curated.slug,
       photo: curated.photo,
+      tag: curated.tag,
+      description: curated.description,
+      startingPrice: curated.startingPrice,
+      count: matched?.serviceCount || curated.count,
     };
   });
 
-  return { tiles, collage: COLLAGE };
+  return { tiles };
 }
