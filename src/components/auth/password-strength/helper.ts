@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { PASSWORD_MIN_LENGTH } from '@/constants/auth';
 import { useTheme } from '@/theme';
 
 export function usePasswordStrength(password: string) {
@@ -6,7 +7,7 @@ export function usePasswordStrength(password: string) {
 
   const score = useMemo(() => {
     let s = 0;
-    if (password.length >= 6) s++;
+    if (password.length >= PASSWORD_MIN_LENGTH) s++;
     if (password.length >= 10) s++;
     if (/[A-Z]/.test(password) && /[0-9]/.test(password)) s++;
     if (/[^A-Za-z0-9]/.test(password)) s++;
