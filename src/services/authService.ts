@@ -2,7 +2,7 @@ import { peekAuthIntent } from '@/utils/auth/post-auth';
 import { apiRequest, apiRequestPaginated, ApiError } from '@/api/client';
 import type { ServiceResponse, Session, User, UserRole } from '@/types';
 
-type BackendRole = 'CLIENT' | 'VENDOR' | 'ADMIN';
+type BackendRole = 'CLIENT' | 'VENDOR' | 'ADMIN' | 'SUPER_ADMIN';
 
 interface BackendUser {
   id: string;
@@ -15,8 +15,9 @@ interface BackendUser {
 }
 
 const toFeRole = (role: BackendRole): UserRole => {
-  if (role === 'VENDOR') return 'vendor';
+  if (role === 'SUPER_ADMIN') return 'super_admin';
   if (role === 'ADMIN') return 'admin';
+  if (role === 'VENDOR') return 'vendor';
   return 'customer';
 };
 
@@ -174,6 +175,31 @@ export const authService = {
         query: { page: 1, page_size: 100, ...(role ? { role } : null) },
       });
       return page.items.map(user => mapUser(user));
+    });
+  },
+
+  async listSuperAdmins(): Promise<ServiceResponse<User[]>> {
+    return wrap(async () => {
+      const items = await apiRequest<BackendUser[]>('/admin/super-admins');
+      return items.map(user => mapUser(user));
+    });
+  },
+
+  async promoteToSuperAdmin(userId: string): Promise<ServiceResponse<User>> {
+    return wrap(async () => {
+      const raw = await apiRequest<BackendUser>(`/admin/super-admins/${userId}/promote`, {
+        method: 'POST',
+      });
+      return mapUser(raw);
+    });
+  },
+
+  async demoteSuperAdmin(userId: string): Promise<ServiceResponse<User>> {
+    return wrap(async () => {
+      const raw = await apiRequest<BackendUser>(`/admin/super-admins/${userId}/demote`, {
+        method: 'POST',
+      });
+      return mapUser(raw);
     });
   },
 

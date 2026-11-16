@@ -42,6 +42,7 @@ export const ROUTES = {
   VENDOR_PENDING: '/vendor/pending',
   ADMIN: '/admin',
   ADMIN_DASHBOARD: '/admin/dashboard',
+  ADMIN_SUPER_ADMINS: '/admin/super-admins',
   ADMIN_APPROVALS: '/admin/approvals',
   ADMIN_CUSTOMERS: '/admin/customers',
   ADMIN_VENDORS: '/admin/vendors',

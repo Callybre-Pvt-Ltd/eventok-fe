@@ -18,6 +18,7 @@ import {
   PackagePlus,
   Receipt,
   MapPin,
+  ShieldCheck,
   type LucideIcon,
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
@@ -55,6 +56,11 @@ const adminNav: NavItem[] = [
     path: ROUTES.ADMIN_DASHBOARD,
     labelKey: 'admin.dashboard',
     icon: LayoutDashboard,
+  },
+  {
+    path: ROUTES.ADMIN_SUPER_ADMINS,
+    labelKey: 'admin.superAdmins',
+    icon: ShieldCheck,
   },
   {
     path: ROUTES.ADMIN_APPROVALS,

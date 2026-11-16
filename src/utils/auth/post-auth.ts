@@ -22,7 +22,7 @@ export function consumeAuthIntent(): AuthIntent | null {
 }
 
 export function getPostAuthPath(role: UserRole, vendorStatus?: string): string {
-  if (role === 'admin') return ROUTES.ADMIN_DASHBOARD;
+  if (role === 'admin' || role === 'super_admin') return ROUTES.ADMIN_DASHBOARD;
   if (role === 'vendor') {
     return vendorStatus === 'approved'
       ? ROUTES.VENDOR_DASHBOARD

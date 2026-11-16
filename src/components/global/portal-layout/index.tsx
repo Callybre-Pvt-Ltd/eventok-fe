@@ -5,6 +5,7 @@ import { AccountAvatar } from '@/components/auth/account-avatar';
 import { NotificationBell } from '@/components/global/notification-bell';
 import { PortalSidebar } from '@/components/global/portal-sidebar';
 import { ThemeToggle } from '@/components/global/theme-toggle';
+import { useAuth } from '@/hooks/auth/use-auth';
 import { getRoleLabel } from '@/utils/auth/roles';
 import { usePortalLayout } from './helper';
 import {
@@ -25,6 +26,8 @@ interface PortalLayoutProps {
 }
 
 export function PortalLayout({ role }: PortalLayoutProps) {
+  const { session } = useAuth();
+  const effectiveRole = session?.user.role ?? role;
   const {
     palette,
     portalLabel,
@@ -36,12 +39,12 @@ export function PortalLayout({ role }: PortalLayoutProps) {
     toggleCollapse,
     toggleMobile,
     closeMobile,
-  } = usePortalLayout(role);
+  } = usePortalLayout(effectiveRole);
 
   return (
     <Layout $palette={palette}>
       <PortalSidebar
-        role={role}
+        role={effectiveRole}
         palette={palette}
         portalEyebrow={portalEyebrow}
         navItems={navItems}
@@ -67,8 +70,8 @@ export function PortalLayout({ role }: PortalLayoutProps) {
           </TopBarCopy>
           <TopBarTrailing>
             <ThemeToggle compact />
-            <RolePill>{getRoleLabel(role)}</RolePill>
-            <NotificationBell role={role} />
+            <RolePill>{getRoleLabel(effectiveRole)}</RolePill>
+            <NotificationBell role={effectiveRole} />
             <AccountAvatar />
           </TopBarTrailing>
         </TopBar>

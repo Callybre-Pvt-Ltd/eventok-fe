@@ -1,7 +1,9 @@
+import type { UserRole } from './user';
+
 export interface ChatThread {
   id: string;
   participantId: string;
-  participantRole: 'admin' | 'customer' | 'vendor';
+  participantRole: UserRole;
   participantName: string;
   lastMessage: string;
   updatedAt: string;
@@ -12,7 +14,7 @@ export interface Message {
   id: string;
   threadId: string;
   senderId: string;
-  senderRole: 'admin' | 'customer' | 'vendor';
+  senderRole: UserRole;
   content: string;
   type: 'text' | 'image' | 'pdf';
   createdAt: string;

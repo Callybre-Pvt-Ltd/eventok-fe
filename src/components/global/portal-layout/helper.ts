@@ -4,7 +4,8 @@ import { usePortalSidebar } from '@/components/global/portal-sidebar/helper';
 import { useTheme } from '@/theme';
 
 const PORTAL_COPY: Record<UserRole, { eyebrow: string; label: string }> = {
-  admin: { eyebrow: 'EventOK control', label: 'Super admin portal' },
+  super_admin: { eyebrow: 'EventOK control', label: 'Super admin portal' },
+  admin: { eyebrow: 'EventOK control', label: 'Admin portal' },
   vendor: { eyebrow: 'EventOK partners', label: 'Vendor workspace' },
   customer: { eyebrow: 'EventOK', label: 'User portal' },
 };
