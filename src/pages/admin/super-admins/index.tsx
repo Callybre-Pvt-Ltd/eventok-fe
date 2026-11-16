@@ -1,6 +1,13 @@
 import { Alert, Button, Modal, Select, Table, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { AlertTriangle, Info, Shield, ShieldAlert, UserMinus, UserPlus } from 'lucide-react';
+import {
+  AlertTriangle,
+  Info,
+  Shield,
+  ShieldAlert,
+  UserMinus,
+  UserPlus,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ErrorState } from '@/components/global/error-state';
 import { LoadingState } from '@/components/global/loading-state';
@@ -85,7 +92,10 @@ export default function AdminSuperAdminsPage() {
       title: 'Role',
       key: 'role',
       render: () => (
-        <Tag color="gold" icon={<Shield size={12} style={{ marginRight: 4 }} />}>
+        <Tag
+          color="gold"
+          icon={<Shield size={12} style={{ marginRight: 4 }} />}
+        >
           SUPER ADMIN
         </Tag>
       ),
@@ -101,13 +111,22 @@ export default function AdminSuperAdminsPage() {
       key: 'actions',
       render: (_, record: User) => {
         if (!isCurrentSuperAdmin) {
-          return <span style={{ color: 'var(--color-text-secondary)' }}>View only</span>;
+          return (
+            <span style={{ color: 'var(--color-text-secondary)' }}>
+              View only
+            </span>
+          );
         }
 
         if (isLastSuperAdmin) {
           return (
             <Tooltip title={t('admin.lastSuperAdminWarning')}>
-              <Button size="small" danger disabled icon={<UserMinus size={14} />}>
+              <Button
+                size="small"
+                danger
+                disabled
+                icon={<UserMinus size={14} />}
+              >
                 {t('admin.demoteSuperAdmin')}
               </Button>
             </Tooltip>
@@ -132,7 +151,9 @@ export default function AdminSuperAdminsPage() {
     <>
       <PageHeader>
         <div>
-          <PageTitle $palette={palette}>{t('admin.superAdminsTitle')}</PageTitle>
+          <PageTitle $palette={palette}>
+            {t('admin.superAdminsTitle')}
+          </PageTitle>
           <PageLead $palette={palette}>{t('admin.superAdminsDesc')}</PageLead>
         </div>
         {isCurrentSuperAdmin && (
@@ -160,8 +181,8 @@ export default function AdminSuperAdminsPage() {
         <NoticeBanner $variant="warning">
           <AlertTriangle size={18} />
           <span>
-            {t('admin.lastSuperAdminWarning')} You may promote additional team members to share
-            governance.
+            {t('admin.lastSuperAdminWarning')} You may promote additional team
+            members to share governance.
           </span>
         </NoticeBanner>
       )}
@@ -196,8 +217,9 @@ export default function AdminSuperAdminsPage() {
       >
         <ModalBody>
           <p style={{ margin: 0, color: 'var(--color-text-secondary)' }}>
-            {t('admin.selectUserToPromote')}. Once promoted, this user will receive full Super
-            Admin access to manage platform permissions and administrators.
+            {t('admin.selectUserToPromote')}. Once promoted, this user will
+            receive full Super Admin access to manage platform permissions and
+            administrators.
           </p>
 
           <div>
@@ -240,7 +262,14 @@ export default function AdminSuperAdminsPage() {
       {/* Demote Super Admin Confirmation Modal */}
       <Modal
         title={
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#ef4444' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              color: '#ef4444',
+            }}
+          >
             <ShieldAlert size={18} />
             <span>{t('admin.confirmDemote')}</span>
           </div>
@@ -262,9 +291,15 @@ export default function AdminSuperAdminsPage() {
               name: demoteTarget?.name || demoteTarget?.email || 'this user',
             })}
           />
-          <p style={{ margin: '8px 0 0', fontSize: 13, color: 'var(--color-text-secondary)' }}>
-            The user will retain standard Admin privileges, but will no longer be able to manage
-            Super Admins.
+          <p
+            style={{
+              margin: '8px 0 0',
+              fontSize: 13,
+              color: 'var(--color-text-secondary)',
+            }}
+          >
+            The user will retain standard Admin privileges, but will no longer
+            be able to manage Super Admins.
           </p>
         </ModalBody>
       </Modal>

@@ -85,8 +85,14 @@ export function useSuperAdmins() {
     },
   });
 
-  const superAdmins = useMemo(() => superAdminsQuery.data ?? [], [superAdminsQuery.data]);
-  const allUsers = useMemo(() => allUsersQuery.data ?? [], [allUsersQuery.data]);
+  const superAdmins = useMemo(
+    () => superAdminsQuery.data ?? [],
+    [superAdminsQuery.data],
+  );
+  const allUsers = useMemo(
+    () => allUsersQuery.data ?? [],
+    [allUsersQuery.data],
+  );
 
   const superAdminIds = useMemo(
     () => new Set(superAdmins.map(u => u.id)),
@@ -94,7 +100,10 @@ export function useSuperAdmins() {
   );
 
   const candidateUsers = useMemo(
-    () => allUsers.filter(u => !superAdminIds.has(u.id) && u.role !== 'super_admin'),
+    () =>
+      allUsers.filter(
+        u => !superAdminIds.has(u.id) && u.role !== 'super_admin',
+      ),
     [allUsers, superAdminIds],
   );
 
@@ -113,7 +122,9 @@ export function useSuperAdmins() {
   return {
     superAdmins,
     isLoading: superAdminsQuery.isLoading || allUsersQuery.isLoading,
-    error: superAdminsQuery.error ? (superAdminsQuery.error as Error).message : null,
+    error: superAdminsQuery.error
+      ? (superAdminsQuery.error as Error).message
+      : null,
     refetch: () => {
       superAdminsQuery.refetch();
       allUsersQuery.refetch();

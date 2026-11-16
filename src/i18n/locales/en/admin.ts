@@ -77,15 +77,18 @@ export const admin = {
   noRefunds: 'No refunds yet.',
   superAdmins: 'Super Admins',
   superAdminsTitle: 'Super Admin Management',
-  superAdminsDesc: 'Manage platform administrators with Super Admin privileges.',
+  superAdminsDesc:
+    'Manage platform administrators with Super Admin privileges.',
   promoteToSuperAdmin: 'Promote User to Super Admin',
   demoteSuperAdmin: 'Demote to Admin',
   lastSuperAdminWarning: 'Cannot demote the last active Super Admin.',
-  onlySuperAdminCanManage: 'Only Super Admins have permission to promote or demote administrators.',
+  onlySuperAdminCanManage:
+    'Only Super Admins have permission to promote or demote administrators.',
   selectUserToPromote: 'Select an existing user to promote to Super Admin',
   confirmPromote: 'Confirm Promotion',
   confirmDemote: 'Confirm Demotion',
-  demoteConfirmPrompt: 'Are you sure you want to revoke Super Admin privileges for {{name}}? They will be demoted to regular Admin.',
+  demoteConfirmPrompt:
+    'Are you sure you want to revoke Super Admin privileges for {{name}}? They will be demoted to regular Admin.',
   promoteSuccess: 'User successfully promoted to Super Admin.',
   demoteSuccess: 'Super Admin privileges revoked successfully.',
 };

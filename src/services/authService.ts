@@ -187,18 +187,24 @@ export const authService = {
 
   async promoteToSuperAdmin(userId: string): Promise<ServiceResponse<User>> {
     return wrap(async () => {
-      const raw = await apiRequest<BackendUser>(`/admin/super-admins/${userId}/promote`, {
-        method: 'POST',
-      });
+      const raw = await apiRequest<BackendUser>(
+        `/admin/super-admins/${userId}/promote`,
+        {
+          method: 'POST',
+        },
+      );
       return mapUser(raw);
     });
   },
 
   async demoteSuperAdmin(userId: string): Promise<ServiceResponse<User>> {
     return wrap(async () => {
-      const raw = await apiRequest<BackendUser>(`/admin/super-admins/${userId}/demote`, {
-        method: 'POST',
-      });
+      const raw = await apiRequest<BackendUser>(
+        `/admin/super-admins/${userId}/demote`,
+        {
+          method: 'POST',
+        },
+      );
       return mapUser(raw);
     });
   },

@@ -62,7 +62,9 @@ export const NoticeBanner = styled.div<{ $variant?: 'warning' | 'info' }>`
     ${({ $variant }) =>
       $variant === 'warning' ? '#f59e0b' : 'var(--color-border)'};
   background: ${({ $variant }) =>
-    $variant === 'warning' ? 'rgba(245, 158, 11, 0.08)' : 'var(--color-bg-secondary)'};
+    $variant === 'warning'
+      ? 'rgba(245, 158, 11, 0.08)'
+      : 'var(--color-bg-secondary)'};
   color: var(--color-text);
 `;
 
