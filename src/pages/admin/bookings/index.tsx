@@ -1,35 +1,31 @@
-import { Select, Table, Tag } from 'antd';
+import { Select, Table } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import { Calendar as CalendarIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { CustomAntdSearchInput } from '@/components/global/custom-antd-search-input';
 import { ErrorState } from '@/components/global/error-state';
 import { LoadingState } from '@/components/global/loading-state';
+import {
+  AdminStatusBadge,
+  AdminTableCard,
+  AdminToolbar,
+  AdminToolbarLeft,
+  CellPrimary,
+  CellSecondary,
+  CellStack,
+  PriceCellText,
+} from '@/components/ui/admin-table';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import type { Booking } from '@/types';
 import { useAdminBookings } from './helper';
 import {
   CategoryBadge,
-  FilterBar,
-  FilterSearch,
-  MutedLine,
+  PageEyebrow,
+  PageHeader,
+  PageLead,
   PageTitle,
   PhoneLink,
-  StrongLine,
-  VendorCell,
 } from './styled';
-
-const statusColorMap: Record<string, string> = {
-  requested: 'blue',
-  admin_review: 'gold',
-  vendor_assigned: 'cyan',
-  pending_vendor_acceptance: 'gold',
-  payment_pending: 'orange',
-  confirmed: 'green',
-  in_progress: 'geekblue',
-  completed: 'purple',
-  rejected: 'red',
-  cancelled: 'red',
-};
 
 export default function AdminBookingsPage() {
   const { t } = useTranslation();
@@ -50,119 +46,152 @@ export default function AdminBookingsPage() {
   if (isLoading) return <LoadingState />;
   if (error) return <ErrorState message={error} onRetry={() => refetch()} />;
 
+  const formatPrice = (amount: number | string | undefined | null) => {
+    const val = Number(amount ?? 0);
+    return `₹${val.toLocaleString('en-IN')}`;
+  };
+
   const columns: ColumnsType<Booking> = [
     {
-      title: t('admin.bookingVendor'),
+      title: t('admin.bookingVendor') || 'Vendor',
       key: 'vendor',
+      align: 'left',
       render: (_value, booking) => (
-        <VendorCell>
-          <StrongLine>
+        <CellStack>
+          <CellPrimary>
             {booking.vendorBusinessName ||
               booking.vendorName ||
               t('admin.bookingVendorUnassigned')}
-          </StrongLine>
-          {booking.vendorPhone ? (
-            <PhoneLink href={`tel:${booking.vendorPhone}`}>
-              {booking.vendorPhone}
-            </PhoneLink>
-          ) : (
-            <MutedLine>{t('admin.bookingNoPhone')}</MutedLine>
-          )}
-          {booking.pricingMode && booking.pricingMode !== 'quotation' && (
-            <CategoryBadge>
-              {booking.pricingMode === 'direct_package'
-                ? t('admin.bookingPackage')
-                : t('admin.bookingService')}
-            </CategoryBadge>
-          )}
-        </VendorCell>
+          </CellPrimary>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+            {booking.vendorPhone ? (
+              <PhoneLink href={`tel:${booking.vendorPhone}`}>
+                {booking.vendorPhone}
+              </PhoneLink>
+            ) : (
+              <CellSecondary>{t('admin.bookingNoPhone')}</CellSecondary>
+            )}
+            {booking.pricingMode && booking.pricingMode !== 'quotation' && (
+              <CategoryBadge>
+                {booking.pricingMode === 'direct_package'
+                  ? t('admin.bookingPackage')
+                  : t('admin.bookingService')}
+              </CategoryBadge>
+            )}
+          </div>
+        </CellStack>
       ),
     },
     {
-      title: t('admin.bookingItem'),
+      title: t('admin.bookingItem') || 'Service / Event',
       key: 'item',
+      align: 'left',
       render: (_value, booking) => (
-        <VendorCell>
-          <StrongLine>
+        <CellStack>
+          <CellPrimary>
             {booking.serviceName || booking.eventType || t('admin.bookings')}
-          </StrongLine>
+          </CellPrimary>
           {booking.serviceCategory && (
-            <MutedLine>{booking.serviceCategory}</MutedLine>
+            <CellSecondary>{booking.serviceCategory}</CellSecondary>
           )}
-        </VendorCell>
+        </CellStack>
       ),
     },
     {
-      title: t('admin.bookingCustomer'),
+      title: t('admin.bookingCustomer') || 'Customer',
       key: 'customer',
+      align: 'left',
       render: (_value, booking) => (
-        <VendorCell>
-          <StrongLine>{booking.customerName || '—'}</StrongLine>
-          <MutedLine>{booking.customerEmail}</MutedLine>
-          {booking.customerPhone ? (
-            <PhoneLink href={`tel:${booking.customerPhone}`}>
-              {booking.customerPhone}
-            </PhoneLink>
-          ) : (
-            <MutedLine>{t('admin.bookingNoPhone')}</MutedLine>
-          )}
-        </VendorCell>
+        <CellStack>
+          <CellPrimary>{booking.customerName || '—'}</CellPrimary>
+          <CellSecondary>
+            {booking.customerEmail}
+            {booking.customerPhone ? ` · ${booking.customerPhone}` : ''}
+          </CellSecondary>
+        </CellStack>
       ),
     },
     {
-      title: t('admin.bookingDate'),
+      title: t('admin.bookingDate') || 'Event Date',
       dataIndex: 'eventDate',
       key: 'eventDate',
+      align: 'left',
+      render: (dateStr: string) => {
+        if (!dateStr) return <span style={{ color: 'var(--color-text-secondary)' }}>—</span>;
+        const d = new Date(dateStr);
+        const formatted = isNaN(d.getTime())
+          ? dateStr
+          : d.toLocaleDateString('en-IN', {
+              day: 'numeric',
+              month: 'short',
+              year: 'numeric',
+            });
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            <CalendarIcon size={14} color="var(--color-text-secondary)" />
+            <span style={{ fontWeight: 500 }}>{formatted}</span>
+          </div>
+        );
+      },
     },
     {
-      title: t('admin.amount'),
+      title: t('admin.amount') || 'Total Amount',
       key: 'amount',
-      render: (_value, booking) =>
-        `₹${Number(booking.totalAmount ?? 0).toLocaleString('en-IN')}`,
+      align: 'right',
+      render: (_value, booking) => (
+        <PriceCellText $accent>{formatPrice(booking.totalAmount)}</PriceCellText>
+      ),
     },
     {
-      title: t('admin.status'),
+      title: t('admin.status') || 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status: string) => (
-        <Tag color={statusColorMap[status] || 'default'}>
-          {status.replace(/_/g, ' ')}
-        </Tag>
-      ),
+      align: 'center',
+      render: (status: string) => <AdminStatusBadge status={status} />,
     },
   ];
 
   return (
     <>
-      <PageTitle $palette={palette}>{t('admin.bookings')}</PageTitle>
+      <PageHeader>
+        <div>
+          <PageEyebrow>MARKETPLACE MANAGEMENT</PageEyebrow>
+          <PageTitle $palette={palette}>{t('admin.bookings')}</PageTitle>
+          <PageLead $palette={palette}>
+            Track all customer bookings, assigned vendor partners, and order statuses.
+          </PageLead>
+        </div>
+      </PageHeader>
 
-      <FilterBar>
-        <FilterSearch>
+      <AdminToolbar>
+        <AdminToolbarLeft>
           <CustomAntdSearchInput
             value={search}
             onChange={setSearch}
             placeholder={t('admin.bookingSearchPlaceholder')}
           />
-        </FilterSearch>
-        <Select
-          value={vendorId}
-          onChange={setVendorId}
-          options={vendorOptions}
-          showSearch
-          optionFilterProp="label"
-          style={{ minWidth: 220 }}
-        />
-      </FilterBar>
+          <Select
+            value={vendorId}
+            onChange={setVendorId}
+            options={vendorOptions}
+            showSearch
+            optionFilterProp="label"
+            style={{ minWidth: 220 }}
+            placeholder="Filter by vendor"
+          />
+        </AdminToolbarLeft>
+      </AdminToolbar>
 
-      <Table
-        dataSource={bookings}
-        columns={columns}
-        rowKey="id"
-        loading={isFetching}
-        pagination={{ pageSize: 10 }}
-        locale={{ emptyText: t('admin.bookingEmpty') }}
-        bordered
-      />
+      <AdminTableCard>
+        <Table
+          dataSource={bookings}
+          columns={columns}
+          rowKey="id"
+          loading={isFetching}
+          pagination={{ pageSize: 10, showSizeChanger: false }}
+          locale={{ emptyText: t('admin.bookingEmpty') }}
+        />
+      </AdminTableCard>
     </>
   );
 }

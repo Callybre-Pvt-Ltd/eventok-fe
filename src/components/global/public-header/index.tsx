@@ -3,7 +3,6 @@ import { ArrowRight, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { BrandIcon } from '@/components/global/brand-icon';
 import { ProfileMenu } from '@/components/auth/profile-menu';
-import { ThemeToggle } from '@/components/global/theme-toggle';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { getPostAuthPath } from '@/utils/auth/post-auth';
@@ -75,7 +74,6 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
               gap: '0.5rem',
             }}
           >
-            <ThemeToggle compact />
             <MobileClose
               type="button"
               onClick={nav.closeMenu}
@@ -155,7 +153,6 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
           </CenterNav>
 
           <Actions>
-            <ThemeToggle compact />
             {isSignedIn ? (
               <ProfileMenu tone="light" />
             ) : (

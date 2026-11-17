@@ -4,7 +4,6 @@ import type { UserRole } from '@/types';
 import { AccountAvatar } from '@/components/auth/account-avatar';
 import { NotificationBell } from '@/components/global/notification-bell';
 import { PortalSidebar } from '@/components/global/portal-sidebar';
-import { ThemeToggle } from '@/components/global/theme-toggle';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { getRoleLabel } from '@/utils/auth/roles';
 import { usePortalLayout } from './helper';
@@ -69,7 +68,6 @@ export function PortalLayout({ role }: PortalLayoutProps) {
             <TopBarTitle $palette={palette}>{portalLabel}</TopBarTitle>
           </TopBarCopy>
           <TopBarTrailing>
-            <ThemeToggle compact />
             <RolePill>{getRoleLabel(effectiveRole)}</RolePill>
             <NotificationBell role={effectiveRole} />
             <AccountAvatar />

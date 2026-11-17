@@ -5,6 +5,7 @@ import { AlertTriangle, Eye, Phone, Search, ShieldAlert } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
 import { EmptyState } from '@/components/global/empty-state';
+import { AdminTableCard } from '@/components/ui/admin-table';
 import {
   Field,
   FieldLabel,
@@ -284,16 +285,18 @@ export default function VendorBookingsPage() {
       {filteredBookings.length === 0 ? (
         <EmptyState description="No bookings found matching your filters." />
       ) : (
-        <Table
-          dataSource={filteredBookings}
-          columns={columns}
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-          onRow={record => ({
-            onClick: () => openDrawer(record),
-            style: { cursor: 'pointer' },
-          })}
-        />
+        <AdminTableCard>
+          <Table
+            dataSource={filteredBookings}
+            columns={columns}
+            rowKey="id"
+            pagination={{ pageSize: 10, showSizeChanger: false }}
+            onRow={record => ({
+              onClick: () => openDrawer(record),
+              style: { cursor: 'pointer' },
+            })}
+          />
+        </AdminTableCard>
       )}
 
       {/* Booking Details Drawer */}

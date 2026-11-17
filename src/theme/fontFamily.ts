@@ -1,6 +1,6 @@
 export const fontFamily = {
-  body: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
-  display: "'Baloo 2', 'Outfit', sans-serif",
-  emphasis: "'Lora', Georgia, 'Times New Roman', serif",
-  sans: "'Outfit', -apple-system, BlinkMacSystemFont, sans-serif",
+  body: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  display: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  emphasis: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
+  sans: "'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif",
 } as const;

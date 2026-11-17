@@ -11,11 +11,11 @@ import {
 import { useTranslation } from 'react-i18next';
 import { ErrorState } from '@/components/global/error-state';
 import { LoadingState } from '@/components/global/loading-state';
+import { AdminTableCard } from '@/components/ui/admin-table';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import type { User } from '@/types';
 import { useSuperAdmins } from './helper';
 import {
-  Card,
   ModalBody,
   ModalLabel,
   NoticeBanner,
@@ -187,14 +187,14 @@ export default function AdminSuperAdminsPage() {
         </NoticeBanner>
       )}
 
-      <Card $palette={palette}>
+      <AdminTableCard>
         <Table
           dataSource={superAdmins}
           columns={columns}
           rowKey="id"
           pagination={false}
         />
-      </Card>
+      </AdminTableCard>
 
       {/* Promote User to Super Admin Modal */}
       <Modal

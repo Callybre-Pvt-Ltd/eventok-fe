@@ -115,13 +115,11 @@ export function ProfileMenu({
           {role === 'admin' || role === 'super_admin' ? (
             <MenuItem
               role="menuitem"
-              to={ROUTES.ADMIN_DASHBOARD}
-              target="_blank"
-              rel="noopener noreferrer"
+              to={role === 'super_admin' ? ROUTES.ADMIN_SUPER_ADMINS : ROUTES.ADMIN_DASHBOARD}
               onClick={() => setOpen(false)}
             >
               <Shield size={16} aria-hidden />
-              {role === 'super_admin' ? 'Super admin' : 'Admin portal'}
+              {role === 'super_admin' ? 'Super Admins' : 'Admin portal'}
             </MenuItem>
           ) : null}
 

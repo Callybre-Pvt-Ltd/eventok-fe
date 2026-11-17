@@ -8,7 +8,9 @@ import type { Session } from '@/types';
 
 /** Shoppers land on the storefront; the vendor login sends vendors to their portal; admins to admin dashboard. */
 const landingPath = (session: Session) => {
-  if (session.user.role === 'admin') return ROUTES.ADMIN_DASHBOARD;
+  if (session.user.role === 'admin' || session.user.role === 'super_admin') {
+    return ROUTES.ADMIN_DASHBOARD;
+  }
   return peekAuthIntent() === 'vendor'
     ? getPostAuthPath(session.user.role, session.user.vendorStatus)
     : ROUTES.HOME;
