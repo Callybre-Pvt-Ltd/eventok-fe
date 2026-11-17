@@ -1,5 +1,5 @@
 import { Button, Tag } from 'antd';
-import { FolderTree, MapPin, TrendingUp, Wrench } from 'lucide-react';
+import { Calendar, ShieldCheck, Store, Wrench } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { EmptyState } from '@/components/global/empty-state';
@@ -97,7 +97,7 @@ export default function AdminDashboardPage() {
             <Button
               type="link"
               size="small"
-              onClick={() => navigate(ROUTES.ADMIN_APPROVALS)}
+              onClick={() => navigate(`${ROUTES.ADMIN_VENDORS}?status=pending`)}
             >
               View all ({pendingVendors.length})
             </Button>
@@ -119,7 +119,9 @@ export default function AdminDashboardPage() {
                   <Button
                     type="primary"
                     size="small"
-                    onClick={() => navigate(ROUTES.ADMIN_APPROVALS)}
+                    onClick={() =>
+                      navigate(`${ROUTES.ADMIN_VENDORS}?status=pending`)
+                    }
                   >
                     Audit KYC
                   </Button>
@@ -138,21 +140,21 @@ export default function AdminDashboardPage() {
               <BlockTitle>Platform Controls</BlockTitle>
             </BlockHeader>
             <ActionTileGrid>
-              <ActionTile onClick={() => navigate(ROUTES.ADMIN_CATEGORIES)}>
-                <FolderTree size={18} color="var(--color-primary)" />
-                <span>Categories</span>
+              <ActionTile onClick={() => navigate(ROUTES.ADMIN_VENDORS)}>
+                <Store size={18} color="var(--color-primary)" />
+                <span>Vendors</span>
               </ActionTile>
               <ActionTile onClick={() => navigate(ROUTES.ADMIN_SERVICES)}>
                 <Wrench size={18} color="var(--color-primary)" />
                 <span>Services</span>
               </ActionTile>
-              <ActionTile onClick={() => navigate(ROUTES.ADMIN_LOCATIONS)}>
-                <MapPin size={18} color="var(--color-primary)" />
-                <span>Locations</span>
+              <ActionTile onClick={() => navigate(ROUTES.ADMIN_BOOKINGS)}>
+                <Calendar size={18} color="var(--color-primary)" />
+                <span>Bookings</span>
               </ActionTile>
-              <ActionTile onClick={() => navigate(ROUTES.ADMIN_REPORTS)}>
-                <TrendingUp size={18} color="var(--color-primary)" />
-                <span>Reports</span>
+              <ActionTile onClick={() => navigate(ROUTES.ADMIN_SUPER_ADMINS)}>
+                <ShieldCheck size={18} color="var(--color-primary)" />
+                <span>Super Admins</span>
               </ActionTile>
             </ActionTileGrid>
           </SectionBlock>

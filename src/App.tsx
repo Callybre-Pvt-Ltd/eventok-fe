@@ -31,8 +31,7 @@ function ThemedApp() {
   return (
     <ConfigProvider
       theme={{
-        algorithm:
-          mode === 'dark' ? antTheme.darkAlgorithm : antTheme.defaultAlgorithm,
+        algorithm: antTheme.defaultAlgorithm,
         token: {
           colorPrimary: palette.primary,
           colorLink: palette.primary,
@@ -45,12 +44,10 @@ function ThemedApp() {
           colorBorder: palette.border,
           colorPrimaryBg: palette.primaryLight,
           boxShadow: 'none',
-          boxShadowSecondary: 'none',
+          boxShadowSecondary:
+            '0 10px 25px -5px rgba(0, 0, 0, 0.14), 0 8px 10px -6px rgba(0, 0, 0, 0.08)',
           boxShadowTertiary: 'none',
-          controlOutline:
-            mode === 'dark'
-              ? 'rgba(249, 115, 22, 0.25)'
-              : 'rgba(234, 88, 12, 0.18)',
+          controlOutline: 'rgba(234, 88, 12, 0.18)',
         },
         components: {
           Button: {

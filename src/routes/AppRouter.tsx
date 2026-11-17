@@ -42,6 +42,7 @@ const VendorProfilePage = lazy(() => import('@/pages/vendor/profile'));
 const VendorPendingPage = lazy(() => import('@/pages/vendor/pending'));
 
 const AdminDashboardPage = lazy(() => import('@/pages/admin/dashboard'));
+const AdminSuperAdminsPage = lazy(() => import('@/pages/admin/super-admins'));
 const AdminApprovalsPage = lazy(() => import('@/pages/admin/approvals'));
 const AdminCustomersPage = lazy(() => import('@/pages/admin/customers'));
 const AdminVendorsPage = lazy(() => import('@/pages/admin/vendors'));
@@ -202,7 +203,7 @@ export function AppRouter() {
           <Route
             path={ROUTES.ADMIN}
             element={
-              <ProtectedRoute roles={['admin']}>
+              <ProtectedRoute roles={['admin', 'super_admin']}>
                 <PortalLayout role="admin" />
               </ProtectedRoute>
             }
@@ -212,6 +213,7 @@ export function AppRouter() {
               element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />}
             />
             <Route path="dashboard" element={<AdminDashboardPage />} />
+            <Route path="super-admins" element={<AdminSuperAdminsPage />} />
             <Route path="approvals" element={<AdminApprovalsPage />} />
             <Route path="customers" element={<AdminCustomersPage />} />
             <Route path="vendors" element={<AdminVendorsPage />} />

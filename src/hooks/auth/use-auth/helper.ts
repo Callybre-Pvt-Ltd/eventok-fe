@@ -78,7 +78,9 @@ function deriveFallbackSession(
     (user.publicMetadata?.role as string | undefined) ||
     (user.unsafeMetadata?.eventok_role as string | undefined);
   const role: UserRole =
-    rawRole?.toLowerCase() === 'admin'
+    rawRole?.toLowerCase() === 'super_admin'
+      ? 'super_admin'
+      : rawRole?.toLowerCase() === 'admin'
       ? 'admin'
       : rawRole?.toLowerCase() === 'vendor'
       ? 'vendor'

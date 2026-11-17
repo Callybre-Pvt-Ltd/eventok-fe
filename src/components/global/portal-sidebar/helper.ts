@@ -4,20 +4,13 @@ import { useBodyScrollLock } from '@/hooks/use-body-scroll-lock';
 import {
   LayoutDashboard,
   Calendar,
-  CreditCard,
   User,
   Wrench,
   DollarSign,
-  CheckCircle,
   Users,
   Store,
-  Tags,
-  BarChart3,
-  FileText,
-  Settings,
   PackagePlus,
-  Receipt,
-  MapPin,
+  ShieldCheck,
   type LucideIcon,
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
@@ -57,25 +50,14 @@ const adminNav: NavItem[] = [
     icon: LayoutDashboard,
   },
   {
-    path: ROUTES.ADMIN_APPROVALS,
-    labelKey: 'admin.approvals',
-    icon: CheckCircle,
+    path: ROUTES.ADMIN_SUPER_ADMINS,
+    labelKey: 'admin.superAdmins',
+    icon: ShieldCheck,
   },
   { path: ROUTES.ADMIN_VENDORS, labelKey: 'admin.vendors', icon: Store },
   { path: ROUTES.ADMIN_SERVICES, labelKey: 'admin.services', icon: Wrench },
   { path: ROUTES.ADMIN_BOOKINGS, labelKey: 'admin.bookings', icon: Calendar },
-  { path: ROUTES.ADMIN_CATEGORIES, labelKey: 'admin.categories', icon: Tags },
   { path: ROUTES.ADMIN_CUSTOMERS, labelKey: 'admin.customers', icon: Users },
-  { path: ROUTES.ADMIN_PAYMENTS, labelKey: 'admin.payments', icon: CreditCard },
-  { path: ROUTES.ADMIN_REFUNDS, labelKey: 'admin.refunds', icon: Receipt },
-  { path: ROUTES.ADMIN_LOCATIONS, labelKey: 'admin.locations', icon: MapPin },
-  { path: ROUTES.ADMIN_REPORTS, labelKey: 'admin.reports', icon: FileText },
-  {
-    path: ROUTES.ADMIN_ANALYTICS,
-    labelKey: 'admin.analytics',
-    icon: BarChart3,
-  },
-  { path: ROUTES.ADMIN_SETTINGS, labelKey: 'admin.settings', icon: Settings },
 ];
 
 export function getNavItems(role: UserRole): NavItem[] {

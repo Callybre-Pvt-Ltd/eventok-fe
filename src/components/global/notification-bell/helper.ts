@@ -18,6 +18,7 @@ const BOOKING_TYPES = new Set([
 ]);
 
 const BOOKINGS_ROUTE: Record<UserRole, string> = {
+  super_admin: ROUTES.ADMIN_BOOKINGS,
   admin: ROUTES.ADMIN_BOOKINGS,
   vendor: ROUTES.VENDOR_BOOKINGS,
   customer: ROUTES.CUSTOMER_BOOKINGS,

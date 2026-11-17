@@ -4,12 +4,18 @@ import { Eye, Trash2 } from 'lucide-react';
 import { CustomAntdSearchInput } from '@/components/global/custom-antd-search-input';
 import { ErrorState } from '@/components/global/error-state';
 import { LoadingState } from '@/components/global/loading-state';
-import type { AdminApiService } from '@/services/vendorService';
 import {
-  ALL_CATEGORIES,
-  useAdminServices,
-  type ServiceStatusFilter,
-} from './helper';
+  AdminTableCard,
+  AdminToolbar,
+  AdminToolbarLeft,
+  AdminStatusBadge,
+  CellStack,
+  CellPrimary,
+  CellSecondary,
+  PriceCellText,
+} from '@/components/ui/admin-table';
+import type { AdminApiService } from '@/services/vendorService';
+import { ALL_CATEGORIES, useAdminServices } from './helper';
 import {
   Page,
   HeaderSection,
@@ -17,15 +23,6 @@ import {
   HeaderEyebrow,
   HeaderTitle,
   HeaderSubtitle,
-  ControlsBar,
-  ControlsLeft,
-  StatusPillGroup,
-  StatusFilterBtn,
-  TableWrapper,
-  StatusBadge,
-  ServiceCell,
-  ServiceTitleText,
-  ServiceSubtext,
   DrawerContent,
   DrawerHeader,
   DrawerCategory,
@@ -47,8 +44,6 @@ export default function AdminServicesPage() {
   const {
     searchTerm,
     setSearchTerm,
-    statusFilter,
-    setStatusFilter,
     categoryFilter,
     setCategoryFilter,
     vendorFilter,
@@ -80,51 +75,72 @@ export default function AdminServicesPage() {
     {
       title: 'Service Listing',
       key: 'title',
+      align: 'left',
       render: (_, record) => (
-        <ServiceCell>
-          <ServiceTitleText>{record.title}</ServiceTitleText>
-          <ServiceSubtext>
+        <CellStack>
+          <CellPrimary>{record.title}</CellPrimary>
+          <CellSecondary>
             Added{' '}
             {new Date(record.created_at).toLocaleDateString('en-IN', {
               month: 'short',
               day: 'numeric',
               year: 'numeric',
             })}
-          </ServiceSubtext>
-        </ServiceCell>
+          </CellSecondary>
+        </CellStack>
       ),
     },
     {
       title: 'Vendor',
       key: 'vendor',
-      render: (_, record) => <strong>{record.vendor_name || '—'}</strong>,
+      align: 'left',
+      render: (_, record) => (
+        <span style={{ fontWeight: 600, color: 'var(--color-text)' }}>
+          {record.vendor_name || '—'}
+        </span>
+      ),
     },
     {
       title: 'Category',
       key: 'category',
+      align: 'left',
       render: (_, record) => {
         const catName = categoryMap.get(record.category_id) || 'Uncategorized';
-        return <Tag color="blue">{catName}</Tag>;
+        return (
+          <Tag
+            color="default"
+            style={{
+              borderRadius: 6,
+              fontWeight: 500,
+              border: '1px solid var(--color-border)',
+              background: 'var(--color-bg-alt)',
+            }}
+          >
+            {catName}
+          </Tag>
+        );
       },
     },
     {
       title: 'Vendor Price',
       dataIndex: 'starting_price',
       key: 'starting_price',
-      render: (val: string | number) => <strong>{formatPrice(val)}</strong>,
+      align: 'right',
+      render: (val: string | number) => (
+        <PriceCellText>{formatPrice(val)}</PriceCellText>
+      ),
     },
     {
       title: 'Customer Total (+3%)',
       key: 'customer_price',
+      align: 'right',
       render: (_, record) => {
         const vendorBase = Number(record.starting_price) || 0;
         const customerTotal = record.customer_price
           ? Number(record.customer_price)
           : Math.round(vendorBase * 1.03);
         return (
-          <span style={{ color: '#059669', fontWeight: 600 }}>
-            {formatPrice(customerTotal)}
-          </span>
+          <PriceCellText $accent>{formatPrice(customerTotal)}</PriceCellText>
         );
       },
     },
@@ -132,13 +148,13 @@ export default function AdminServicesPage() {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status: string) => (
-        <StatusBadge $status={status}>{status.replace('_', ' ')}</StatusBadge>
-      ),
+      align: 'center',
+      render: (status: string) => <AdminStatusBadge status={status} />,
     },
     {
       title: 'Actions',
       key: 'actions',
+      align: 'right',
       render: (_, record) => (
         <Button
           size="small"
@@ -178,8 +194,8 @@ export default function AdminServicesPage() {
         </HeaderLeft>
       </HeaderSection>
 
-      <ControlsBar>
-        <ControlsLeft>
+      <AdminToolbar>
+        <AdminToolbarLeft>
           <CustomAntdSearchInput
             value={searchTerm}
             onChange={setSearchTerm}
@@ -193,12 +209,13 @@ export default function AdminServicesPage() {
             showSearch
             optionFilterProp="label"
             options={vendorOptions}
+            placeholder="Filter by vendor"
           />
 
           <Select
             value={categoryFilter}
             onChange={setCategoryFilter}
-            style={{ width: 180 }}
+            style={{ width: 200 }}
             options={[
               { value: ALL_CATEGORIES, label: 'All Categories' },
               ...categories.map(category => ({
@@ -207,29 +224,10 @@ export default function AdminServicesPage() {
               })),
             ]}
           />
-        </ControlsLeft>
+        </AdminToolbarLeft>
+      </AdminToolbar>
 
-        <StatusPillGroup>
-          {(
-            [
-              { key: 'all', label: 'All' },
-              { key: 'PUBLISHED', label: 'Live' },
-              { key: 'DRAFT', label: 'Draft' },
-              { key: 'ARCHIVED', label: 'Archived' },
-            ] as const
-          ).map(pill => (
-            <StatusFilterBtn
-              key={pill.key}
-              $active={statusFilter === pill.key}
-              onClick={() => setStatusFilter(pill.key as ServiceStatusFilter)}
-            >
-              {pill.label}
-            </StatusFilterBtn>
-          ))}
-        </StatusPillGroup>
-      </ControlsBar>
-
-      <TableWrapper>
+      <AdminTableCard>
         <Table
           dataSource={services}
           columns={columns}
@@ -238,7 +236,7 @@ export default function AdminServicesPage() {
           pagination={{ pageSize: 12, showSizeChanger: false }}
           locale={{ emptyText: 'No services match the current filters' }}
         />
-      </TableWrapper>
+      </AdminTableCard>
 
       {/* Inspection Drawer */}
       <Drawer
@@ -260,9 +258,7 @@ export default function AdminServicesPage() {
                 <DrawerCategory>
                   {categoryMap.get(selectedService.category_id) || 'Category'}
                 </DrawerCategory>
-                <StatusBadge $status={selectedService.status}>
-                  {selectedService.status.replace('_', ' ')}
-                </StatusBadge>
+                <AdminStatusBadge status={selectedService.status} />
               </div>
               <DrawerTitle>{selectedService.title}</DrawerTitle>
               {selectedService.description && (
