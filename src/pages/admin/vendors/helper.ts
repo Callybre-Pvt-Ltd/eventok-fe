@@ -18,7 +18,8 @@ export function useAdminVendors() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // Initialize status filter from URL if provided (e.g. ?status=pending)
-  const initialStatus = (searchParams.get('status') as VendorStatusFilter) || 'all';
+  const initialStatus =
+    (searchParams.get('status') as VendorStatusFilter) || 'all';
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilterState] = useState<VendorStatusFilter>(

@@ -99,7 +99,8 @@ export default function AdminCustomersPage() {
           <PageEyebrow>USER DIRECTORY</PageEyebrow>
           <PageTitle $palette={palette}>{t('admin.customers')}</PageTitle>
           <PageLead $palette={palette}>
-            View and manage customer accounts, registered users, and role assignments across EventOK.
+            View and manage customer accounts, registered users, and role
+            assignments across EventOK.
           </PageLead>
         </div>
       </PageHeader>

@@ -25,10 +25,7 @@ import {
 } from '@/components/ui/form-modal';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import type { VendorPrivate } from '@/types';
-import {
-  useAdminVendors,
-  type VendorSortOption,
-} from './helper';
+import { useAdminVendors, type VendorSortOption } from './helper';
 import {
   DocList,
   DocThumb,
@@ -295,7 +292,9 @@ export default function AdminVendorsPage() {
               </>
             )
           ) : (
-            <Button onClick={closeReview}>{t('common.close') || 'Close'}</Button>
+            <Button onClick={closeReview}>
+              {t('common.close') || 'Close'}
+            </Button>
           )
         }
       >
@@ -304,27 +303,42 @@ export default function AdminVendorsPage() {
           <KycGrid>
             <KycRow>
               <KycLabel>{t('admin.ownerName')}</KycLabel>
-              <KycValue>{kyc?.owner_name || reviewTarget?.ownerName || t('admin.notProvided')}</KycValue>
+              <KycValue>
+                {kyc?.owner_name ||
+                  reviewTarget?.ownerName ||
+                  t('admin.notProvided')}
+              </KycValue>
             </KycRow>
             <KycRow>
               <KycLabel>{t('admin.mobileNumber')}</KycLabel>
               <KycValue>
-                {kyc?.mobile_number || reviewTarget?.mobileNumber || reviewTarget?.phone || t('admin.notProvided')}
+                {kyc?.mobile_number ||
+                  reviewTarget?.mobileNumber ||
+                  reviewTarget?.phone ||
+                  t('admin.notProvided')}
               </KycValue>
             </KycRow>
             <KycRow>
               <KycLabel>{t('admin.aadhaar')}</KycLabel>
               <KycValue>
-                {kyc?.aadhaar_number || reviewTarget?.maskedAadhaar || t('admin.notProvided')}
+                {kyc?.aadhaar_number ||
+                  reviewTarget?.maskedAadhaar ||
+                  t('admin.notProvided')}
               </KycValue>
             </KycRow>
             <KycRow>
               <KycLabel>{t('admin.pan')}</KycLabel>
-              <KycValue>{kyc?.pan_number || reviewTarget?.maskedPan || t('admin.notProvided')}</KycValue>
+              <KycValue>
+                {kyc?.pan_number ||
+                  reviewTarget?.maskedPan ||
+                  t('admin.notProvided')}
+              </KycValue>
             </KycRow>
             <KycRow>
               <KycLabel>{t('admin.gstin')}</KycLabel>
-              <KycValue>{kyc?.gstin || reviewTarget?.gstin || t('admin.notProvided')}</KycValue>
+              <KycValue>
+                {kyc?.gstin || reviewTarget?.gstin || t('admin.notProvided')}
+              </KycValue>
             </KycRow>
             <KycRow>
               <KycLabel>Verification Status</KycLabel>
@@ -338,7 +352,13 @@ export default function AdminVendorsPage() {
         <Section>
           <SectionLabel>{t('admin.documents')}</SectionLabel>
           {documents.length === 0 ? (
-            <p style={{ margin: 0, color: 'var(--color-text-secondary)', fontSize: '0.85rem' }}>
+            <p
+              style={{
+                margin: 0,
+                color: 'var(--color-text-secondary)',
+                fontSize: '0.85rem',
+              }}
+            >
               {t('admin.noDocs')}
             </p>
           ) : (

@@ -63,7 +63,14 @@ export default function AdminBookingsPage() {
               booking.vendorName ||
               t('admin.bookingVendorUnassigned')}
           </CellPrimary>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              flexWrap: 'wrap',
+            }}
+          >
             {booking.vendorPhone ? (
               <PhoneLink href={`tel:${booking.vendorPhone}`}>
                 {booking.vendorPhone}
@@ -117,7 +124,10 @@ export default function AdminBookingsPage() {
       key: 'eventDate',
       align: 'left',
       render: (dateStr: string) => {
-        if (!dateStr) return <span style={{ color: 'var(--color-text-secondary)' }}>—</span>;
+        if (!dateStr)
+          return (
+            <span style={{ color: 'var(--color-text-secondary)' }}>—</span>
+          );
         const d = new Date(dateStr);
         const formatted = isNaN(d.getTime())
           ? dateStr
@@ -127,7 +137,9 @@ export default function AdminBookingsPage() {
               year: 'numeric',
             });
         return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}
+          >
             <CalendarIcon size={14} color="var(--color-text-secondary)" />
             <span style={{ fontWeight: 500 }}>{formatted}</span>
           </div>
@@ -139,7 +151,9 @@ export default function AdminBookingsPage() {
       key: 'amount',
       align: 'right',
       render: (_value, booking) => (
-        <PriceCellText $accent>{formatPrice(booking.totalAmount)}</PriceCellText>
+        <PriceCellText $accent>
+          {formatPrice(booking.totalAmount)}
+        </PriceCellText>
       ),
     },
     {
@@ -158,7 +172,8 @@ export default function AdminBookingsPage() {
           <PageEyebrow>MARKETPLACE MANAGEMENT</PageEyebrow>
           <PageTitle $palette={palette}>{t('admin.bookings')}</PageTitle>
           <PageLead $palette={palette}>
-            Track all customer bookings, assigned vendor partners, and order statuses.
+            Track all customer bookings, assigned vendor partners, and order
+            statuses.
           </PageLead>
         </div>
       </PageHeader>

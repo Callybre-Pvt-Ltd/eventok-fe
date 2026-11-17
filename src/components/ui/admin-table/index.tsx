@@ -3,7 +3,12 @@ import { StatusPill } from './styled';
 
 export * from './styled';
 
-export type StatusVariant = 'success' | 'warning' | 'error' | 'neutral' | 'info';
+export type StatusVariant =
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'neutral'
+  | 'info';
 
 export function getStatusVariant(status: string): StatusVariant {
   const s = status.toLowerCase().trim();

@@ -5,7 +5,8 @@ export const AdminTableCard = styled.div`
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: ${radii.lg};
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 2px 8px -2px rgba(0, 0, 0, 0.05) !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04),
+    0 2px 8px -2px rgba(0, 0, 0, 0.05) !important;
   overflow: hidden;
   margin-top: 0.5rem;
 
@@ -128,7 +129,9 @@ export const FilterButton = styled.button<{ $active: boolean }>`
   }
 `;
 
-export const StatusPill = styled.span<{ $variant: 'success' | 'warning' | 'error' | 'neutral' | 'info' }>`
+export const StatusPill = styled.span<{
+  $variant: 'success' | 'warning' | 'error' | 'neutral' | 'info';
+}>`
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
@@ -239,4 +242,3 @@ export const PriceCellText = styled.span<{ $accent?: boolean }>`
   text-align: right;
   display: block;
 `;
-

@@ -119,7 +119,9 @@ export default function AdminDashboardPage() {
                   <Button
                     type="primary"
                     size="small"
-                    onClick={() => navigate(`${ROUTES.ADMIN_VENDORS}?status=pending`)}
+                    onClick={() =>
+                      navigate(`${ROUTES.ADMIN_VENDORS}?status=pending`)
+                    }
                   >
                     Audit KYC
                   </Button>
