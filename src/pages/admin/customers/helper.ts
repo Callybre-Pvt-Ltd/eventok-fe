@@ -41,9 +41,11 @@ export function useAdminCustomers() {
       }
       return res.data;
     },
-    onSuccess: (updatedUser) => {
+    onSuccess: updatedUser => {
       message.success(
-        `Role for ${updatedUser.name || updatedUser.email} updated to ${updatedUser.role.replace('_', ' ').toUpperCase()}`,
+        `Role for ${
+          updatedUser.name || updatedUser.email
+        } updated to ${updatedUser.role.replace('_', ' ').toUpperCase()}`,
       );
       queryClient.invalidateQueries({ queryKey: ['admin-users'] });
     },
@@ -60,7 +62,9 @@ export function useAdminCustomers() {
     const targetName = targetUser.name || targetUser.email || 'this user';
 
     let title = 'Change User Role';
-    let content = `Are you sure you want to change the role of ${targetName} to ${newRole.replace('_', ' ').toUpperCase()}?`;
+    let content = `Are you sure you want to change the role of ${targetName} to ${newRole
+      .replace('_', ' ')
+      .toUpperCase()}?`;
 
     if (isPromotingToSuperAdmin) {
       title = 'Promote to Super Administrator';
@@ -75,7 +79,10 @@ export function useAdminCustomers() {
       content,
       okText: 'Confirm Change',
       cancelText: 'Cancel',
-      okType: isPromotingToSuperAdmin || isDemotingFromSuperAdmin ? 'danger' : 'primary',
+      okType:
+        isPromotingToSuperAdmin || isDemotingFromSuperAdmin
+          ? 'danger'
+          : 'primary',
       onOk: async () => {
         await updateRoleMutation.mutateAsync({
           userId: targetUser.id,

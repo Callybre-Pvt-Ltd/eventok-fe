@@ -19,8 +19,7 @@ export function checkRouteAccess(
   const isVendorRoute = Boolean(roles && roles.includes('vendor'));
 
   const isAuthorizedForVendor =
-    isVendorRoute &&
-    (user.role === 'vendor' || Boolean(user.vendorId));
+    isVendorRoute && (user.role === 'vendor' || Boolean(user.vendorId));
 
   const isAuthorizedByPrimaryRole = Boolean(roles && roles.includes(user.role));
 
@@ -41,4 +40,3 @@ export function checkRouteAccess(
 
   return { allowed: true };
 }
-

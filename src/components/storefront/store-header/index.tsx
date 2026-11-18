@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import {
-  Heart,
-  Menu,
-  Search,
-  ShoppingBag,
-  User,
-} from 'lucide-react';
+import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ProfileMenu } from '@/components/auth/profile-menu';
 import { BrandIcon } from '@/components/global/brand-icon';

@@ -4,12 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Dropdown } from 'antd';
 import type { MenuProps } from 'antd';
 import { useCategoryNav } from './helper';
-import {
-  NavBar,
-  NavGroup,
-  NavScroller,
-  NavTrigger,
-} from './styled';
+import { NavBar, NavGroup, NavScroller, NavTrigger } from './styled';
 
 export function CategoryNav() {
   const { t } = useTranslation();

@@ -1,12 +1,7 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import {
-  CalendarCheck,
-  ShieldCheck,
-  Sparkles,
-  Star,
-} from 'lucide-react';
+import { CalendarCheck, ShieldCheck, Sparkles, Star } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { PublicHeader } from '@/components/global/public-header';
 import { PublicFooter } from '@/components/global/public-footer';

@@ -46,7 +46,10 @@ const mapRoom = (r: ApiChatRoom): ChatThread => ({
   unread: r.unread_count ?? 0,
 });
 
-const mapMessage = (m: ApiChatMessage, fallbackRole: UserRole = 'customer'): Message => ({
+const mapMessage = (
+  m: ApiChatMessage,
+  fallbackRole: UserRole = 'customer',
+): Message => ({
   id: m.id,
   threadId: m.room_id,
   senderId: m.sender_id,

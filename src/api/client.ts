@@ -20,7 +20,9 @@ export class ApiError extends Error {
 }
 
 type QueryValue = string | number | boolean | null | undefined;
-type TokenProvider = (options?: { skipCache?: boolean }) => Promise<string | null>;
+type TokenProvider = (options?: {
+  skipCache?: boolean;
+}) => Promise<string | null>;
 
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';

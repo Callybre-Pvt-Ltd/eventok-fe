@@ -211,7 +211,10 @@ export function AppRouter() {
               element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />}
             />
             <Route path="dashboard" element={<AdminDashboardPage />} />
-            <Route path="super-admins" element={<Navigate to={ROUTES.ADMIN_CUSTOMERS} replace />} />
+            <Route
+              path="super-admins"
+              element={<Navigate to={ROUTES.ADMIN_CUSTOMERS} replace />}
+            />
             <Route path="approvals" element={<AdminApprovalsPage />} />
             <Route path="customers" element={<AdminCustomersPage />} />
             <Route path="vendors" element={<AdminVendorsPage />} />

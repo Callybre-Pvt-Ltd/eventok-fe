@@ -203,7 +203,9 @@ export default function RegisterPage() {
                 <VendorNote $palette={palette}>
                   {role === 'vendor'
                     ? `You are applying as a Vendor using your account (${sessionUser?.email}). Your current role and credentials will remain untouched.`
-                    : `You are currently signed in as ${sessionUser?.name || sessionUser?.email}.`}
+                    : `You are currently signed in as ${
+                        sessionUser?.name || sessionUser?.email
+                      }.`}
                 </VendorNote>
               )}
               <Field $palette={palette}>
@@ -232,7 +234,12 @@ export default function RegisterPage() {
                   {t('auth.continueToSite')}
                 </Button>
               ) : (
-                <Button variant="primary" size="lg" fullWidth onClick={nextStep}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  fullWidth
+                  onClick={nextStep}
+                >
                   {isLoggedIn ? 'Continue to Vendor Details' : t('common.next')}
                 </Button>
               )}
@@ -249,7 +256,8 @@ export default function RegisterPage() {
               }}
             >
               <VendorNote $palette={palette}>
-                Registering Vendor profile for <strong>{sessionUser?.email}</strong>
+                Registering Vendor profile for{' '}
+                <strong>{sessionUser?.email}</strong>
               </VendorNote>
               <Field $palette={palette}>
                 <Label $palette={palette}>Business Name *</Label>
@@ -400,7 +408,8 @@ export default function RegisterPage() {
 
       {!isLoggedIn && (
         <AuthFooter $palette={palette}>
-          {t('auth.hasAccount')} <Link to={ROUTES.LOGIN}>{t('auth.login')}</Link>
+          {t('auth.hasAccount')}{' '}
+          <Link to={ROUTES.LOGIN}>{t('auth.login')}</Link>
         </AuthFooter>
       )}
     </AuthShell>
