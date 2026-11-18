@@ -5,7 +5,7 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from '@/components/storefront/shared/styled';
-import { getCategoryCount, getCategoryPhoto } from '@/pages/categories/helper';
+import { getCategoryPhoto } from '@/pages/categories/helper';
 import { useCategoryTiles } from './helper';
 import {
   Grid,
@@ -14,7 +14,6 @@ import {
   TileBody,
   TileImage,
   TileMedia,
-  TileMeta,
   TileName,
   TileOverlay,
 } from './styled';
@@ -43,10 +42,6 @@ export function CategoryTiles({
         <Grid>
           {categories.map(category => {
             const photo = getCategoryPhoto(category.slug);
-            const count =
-              category.serviceCount > 0
-                ? category.serviceCount
-                : getCategoryCount(category.slug);
 
             return (
               <Tile key={category.id} to={`${hrefPrefix}/${category.slug}`}>
@@ -56,11 +51,6 @@ export function CategoryTiles({
                 </TileMedia>
                 <TileBody>
                   <TileName>{category.name}</TileName>
-                  <TileMeta>
-                    {t('storefront.builderServicesAvailable', {
-                      count,
-                    })}
-                  </TileMeta>
                 </TileBody>
               </Tile>
             );

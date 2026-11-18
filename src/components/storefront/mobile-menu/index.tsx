@@ -91,7 +91,6 @@ export function MobileMenu({
             {group.children.map(category => (
               <SubLink key={category.slug} to={`/category/${category.slug}`}>
                 {category.name}
-                <MenuCount>{category.serviceCount ?? 0}</MenuCount>
               </SubLink>
             ))}
           </Section>

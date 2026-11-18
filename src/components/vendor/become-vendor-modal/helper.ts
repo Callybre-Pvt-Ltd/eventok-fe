@@ -112,11 +112,22 @@ export function useBecomeVendorModal({
   };
 
   const createProfile = async (values: FormValues): Promise<string | null> => {
-    if (values.full_name || values.phone) {
-      await authService.updateMe({
-        full_name: values.full_name.trim(),
-        phone: values.phone.trim(),
+    const currentName = session?.user?.name || '';
+    const currentPhone = session?.user?.phone || '';
+    const newName = values.full_name?.trim() || '';
+    const newPhone = values.phone?.trim() || '';
+    if (
+      (newName && newName !== currentName) ||
+      (newPhone && newPhone !== currentPhone)
+    ) {
+      const updateRes = await authService.updateMe({
+        full_name: newName !== currentName ? newName : undefined,
+        phone: newPhone !== currentPhone ? newPhone : undefined,
       });
+      if (updateRes.error) {
+        message.error(updateRes.error);
+        return null;
+      }
     }
     const res = await vendorService.createProfile({
       business_name: values.business_name.trim(),

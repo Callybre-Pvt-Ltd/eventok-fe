@@ -5,7 +5,7 @@ import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
 export const Page = styled.div`
   max-width: 1440px;
   margin: 0 auto;
-  padding: 1.5rem clamp(1rem, 3.5vw, 2.5rem) 4rem;
+  padding: 1.25rem clamp(1rem, 2vw, 1.75rem) 3rem;
 `;
 
 export const Breadcrumbs = styled.nav`

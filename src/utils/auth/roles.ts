@@ -5,7 +5,7 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   super_admin: 'Super Admin',
   admin: 'Admin',
   vendor: 'Vendor',
-  customer: 'User',
+  customer: '',
 };
 
 export function getRoleLabel(
@@ -19,8 +19,7 @@ export function getRoleLabel(
       ? 'Vendor (waitlist)'
       : ROLE_LABELS.vendor;
   }
-  if (role === 'customer') return ROLE_LABELS.customer;
-  return 'User';
+  return '';
 }
 
 export function formatEmailWithRole(

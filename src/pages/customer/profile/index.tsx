@@ -50,7 +50,11 @@ export default function CustomerProfilePage() {
             <User size={18} color="var(--color-primary)" />
             <SectionTitle>Personal Details</SectionTitle>
           </div>
-          <Tag color="orange">CUSTOMER</Tag>
+          {user?.role === 'vendor' ? (
+            <Tag color="orange">VENDOR</Tag>
+          ) : user?.role === 'admin' || user?.role === 'super_admin' ? (
+            <Tag color="red">ADMIN</Tag>
+          ) : null}
         </SectionHeader>
 
         <FormRow>

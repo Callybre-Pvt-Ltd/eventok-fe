@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, MapPin, Star } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Star } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
 import {
   Eyebrow,
@@ -9,17 +9,15 @@ import {
   SectionSubtitle,
   SectionTitle,
 } from '@/components/storefront/shared/styled';
-import { mockVendors } from '@/mock/vendors';
+import { useFeaturedVendors } from '@/components/landing/featured-vendors/helper';
 import {
   CardContent,
   CardFooter,
   Description,
   ExperienceBadge,
   HeaderRow,
-  LocationMeta,
   PortfolioStrip,
   PortfolioThumb,
-  PriceHint,
   RatingBlock,
   RatingScore,
   Tag,
@@ -31,7 +29,7 @@ import {
 } from './styled';
 
 export function FeaturedVendorsSection() {
-  const vendors = mockVendors.filter(v => v.featured);
+  const { vendors } = useFeaturedVendors();
 
   if (!vendors.length) return null;
 
@@ -54,20 +52,22 @@ export function FeaturedVendorsSection() {
 
         <VendorGrid>
           {vendors.map(vendor => {
-            const photos = vendor.portfolio.slice(0, 3);
+            const photos = (vendor.portfolio ?? []).slice(0, 3);
             return (
               <VendorCardRoot key={vendor.id}>
-                <PortfolioStrip>
-                  {photos.map((item, idx) => (
-                    <PortfolioThumb key={item.id} $cover={idx === 0}>
-                      <img
-                        src={item.url}
-                        alt={item.caption || vendor.businessName}
-                        loading="lazy"
-                      />
-                    </PortfolioThumb>
-                  ))}
-                </PortfolioStrip>
+                {photos.length > 0 && (
+                  <PortfolioStrip>
+                    {photos.map((item, idx) => (
+                      <PortfolioThumb key={item.id} $cover={idx === 0}>
+                        <img
+                          src={item.url}
+                          alt={item.caption || vendor.businessName}
+                          loading="lazy"
+                        />
+                      </PortfolioThumb>
+                    ))}
+                  </PortfolioStrip>
+                )}
 
                 <CardContent>
                   <HeaderRow>
@@ -75,23 +75,22 @@ export function FeaturedVendorsSection() {
                       {vendor.businessName}
                       <CheckCircle2 size={16} />
                     </VendorTitle>
-                    <ExperienceBadge>
-                      {vendor.experience}+ Yrs Exp
-                    </ExperienceBadge>
+                    {vendor.experience ? (
+                      <ExperienceBadge>
+                        {vendor.experience}+ Yrs Exp
+                      </ExperienceBadge>
+                    ) : null}
                   </HeaderRow>
-
-                  <LocationMeta>
-                    <MapPin size={12} />
-                    {vendor.city} • Verified KYC Partner
-                  </LocationMeta>
 
                   <Description>{vendor.description}</Description>
 
-                  <TagRow>
-                    {vendor.tags.map(tag => (
-                      <Tag key={tag}>{tag}</Tag>
-                    ))}
-                  </TagRow>
+                  {vendor.tags?.length ? (
+                    <TagRow>
+                      {vendor.tags.map(tag => (
+                        <Tag key={tag}>{tag}</Tag>
+                      ))}
+                    </TagRow>
+                  ) : null}
 
                   <CardFooter>
                     <RatingBlock>
@@ -99,7 +98,6 @@ export function FeaturedVendorsSection() {
                         <Star size={13} fill="#f59e0b" />
                         {vendor.rating} ({vendor.reviewCount} reviews)
                       </RatingScore>
-                      <PriceHint>{vendor.pricing}</PriceHint>
                     </RatingBlock>
 
                     <ViewVendorBtn to={`${ROUTES.SHOP}?vendor=${vendor.id}`}>

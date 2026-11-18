@@ -1,5 +1,5 @@
 import { Button, Tag } from 'antd';
-import { Calendar, ShieldCheck, Store, Wrench } from 'lucide-react';
+import { Calendar, Store, Users, Wrench } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { EmptyState } from '@/components/global/empty-state';
@@ -152,9 +152,9 @@ export default function AdminDashboardPage() {
                 <Calendar size={18} color="var(--color-primary)" />
                 <span>Bookings</span>
               </ActionTile>
-              <ActionTile onClick={() => navigate(ROUTES.ADMIN_SUPER_ADMINS)}>
-                <ShieldCheck size={18} color="var(--color-primary)" />
-                <span>Super Admins</span>
+              <ActionTile onClick={() => navigate(ROUTES.ADMIN_CUSTOMERS)}>
+                <Users size={18} color="var(--color-primary)" />
+                <span>Users</span>
               </ActionTile>
             </ActionTileGrid>
           </SectionBlock>

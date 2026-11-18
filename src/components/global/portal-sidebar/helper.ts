@@ -6,11 +6,10 @@ import {
   Calendar,
   User,
   Wrench,
-  DollarSign,
+  IndianRupee,
   Users,
   Store,
   PackagePlus,
-  ShieldCheck,
   type LucideIcon,
 } from 'lucide-react';
 import { ROUTES } from '@/constants/routes';
@@ -38,7 +37,7 @@ const vendorNav: NavItem[] = [
   {
     path: ROUTES.VENDOR_EARNINGS,
     labelKey: 'vendor.earnings',
-    icon: DollarSign,
+    icon: IndianRupee,
   },
   { path: ROUTES.VENDOR_PROFILE, labelKey: 'vendor.profile', icon: User },
 ];
@@ -48,11 +47,6 @@ const adminNav: NavItem[] = [
     path: ROUTES.ADMIN_DASHBOARD,
     labelKey: 'admin.dashboard',
     icon: LayoutDashboard,
-  },
-  {
-    path: ROUTES.ADMIN_SUPER_ADMINS,
-    labelKey: 'admin.superAdmins',
-    icon: ShieldCheck,
   },
   { path: ROUTES.ADMIN_VENDORS, labelKey: 'admin.vendors', icon: Store },
   { path: ROUTES.ADMIN_SERVICES, labelKey: 'admin.services', icon: Wrench },

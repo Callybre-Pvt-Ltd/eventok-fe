@@ -6,7 +6,6 @@ import {
   availabilityOptions,
   budgetPresets,
   categoryOptions,
-  cityOptions,
   defaultFilters,
   eventTypeOptions,
   getBudgetPresetId,
@@ -146,32 +145,6 @@ export function DiscoveryFilterDrawer({
                     onClick={() =>
                       set({
                         categories: toggleValue(draft.categories, opt.value),
-                      })
-                    }
-                  >
-                    {opt.label}
-                  </CheckChip>
-                ))}
-              </CheckGrid>
-            </AccordionBody>
-          </Accordion>
-
-          <Accordion open>
-            <summary>
-              {t('servicesPage.locationLabel')}
-              <ChevronDown size={16} aria-hidden />
-            </summary>
-            <AccordionBody>
-              <CheckGrid>
-                {cityOptions.map(opt => (
-                  <CheckChip
-                    key={opt.value}
-                    type="button"
-                    $on={draft.cities.includes(opt.value)}
-                    aria-pressed={draft.cities.includes(opt.value)}
-                    onClick={() =>
-                      set({
-                        cities: toggleValue(draft.cities, opt.value),
                       })
                     }
                   >

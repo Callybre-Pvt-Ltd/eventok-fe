@@ -1,4 +1,4 @@
-import { Table, Tag } from 'antd';
+import { Select, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { useTranslation } from 'react-i18next';
 import { CustomAntdSearchInput } from '@/components/global/custom-antd-search-input';
@@ -7,6 +7,7 @@ import {
   AdminTableCard,
   AdminToolbar,
   AdminToolbarLeft,
+  AdminToolbarRight,
   CellPrimary,
   CellSecondary,
   CellStack,
@@ -18,14 +19,23 @@ import {
   PageLead,
   PageTitle,
 } from '@/components/ui/portal-primitives/styled';
-import type { User } from '@/types';
+import type { User, UserRole } from '@/types';
 import { useAdminCustomers } from './helper';
 
 export default function AdminCustomersPage() {
   const { t } = useTranslation();
   const { palette } = usePortalPalette();
-  const { customers, isLoading, searchTerm, setSearchTerm } =
-    useAdminCustomers();
+  const {
+    customers,
+    isLoading,
+    isUpdatingRole,
+    searchTerm,
+    setSearchTerm,
+    roleFilter,
+    setRoleFilter,
+    isSuperAdmin,
+    handleRoleChange,
+  } = useAdminCustomers();
 
   if (isLoading) return <LoadingState />;
 
@@ -64,13 +74,15 @@ export default function AdminCustomersPage() {
       ),
     },
     {
-      title: 'Role',
+      title: 'Current Role',
       dataIndex: 'role',
       key: 'role',
       align: 'center',
       render: (role: string) => {
         const color =
-          role === 'admin' || role === 'super_admin'
+          role === 'super_admin'
+            ? 'magenta'
+            : role === 'admin'
             ? 'purple'
             : role === 'vendor'
             ? 'orange'
@@ -90,6 +102,32 @@ export default function AdminCustomersPage() {
         );
       },
     },
+    ...(isSuperAdmin
+      ? [
+          {
+            title: 'Manage Role',
+            key: 'manageRole',
+            align: 'center' as const,
+            render: (_: unknown, record: User) => (
+              <Select
+                value={record.role}
+                size="middle"
+                style={{ width: 140 }}
+                disabled={isUpdatingRole}
+                onChange={(newRole: UserRole) =>
+                  handleRoleChange(record, newRole)
+                }
+                options={[
+                  { label: 'Super Admin', value: 'super_admin' },
+                  { label: 'Admin', value: 'admin' },
+                  { label: 'Vendor', value: 'vendor' },
+                  { label: 'Client', value: 'customer' },
+                ]}
+              />
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -113,6 +151,20 @@ export default function AdminCustomersPage() {
             placeholder="Search users by name, email, phone, city…"
           />
         </AdminToolbarLeft>
+        <AdminToolbarRight>
+          <Select
+            value={roleFilter}
+            onChange={setRoleFilter}
+            style={{ width: 160 }}
+            options={[
+              { label: 'All Roles', value: 'ALL' },
+              { label: 'Super Admins', value: 'super_admin' },
+              { label: 'Admins', value: 'admin' },
+              { label: 'Vendors', value: 'vendor' },
+              { label: 'Clients', value: 'customer' },
+            ]}
+          />
+        </AdminToolbarRight>
       </AdminToolbar>
 
       <AdminTableCard>
@@ -121,7 +173,7 @@ export default function AdminCustomersPage() {
           columns={columns}
           rowKey="id"
           pagination={{ pageSize: 10, showSizeChanger: false }}
-          locale={{ emptyText: 'No users found matching your search' }}
+          locale={{ emptyText: 'No users found matching your criteria' }}
         />
       </AdminTableCard>
     </>

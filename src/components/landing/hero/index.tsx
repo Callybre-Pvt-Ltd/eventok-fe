@@ -71,11 +71,6 @@ export function Hero() {
                       {t('landing.heroCta')}
                     </Button>
                   </Link>
-                  <Link to={ROUTES.ABOUT}>
-                    <Button variant="outline" size="lg">
-                      {t('landing.heroSecondary')}
-                    </Button>
-                  </Link>
                 </HeroActions>
               </MotionDiv>
               <MotionDiv variants={fadeUp}>

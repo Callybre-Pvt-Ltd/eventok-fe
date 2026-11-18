@@ -10,6 +10,17 @@ const PORTAL_COPY: Record<UserRole, { eyebrow: string; label: string }> = {
   customer: { eyebrow: 'EventOK', label: 'User portal' },
 };
 
+export function getEffectivePortalRole(
+  routeRole: UserRole,
+  userRole?: UserRole,
+): UserRole {
+  return routeRole === 'admin'
+    ? userRole === 'super_admin'
+      ? 'super_admin'
+      : 'admin'
+    : routeRole;
+}
+
 export function usePortalLayout(role: UserRole) {
   const { palette } = useTheme();
   const { t } = useTranslation();

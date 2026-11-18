@@ -51,7 +51,6 @@ export const ROUTES = {
   ADMIN_PAYMENTS: '/admin/payments',
   ADMIN_REFUNDS: '/admin/refunds',
   ADMIN_SERVICES: '/admin/services',
-  ADMIN_LOCATIONS: '/admin/locations',
   ADMIN_REPORTS: '/admin/reports',
   ADMIN_ANALYTICS: '/admin/analytics',
   ADMIN_SETTINGS: '/admin/settings',

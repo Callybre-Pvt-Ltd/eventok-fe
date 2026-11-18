@@ -24,7 +24,6 @@ import {
   Steps,
   StickyBar,
   Subtitle,
-  TileMeta,
   TileName,
   Title,
   TotalBlock,
@@ -70,11 +69,6 @@ export default function PackageBuilderPage() {
                 onClick={() => builder.pickCategory(category.slug)}
               >
                 <TileName>{category.name}</TileName>
-                <TileMeta>
-                  {t('storefront.builderServicesAvailable', {
-                    count: category.serviceCount,
-                  })}
-                </TileMeta>
               </CategoryTile>
             ))}
           </CategoryGrid>

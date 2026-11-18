@@ -15,7 +15,6 @@ import {
 } from './helper';
 import {
   AddonsStep,
-  AreaStep,
   BasicsStep,
   IncludedStep,
   PhotosStep,
@@ -201,8 +200,7 @@ export default function ServiceWizardPage() {
         {wizard.step === 2 && <PricingStep wizard={wizard} />}
         {wizard.step === 3 && <IncludedStep wizard={wizard} />}
         {wizard.step === 4 && <AddonsStep wizard={wizard} />}
-        {wizard.step === 5 && <AreaStep wizard={wizard} />}
-        {wizard.step === 6 && (
+        {wizard.step === 5 && (
           <PhotosStep
             wizard={wizard}
             images={images}
@@ -212,8 +210,8 @@ export default function ServiceWizardPage() {
             onReorder={handleReorder}
           />
         )}
-        {wizard.step === 7 && <PoliciesStep wizard={wizard} />}
-        {wizard.step === 8 && <ReviewStep wizard={wizard} images={images} />}
+        {wizard.step === 6 && <PoliciesStep wizard={wizard} />}
+        {wizard.step === 7 && <ReviewStep wizard={wizard} images={images} />}
       </StepBody>
 
       {!wizard.publishedJustNow ? (

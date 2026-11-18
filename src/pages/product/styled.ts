@@ -9,7 +9,7 @@ export const Page = styled.div`
   padding: 1.25rem 1rem 3rem;
 
   ${media.lg} {
-    padding: 1.75rem 2.5rem 4rem;
+    padding: 1.5rem clamp(1.25rem, 2vw, 2rem) 3rem;
   }
 `;
 

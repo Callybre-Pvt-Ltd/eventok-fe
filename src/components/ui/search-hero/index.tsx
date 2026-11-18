@@ -1,4 +1,4 @@
-import { Calendar, MapPin, Search, Tag, Users } from 'lucide-react';
+import { Calendar, Search, Tag, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/theme';
 import { useSearchHero } from './helper';
@@ -27,17 +27,6 @@ export function SearchHero() {
           placeholder={t('landing.searchCategoryPlaceholder')}
           value={fields.category}
           onChange={e => updateField('category', e.target.value)}
-        />
-      </SearchField>
-      <SearchField $palette={palette}>
-        <FieldLabel $palette={palette}>
-          <MapPin size={12} /> {t('landing.searchLocation')}
-        </FieldLabel>
-        <FieldInput
-          $palette={palette}
-          placeholder={t('landing.searchLocationPlaceholder')}
-          value={fields.location}
-          onChange={e => updateField('location', e.target.value)}
         />
       </SearchField>
       <SearchField $palette={palette}>

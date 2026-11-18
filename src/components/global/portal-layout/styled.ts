@@ -21,8 +21,8 @@ export const Main = styled.main`
 
 export const Content = styled.div`
   flex: 1;
-  padding: ${spacing.xl};
-  max-width: 1200px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  max-width: 1400px;
   width: 100%;
   min-width: 0;
   margin: 0 auto;
@@ -63,7 +63,7 @@ export const TopBar = styled.div<{ $palette: ThemePalette }>`
   display: flex;
   align-items: center;
   gap: ${spacing.md};
-  padding: ${spacing.md} ${spacing.xl};
+  padding: 0.875rem clamp(1rem, 2vw, 1.75rem);
   border-bottom: 1px solid ${({ $palette }) => $palette.border};
   background: ${({ $palette }) => $palette.surface};
   position: sticky;
@@ -80,8 +80,10 @@ export const MenuBtn = styled.button<{ $palette: ThemePalette }>`
   display: none;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 44px;
+  min-height: 44px;
   border: 1px solid ${({ $palette }) => $palette.border};
   border-radius: 10px;
   background: ${({ $palette }) => $palette.surface};

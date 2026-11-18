@@ -128,7 +128,7 @@ export function useWeddingServices() {
           .includes(curated.name.toLowerCase().split(' ')[0]),
     );
     return {
-      id: matched?.id || curated.id,
+      id: curated.id,
       name: curated.name,
       slug: matched?.slug || curated.slug,
       photo: curated.photo,

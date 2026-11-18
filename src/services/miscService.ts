@@ -116,8 +116,28 @@ export const categoryService = {
 };
 
 export const reviewService = {
-  async getByVendor(_vendorId: string): Promise<ServiceResponse<Review[]>> {
-    return { data: [], error: null };
+  async getByVendor(vendorId: string): Promise<ServiceResponse<Review[]>> {
+    return wrap(async () => {
+      const res = await apiRequest<{
+        items?: {
+          id: string;
+          rating: number;
+          comment: string | null;
+          reviewer_name: string;
+          created_at: string;
+        }[];
+      }>(`/vendors/${vendorId}/reviews`, {
+        query: { page: 1, page_size: 50 },
+      });
+      return (res.items ?? []).map(r => ({
+        id: r.id,
+        vendorId,
+        customerName: r.reviewer_name || 'Customer',
+        rating: r.rating,
+        comment: r.comment ?? '',
+        createdAt: r.created_at,
+      }));
+    });
   },
 
   async getFeatured(): Promise<ServiceResponse<Review[]>> {
@@ -139,7 +159,12 @@ export const analyticsService = {
     }>
   > {
     return wrap(async () => {
-      const raw = await apiRequest<DashboardStats>('/admin/dashboard');
+      const [raw, summary] = await Promise.all([
+        apiRequest<DashboardStats>('/admin/dashboard'),
+        apiRequest<{ gross_revenue?: number }>('/admin/payments/summary').catch(
+          () => null,
+        ),
+      ]);
       const vendors = raw.total_vendors ?? {};
       const users = raw.total_users ?? {};
       const bookings = raw.total_bookings ?? {};
@@ -147,7 +172,7 @@ export const analyticsService = {
         totalVendors: Object.values(vendors).reduce((a, b) => a + b, 0),
         pendingApprovals: raw.pending_vendor_verifications,
         totalBookings: Object.values(bookings).reduce((a, b) => a + b, 0),
-        totalRevenue: 0,
+        totalRevenue: Number(summary?.gross_revenue ?? 0),
         totalCustomers: users.CLIENT ?? users.client ?? 0,
         openEnquiries: raw.open_enquiries,
         bookingsThisMonth: raw.bookings_this_month,

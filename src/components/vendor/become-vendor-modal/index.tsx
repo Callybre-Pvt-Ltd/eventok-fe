@@ -79,11 +79,22 @@ export function BecomeVendorModal({
       }
 
       // 1. Update user profile phone & name if changed
-      if (values.full_name || values.phone) {
-        await authService.updateMe({
-          full_name: values.full_name.trim(),
-          phone: values.phone.trim(),
+      const currentName = session?.user?.name || '';
+      const currentPhone = session?.user?.phone || '';
+      const newName = values.full_name?.trim() || '';
+      const newPhone = values.phone?.trim() || '';
+      if (
+        (newName && newName !== currentName) ||
+        (newPhone && newPhone !== currentPhone)
+      ) {
+        const updateRes = await authService.updateMe({
+          full_name: newName !== currentName ? newName : undefined,
+          phone: newPhone !== currentPhone ? newPhone : undefined,
         });
+        if (updateRes.error) {
+          message.error(updateRes.error);
+          return;
+        }
       }
 
       // 2. Create vendor profile
@@ -303,12 +314,12 @@ export function BecomeVendorModal({
             { required: true, message: 'PAN is required' },
             {
               pattern: /^[A-Z]{5}[0-9]{4}[A-Z]$/i,
-              message: 'Enter a valid PAN, e.g. ABCDE1234F',
+              message: 'Enter a valid PAN, e.g. ABCPE1234F',
             },
           ]}
         >
           <Input
-            placeholder="ABCDE1234F"
+            placeholder="ABCPE1234F"
             size="large"
             maxLength={10}
             onChange={e =>

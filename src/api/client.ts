@@ -20,7 +20,9 @@ export class ApiError extends Error {
 }
 
 type QueryValue = string | number | boolean | null | undefined;
-type TokenProvider = () => Promise<string | null>;
+type TokenProvider = (options?: {
+  skipCache?: boolean;
+}) => Promise<string | null>;
 
 interface RequestOptions {
   method?: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE';
@@ -53,6 +55,16 @@ interface ErrorEnvelope {
 }
 
 let tokenProvider: TokenProvider = async () => null;
+let refreshPromise: Promise<string | null> | null = null;
+
+const getFreshToken = async (): Promise<string | null> => {
+  if (!refreshPromise) {
+    refreshPromise = tokenProvider({ skipCache: true }).finally(() => {
+      refreshPromise = null;
+    });
+  }
+  return refreshPromise;
+};
 
 export const setAuthTokenProvider = (provider: TokenProvider) => {
   tokenProvider = provider;
@@ -86,8 +98,32 @@ const parseBody = async (response: Response): Promise<unknown> => {
 const toApiError = (payload: unknown, status: number): ApiError => {
   if (payload && typeof payload === 'object') {
     const error = (payload as ErrorEnvelope).error;
+    let message = error?.message ?? 'Request failed';
+    if (
+      error?.details &&
+      typeof error.details === 'object' &&
+      'errors' in error.details &&
+      Array.isArray(error.details.errors) &&
+      error.details.errors.length > 0
+    ) {
+      const errList = error.details.errors as Array<{
+        loc?: (string | number)[];
+        msg?: string;
+      }>;
+      const formatted = errList
+        .map(e => {
+          const field = e.loc ? e.loc[e.loc.length - 1] : '';
+          const msg = (e.msg ?? '').replace(/^Value error,\s*/i, '');
+          return field ? `${field}: ${msg}` : msg;
+        })
+        .filter(Boolean)
+        .join('; ');
+      if (formatted) {
+        message = formatted;
+      }
+    }
     return new ApiError(
-      error?.message ?? 'Request failed',
+      message,
       error?.code ?? 'UNKNOWN',
       status,
       error?.details ?? {},
@@ -99,13 +135,16 @@ const toApiError = (payload: unknown, status: number): ApiError => {
 const execute = async (
   path: string,
   options: RequestOptions,
+  forceRefreshToken = false,
 ): Promise<Response> => {
   const headers: Record<string, string> = {};
   if (options.formData === undefined && options.body !== undefined) {
     headers['Content-Type'] = 'application/json';
   }
   if (options.auth !== false) {
-    const token = await tokenProvider();
+    const token = forceRefreshToken
+      ? await getFreshToken()
+      : await tokenProvider();
     if (token) headers.Authorization = `Bearer ${token}`;
   }
 
@@ -163,6 +202,19 @@ export const apiRequest = async <T>(
   } catch (error) {
     throw toTransportError(error);
   }
+
+  // If 401 on an authenticated request, attempt a single refresh with skipCache: true and retry
+  if (response.status === 401 && options.auth !== false) {
+    try {
+      const retryResponse = await execute(path, options, true);
+      if (retryResponse.ok || retryResponse.status !== 401) {
+        response = retryResponse;
+      }
+    } catch {
+      // Keep original response if retry throws transport error
+    }
+  }
+
   const payload = await parseBody(response);
   if (!response.ok) throw toApiError(payload, response.status);
   if (payload && typeof payload === 'object' && 'items' in payload)
@@ -180,6 +232,19 @@ export const apiRequestPaginated = async <T>(
   } catch (error) {
     throw toTransportError(error);
   }
+
+  // If 401 on an authenticated request, attempt a single refresh with skipCache: true and retry
+  if (response.status === 401 && options.auth !== false) {
+    try {
+      const retryResponse = await execute(path, options, true);
+      if (retryResponse.ok || retryResponse.status !== 401) {
+        response = retryResponse;
+      }
+    } catch {
+      // Keep original response if retry throws transport error
+    }
+  }
+
   const payload = await parseBody(response);
   if (!response.ok) throw toApiError(payload, response.status);
   if (payload && typeof payload === 'object') {
