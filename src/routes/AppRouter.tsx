@@ -42,7 +42,6 @@ const VendorProfilePage = lazy(() => import('@/pages/vendor/profile'));
 const VendorPendingPage = lazy(() => import('@/pages/vendor/pending'));
 
 const AdminDashboardPage = lazy(() => import('@/pages/admin/dashboard'));
-const AdminSuperAdminsPage = lazy(() => import('@/pages/admin/super-admins'));
 const AdminApprovalsPage = lazy(() => import('@/pages/admin/approvals'));
 const AdminCustomersPage = lazy(() => import('@/pages/admin/customers'));
 const AdminVendorsPage = lazy(() => import('@/pages/admin/vendors'));
@@ -51,7 +50,6 @@ const AdminBookingsPage = lazy(() => import('@/pages/admin/bookings'));
 const AdminPaymentsPage = lazy(() => import('@/pages/admin/payments'));
 const AdminRefundsPage = lazy(() => import('@/pages/admin/refunds'));
 const AdminServicesPage = lazy(() => import('@/pages/admin/services'));
-const AdminLocationsPage = lazy(() => import('@/pages/admin/locations'));
 const AdminReportsPage = lazy(() => import('@/pages/admin/reports'));
 const AdminAnalyticsPage = lazy(() => import('@/pages/admin/analytics'));
 const AdminSettingsPage = lazy(() => import('@/pages/admin/settings'));
@@ -213,7 +211,7 @@ export function AppRouter() {
               element={<Navigate to={ROUTES.ADMIN_DASHBOARD} replace />}
             />
             <Route path="dashboard" element={<AdminDashboardPage />} />
-            <Route path="super-admins" element={<AdminSuperAdminsPage />} />
+            <Route path="super-admins" element={<Navigate to={ROUTES.ADMIN_CUSTOMERS} replace />} />
             <Route path="approvals" element={<AdminApprovalsPage />} />
             <Route path="customers" element={<AdminCustomersPage />} />
             <Route path="vendors" element={<AdminVendorsPage />} />
@@ -222,7 +220,6 @@ export function AppRouter() {
             <Route path="payments" element={<AdminPaymentsPage />} />
             <Route path="refunds" element={<AdminRefundsPage />} />
             <Route path="services" element={<AdminServicesPage />} />
-            <Route path="locations" element={<AdminLocationsPage />} />
             <Route path="reports" element={<AdminReportsPage />} />
             <Route path="analytics" element={<AdminAnalyticsPage />} />
             <Route path="settings" element={<AdminSettingsPage />} />

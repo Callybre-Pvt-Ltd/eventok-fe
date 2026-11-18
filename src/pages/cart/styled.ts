@@ -6,10 +6,10 @@ import { fontFamily, fontSizes, media, radii, shadows } from '@/theme';
 export const Page = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  padding: 1.5rem 1rem 3rem;
+  padding: 1.25rem 1rem 3rem;
 
   ${media.lg} {
-    padding: 2rem 2.5rem 4rem;
+    padding: 1.5rem clamp(1.25rem, 2vw, 2rem) 3rem;
   }
 `;
 

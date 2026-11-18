@@ -6,7 +6,7 @@ import { NotificationBell } from '@/components/global/notification-bell';
 import { PortalSidebar } from '@/components/global/portal-sidebar';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { getRoleLabel } from '@/utils/auth/roles';
-import { usePortalLayout } from './helper';
+import { getEffectivePortalRole, usePortalLayout } from './helper';
 import {
   Content,
   Layout,
@@ -26,7 +26,7 @@ interface PortalLayoutProps {
 
 export function PortalLayout({ role }: PortalLayoutProps) {
   const { session } = useAuth();
-  const effectiveRole = session?.user.role ?? role;
+  const effectiveRole = getEffectivePortalRole(role, session?.user.role);
   const {
     palette,
     portalLabel,

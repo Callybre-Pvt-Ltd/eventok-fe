@@ -9,7 +9,6 @@ import {
   BarContainer,
   BarSection,
   CategoryChip,
-  ChipCount,
   ChipIconWrap,
   NavArrowButton,
   ScrollTrack,
@@ -99,9 +98,6 @@ export function CategoryBar() {
                   <Icon size={16} />
                 </ChipIconWrap>
                 <span>{cat.name}</span>
-                {cat.serviceCount !== undefined && cat.serviceCount > 0 && (
-                  <ChipCount>{cat.serviceCount}</ChipCount>
-                )}
               </CategoryChip>
             );
           })}

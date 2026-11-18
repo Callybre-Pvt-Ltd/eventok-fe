@@ -27,7 +27,6 @@ import {
 import { Field, FieldLabel } from '@/components/ui/form-modal';
 import { ListBuilder } from '@/components/vendor/list-builder';
 import { ServiceAddons } from '@/components/vendor/service-addons';
-import { LocationPicker } from '@/components/vendor/location-picker';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 import type { ServiceWizard } from './helper';
 import {
@@ -305,21 +304,6 @@ export function AddonsStep({ wizard }: { wizard: ServiceWizard }) {
           extras.
         </StepLead>
       )}
-    </>
-  );
-}
-
-export function AreaStep({ wizard }: { wizard: ServiceWizard }) {
-  const { palette } = usePortalPalette();
-  return (
-    <>
-      <StepIntro>
-        <StepHeading $palette={palette}>Service locations</StepHeading>
-        <StepLead $palette={palette}>
-          Where do you provide this service? Select supported states and cities.
-        </StepLead>
-      </StepIntro>
-      {wizard.vendorId ? <LocationPicker vendorId={wizard.vendorId} /> : null}
     </>
   );
 }

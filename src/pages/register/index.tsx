@@ -60,7 +60,45 @@ export default function RegisterPage() {
     resendCode,
     changeEmail,
     finish,
+    isLoggedIn,
+    hasVendorProfile,
+    existingVendorStatus,
+    sessionUser,
+    navigate,
   } = useRegisterPage();
+
+  if (hasVendorProfile) {
+    return (
+      <AuthShell>
+        <SuccessIcon $palette={palette}>
+          <CheckCircle2 size={36} aria-hidden />
+        </SuccessIcon>
+        <AuthTitle $palette={palette}>Vendor Profile Exists</AuthTitle>
+        <AuthSubtitle $palette={palette}>
+          You already have a vendor profile associated with{' '}
+          {sessionUser?.email ?? 'your account'} (Status:{' '}
+          {existingVendorStatus ?? 'pending'}).
+        </AuthSubtitle>
+        <Button
+          variant="primary"
+          size="lg"
+          fullWidth
+          onClick={() => {
+            navigate(
+              existingVendorStatus === 'approved'
+                ? ROUTES.VENDOR_DASHBOARD
+                : ROUTES.VENDOR_PENDING,
+              { replace: true },
+            );
+          }}
+        >
+          {existingVendorStatus === 'approved'
+            ? 'Go to Vendor Dashboard'
+            : 'View Application Status'}
+        </Button>
+      </AuthShell>
+    );
+  }
 
   if (stage === 'success') {
     return (
@@ -75,7 +113,9 @@ export default function RegisterPage() {
             : t('auth.successSubtitle')}
         </AuthSubtitle>
         <Button variant="primary" size="lg" fullWidth onClick={finish}>
-          {t('auth.continueToSite')}
+          {role === 'vendor' && isLoggedIn
+            ? 'View Application Status'
+            : t('auth.continueToSite')}
         </Button>
       </AuthShell>
     );
@@ -143,20 +183,29 @@ export default function RegisterPage() {
 
       <AuthTitle $palette={palette}>{t('auth.registerTitle')}</AuthTitle>
       <AuthSubtitle $palette={palette}>
-        {step === 1
+        {isLoggedIn && role === 'vendor'
+          ? 'Apply for a Vendor profile using your authenticated account'
+          : step === 1
           ? t('auth.role')
           : step === 2
           ? t('auth.registerSubtitle')
           : t('auth.pendingApproval')}
       </AuthSubtitle>
 
-      {step === 1 && <SocialButtons />}
+      {step === 1 && !isLoggedIn && <SocialButtons />}
       {error && <ErrorMsg $palette={palette}>{error}</ErrorMsg>}
 
       <AnimatePresence mode="wait">
         {step === 1 && (
           <motion.div key="step1" {...stepMotion}>
             <StepBody>
+              {isLoggedIn && (
+                <VendorNote $palette={palette}>
+                  {role === 'vendor'
+                    ? `You are applying as a Vendor using your account (${sessionUser?.email}). Your current role and credentials will remain untouched.`
+                    : `You are currently signed in as ${sessionUser?.name || sessionUser?.email}.`}
+                </VendorNote>
+              )}
               <Field $palette={palette}>
                 <Label $palette={palette}>{t('auth.role')}</Label>
                 <RoleGroup $palette={palette}>
@@ -178,14 +227,85 @@ export default function RegisterPage() {
                   </RoleLabel>
                 </RoleGroup>
               </Field>
-              <Button variant="primary" size="lg" fullWidth onClick={nextStep}>
-                {t('common.next')}
-              </Button>
+              {isLoggedIn && role === 'customer' ? (
+                <Button variant="primary" size="lg" fullWidth onClick={finish}>
+                  {t('auth.continueToSite')}
+                </Button>
+              ) : (
+                <Button variant="primary" size="lg" fullWidth onClick={nextStep}>
+                  {isLoggedIn ? 'Continue to Vendor Details' : t('common.next')}
+                </Button>
+              )}
             </StepBody>
           </motion.div>
         )}
 
-        {step === 2 && (
+        {step === 2 && isLoggedIn && role === 'vendor' && (
+          <motion.div key="step2-vendor-auth" {...stepMotion}>
+            <AuthForm
+              onSubmit={event => {
+                event.preventDefault();
+                continueFromDetails();
+              }}
+            >
+              <VendorNote $palette={palette}>
+                Registering Vendor profile for <strong>{sessionUser?.email}</strong>
+              </VendorNote>
+              <Field $palette={palette}>
+                <Label $palette={palette}>Business Name *</Label>
+                <Input
+                  $palette={palette}
+                  value={draft.businessName}
+                  onChange={e => updateDraft({ businessName: e.target.value })}
+                  placeholder="e.g. Royal Decorators"
+                  required
+                />
+              </Field>
+              <Field $palette={palette}>
+                <Label $palette={palette}>Owner / Contact Name</Label>
+                <Input
+                  $palette={palette}
+                  value={draft.name}
+                  onChange={e => updateDraft({ name: e.target.value })}
+                  placeholder="Owner name"
+                />
+              </Field>
+              <Field $palette={palette}>
+                <Label $palette={palette}>Mobile Number</Label>
+                <Input
+                  $palette={palette}
+                  type="tel"
+                  value={draft.phone}
+                  onChange={e => updateDraft({ phone: e.target.value })}
+                  placeholder="+91 98765 43210"
+                />
+              </Field>
+              <Field $palette={palette}>
+                <Label $palette={palette}>{t('auth.city')}</Label>
+                <Input
+                  $palette={palette}
+                  value={draft.city}
+                  onChange={e => updateDraft({ city: e.target.value })}
+                  placeholder="e.g. Mumbai, Delhi, Jaipur"
+                />
+              </Field>
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                fullWidth
+                loading={loading}
+              >
+                Submit Vendor Application
+              </Button>
+              <Button variant="ghost" size="sm" onClick={prevStep}>
+                {t('common.back')}
+              </Button>
+            </AuthForm>
+          </motion.div>
+        )}
+
+        {step === 2 && !isLoggedIn && (
           <motion.div key="step2" {...stepMotion}>
             <AuthForm
               onSubmit={event => {
@@ -253,7 +373,7 @@ export default function RegisterPage() {
           </motion.div>
         )}
 
-        {step === 3 && role === 'vendor' && (
+        {step === 3 && !isLoggedIn && role === 'vendor' && (
           <motion.div key="step3" {...stepMotion}>
             <StepBody>
               <VendorNote $palette={palette}>
@@ -278,9 +398,11 @@ export default function RegisterPage() {
         )}
       </AnimatePresence>
 
-      <AuthFooter $palette={palette}>
-        {t('auth.hasAccount')} <Link to={ROUTES.LOGIN}>{t('auth.login')}</Link>
-      </AuthFooter>
+      {!isLoggedIn && (
+        <AuthFooter $palette={palette}>
+          {t('auth.hasAccount')} <Link to={ROUTES.LOGIN}>{t('auth.login')}</Link>
+        </AuthFooter>
+      )}
     </AuthShell>
   );
 }

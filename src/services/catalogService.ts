@@ -1,5 +1,4 @@
 import { photography } from '@/design-system/tokens/photography';
-import { mockCatalogServices } from '@/mock/catalog/services';
 import {
   DEFAULT_PAGE_SIZE,
   marketplaceService,
@@ -151,27 +150,6 @@ export const catalogService = {
         };
       });
 
-      if (items.length === 0) {
-        items = mockCatalogServices;
-        if (filters.categorySlug) {
-          items = items.filter(
-            item =>
-              item.categorySlug === filters.categorySlug ||
-              item.tags.some(t =>
-                t.toLowerCase().includes(filters.categorySlug!.toLowerCase()),
-              ),
-          );
-        }
-        if (filters.search) {
-          const q = filters.search.toLowerCase();
-          items = items.filter(
-            item =>
-              item.title.toLowerCase().includes(q) ||
-              item.description.toLowerCase().includes(q),
-          );
-        }
-      }
-
       if (filters.eventType && filters.eventType !== 'all') {
         items = items.filter(item => item.eventType === filters.eventType);
       }
@@ -186,12 +164,8 @@ export const catalogService = {
 
   async getBySlug(slug: string): Promise<ServiceResponse<CatalogService>> {
     return wrap(async () => {
-      const mock = mockCatalogServices.find(
-        s => s.slug === slug || s.id === slug,
-      );
       const res = await marketplaceService.getService(slug);
       if (res.error || !res.data) {
-        if (mock) return mock;
         throw new Error(res.error ?? 'Service not found');
       }
       const d = res.data;

@@ -14,7 +14,6 @@ export const STEP_LABELS = [
   'Pricing',
   "What's included",
   'Add-ons',
-  'Service area',
   'Photos',
   'Policies',
   'Review',
@@ -271,7 +270,7 @@ export function useServiceWizard() {
       setStep(4);
       return;
     }
-    if (step === 7) {
+    if (step === 6) {
       const fullPolicy = [
         `Free cancellation up to ${cancelWindow} before event (${refundType}).`,
         ...cancellationPolicy,
@@ -281,8 +280,8 @@ export function useServiceWizard() {
         cancellation_policy: fullPolicy,
       });
       if (!ok) return;
-      unlock(8);
-      setStep(8);
+      unlock(7);
+      setStep(7);
       return;
     }
     unlock(step + 1);

@@ -1,6 +1,5 @@
-import { ArrowRight, ChevronLeft, ChevronRight, Play } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme/useTheme';
 import { useHeroCarousel } from './helper';
 import {
@@ -12,7 +11,6 @@ import {
   Dot,
   Dots,
   Eyebrow,
-  GhostCta,
   HeroWrap,
   PrimaryCta,
   Scrim,
@@ -57,10 +55,6 @@ export function HeroCarousel() {
                   {t('storefront.heroExplore')}
                   <ArrowRight size={16} />
                 </PrimaryCta>
-                <GhostCta to={ROUTES.ABOUT}>
-                  <Play size={13} fill="currentColor" />
-                  {t('storefront.heroHowItWorks')}
-                </GhostCta>
               </Buttons>
             </Content>
           </Slide>

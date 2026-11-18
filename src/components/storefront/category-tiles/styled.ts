@@ -99,8 +99,8 @@ export const TileBody = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  padding: 0.95rem 0.85rem 1.1rem;
+  padding: 0.85rem 0.75rem;
+  min-height: 3.25rem;
   text-align: center;
 `;
 

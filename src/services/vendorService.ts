@@ -3,7 +3,6 @@ import type { PublicVendor, VendorPrivate, ServiceResponse } from '@/types';
 import {
   getAllStates,
   getCitiesByState,
-  findCity,
   INDIA_LOCATIONS,
 } from '@/constants/indiaLocations';
 
@@ -553,63 +552,21 @@ export const vendorService = {
   async getVendorLocations(
     vendorId: string,
   ): Promise<ServiceResponse<ApiVendorLocation[]>> {
-    const storageKey = `eventok_vendor_locations_${vendorId}`;
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const parsed = JSON.parse(raw);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          return { data: parsed, error: null };
-        }
-      }
-    } catch {
-      // ignore JSON parse error
-    }
-
-    try {
-      const res = await apiRequest<ApiVendorLocation[]>(
-        `/vendors/${vendorId}/locations`,
-      );
-      return { data: res, error: null };
-    } catch {
-      return { data: [], error: null };
-    }
+    return wrap(() =>
+      apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`),
+    );
   },
 
   async replaceVendorLocations(
     vendorId: string,
     cityIds: string[],
   ): Promise<ServiceResponse<ApiVendorLocation[]>> {
-    const storageKey = `eventok_vendor_locations_${vendorId}`;
-    const mapped: ApiVendorLocation[] = [];
-    for (const cityId of cityIds) {
-      const found = findCity(cityId);
-      if (found) {
-        mapped.push({
-          city_id: found.city.id,
-          city_name: found.city.name,
-          state_id: found.state.id,
-          state_name: found.state.name,
-        });
-      }
-    }
-
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(mapped));
-    } catch {
-      // ignore
-    }
-
-    try {
-      await apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`, {
+    return wrap(() =>
+      apiRequest<ApiVendorLocation[]>(`/vendors/${vendorId}/locations`, {
         method: 'PUT',
         body: { city_ids: cityIds },
-      });
-    } catch {
-      // API fallback
-    }
-
-    return { data: mapped, error: null };
+      }),
+    );
   },
 
   /** Admin catalogue. `q` is matched server-side against service title/description AND the

@@ -12,6 +12,8 @@ interface BackendUser {
   role: BackendRole;
   status: 'ACTIVE' | 'SUSPENDED' | 'DEACTIVATED';
   created_at: string;
+  vendor_id?: string | null;
+  vendor_status?: string | null;
 }
 
 const toFeRole = (role: BackendRole): UserRole => {
@@ -19,6 +21,13 @@ const toFeRole = (role: BackendRole): UserRole => {
   if (role === 'ADMIN') return 'admin';
   if (role === 'VENDOR') return 'vendor';
   return 'customer';
+};
+
+const toBeRole = (role: UserRole): BackendRole => {
+  if (role === 'super_admin') return 'SUPER_ADMIN';
+  if (role === 'admin') return 'ADMIN';
+  if (role === 'vendor') return 'VENDOR';
+  return 'CLIENT';
 };
 
 const mapUser = (raw: BackendUser, extras?: Partial<User>): User => ({
@@ -95,7 +104,12 @@ const fetchMe = async (): Promise<User> => {
   const meta = loadMeta();
   let vendorStatus = meta.vendorStatus;
   let vendorId = meta.vendorId;
-  if (raw.role === 'VENDOR') {
+
+  if (raw.vendor_id) {
+    vendorId = raw.vendor_id;
+    vendorStatus = mapVendorStatus(raw.vendor_status ?? 'PENDING');
+    saveMeta({ ...meta, vendorStatus, vendorId, city: meta.city });
+  } else if (raw.role === 'VENDOR') {
     try {
       const vendor = await ensureVendorProfile({
         businessName: raw.full_name,
@@ -107,7 +121,23 @@ const fetchMe = async (): Promise<User> => {
     } catch {
       vendorStatus ??= 'pending';
     }
+  } else if (
+    (raw.role === 'ADMIN' || raw.role === 'SUPER_ADMIN') &&
+    vendorId &&
+    !vendorStatus
+  ) {
+    try {
+      const vendor = await apiRequest<{ id: string; status: string }>(
+        '/vendors/me',
+      );
+      vendorId = vendor.id;
+      vendorStatus = mapVendorStatus(vendor.status);
+      saveMeta({ ...meta, vendorStatus, vendorId, city: meta.city });
+    } catch {
+      // Not a vendor or not found
+    }
   }
+
   return mapUser(raw, { ...meta, vendorStatus, vendorId });
 };
 
@@ -134,8 +164,11 @@ export const authService = {
 
     let vendorStatus: User['vendorStatus'];
     let vendorId: string | undefined;
-    // The backend keeps an existing profile's role, so trust its answer.
-    if (raw.role === 'VENDOR') {
+
+    if (raw.vendor_id) {
+      vendorId = raw.vendor_id;
+      vendorStatus = mapVendorStatus(raw.vendor_status ?? 'PENDING');
+    } else if (raw.role === 'VENDOR') {
       const vendor = await ensureVendorProfile({
         businessName: raw.full_name,
         city: payload.city,
@@ -169,10 +202,14 @@ export const authService = {
     });
   },
 
-  async listUsers(role?: BackendRole): Promise<ServiceResponse<User[]>> {
+  async listUsers(role?: UserRole): Promise<ServiceResponse<User[]>> {
     return wrap(async () => {
       const page = await apiRequestPaginated<BackendUser>('/admin/users', {
-        query: { page: 1, page_size: 100, ...(role ? { role } : null) },
+        query: {
+          page: 1,
+          page_size: 100,
+          ...(role ? { role: toBeRole(role) } : null),
+        },
       });
       return page.items.map(user => mapUser(user));
     });
@@ -205,6 +242,19 @@ export const authService = {
           method: 'POST',
         },
       );
+      return mapUser(raw);
+    });
+  },
+
+  async updateUserRole(
+    userId: string,
+    role: UserRole,
+  ): Promise<ServiceResponse<User>> {
+    return wrap(async () => {
+      const raw = await apiRequest<BackendUser>(`/admin/users/${userId}`, {
+        method: 'PATCH',
+        body: { role: toBeRole(role) },
+      });
       return mapUser(raw);
     });
   },

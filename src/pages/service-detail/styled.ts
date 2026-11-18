@@ -94,7 +94,7 @@ export const ProductCard = styled.div`
   box-shadow: 0 18px 50px rgba(${brandRgb.black}, 0.06);
 
   ${media.lg} {
-    grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     align-items: stretch;
   }
 `;
@@ -376,11 +376,11 @@ export const OfferItem = styled.li`
 
 export const InfoTiles = styled.div`
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.6rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.65rem;
 
-  ${media.md} {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -908,7 +908,7 @@ export const SplitSections = styled.div`
   gap: 1rem;
 
   ${media.lg} {
-    grid-template-columns: 1.2fr 0.8fr;
-    align-items: start;
+    grid-template-columns: 1fr 1fr;
+    align-items: stretch;
   }
 `;

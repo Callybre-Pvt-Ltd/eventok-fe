@@ -252,3 +252,26 @@ button {
   border-color: #ea580c !important;
   box-shadow: 0 0 0 2px rgba(234, 88, 12, 0.15) !important;
 }
+
+/* ==========================================================================
+   Mobile Responsiveness: Modal Fit, Scrolling & Responsive Tables
+   ========================================================================== */
+.ant-modal {
+  max-width: calc(100vw - 1.5rem) !important;
+  margin: 1rem auto !important;
+}
+
+.ant-modal .ant-modal-content {
+  border-radius: 16px !important;
+  max-height: calc(100dvh - 2.5rem);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .ant-table-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

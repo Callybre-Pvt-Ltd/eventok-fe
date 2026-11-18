@@ -4,7 +4,6 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  MapPin,
   ShieldCheck,
   Sparkles,
   TrendingUp,
@@ -43,16 +42,6 @@ import {
   VisualShowcase,
 } from './styled';
 
-const CITIES = [
-  'Delhi-NCR',
-  'Mumbai',
-  'Bengaluru',
-  'Jaipur',
-  'Chandigarh',
-  'Pune',
-  'Hyderabad',
-];
-
 const EVENTS = [
   { value: '', label: 'All Celebrations' },
   { value: 'wedding', label: 'Weddings & Receptions' },
@@ -74,13 +63,11 @@ const SERVICES = [
 
 export function HeroPlanner() {
   const navigate = useNavigate();
-  const [city, setCity] = useState('Delhi-NCR');
   const [eventType, setEventType] = useState('');
   const [serviceCategory, setServiceCategory] = useState('');
 
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (city) params.set('city', city);
     if (eventType) params.set('event', eventType);
     if (serviceCategory) params.set('category', serviceCategory);
     navigate(`${ROUTES.SHOP}?${params.toString()}`);
@@ -103,23 +90,6 @@ export function HeroPlanner() {
           </Subheadline>
 
           <SearchWidget role="search">
-            <SearchField>
-              <FieldLabel>
-                <MapPin size={12} /> City
-              </FieldLabel>
-              <FieldSelect
-                value={city}
-                onChange={e => setCity(e.target.value)}
-                aria-label="Select City"
-              >
-                {CITIES.map(c => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </FieldSelect>
-            </SearchField>
-
             <SearchField>
               <FieldLabel>Celebration</FieldLabel>
               <FieldSelect

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import {
   budgetPresets,
   categoryOptions,
-  cityOptions,
   getBudgetPresetId,
   getResultsContext,
   getSortLabel,
@@ -153,13 +152,6 @@ export function DiscoveryFilterBar({
             options={categoryOptions}
             values={filters.categories}
             onChange={categories => patch({ categories })}
-            placeholder="Any"
-          />
-          <MultiSelect
-            label={t('servicesPage.locationLabel')}
-            options={cityOptions}
-            values={filters.cities}
-            onChange={cities => patch({ cities })}
             placeholder="Any"
           />
           <Field>

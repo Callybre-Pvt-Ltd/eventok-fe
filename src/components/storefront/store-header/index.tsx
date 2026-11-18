@@ -2,9 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Heart,
-  MapPin,
   Menu,
-  Mic,
   Search,
   ShoppingBag,
   User,
@@ -27,7 +25,6 @@ import {
   DesktopOnly,
   HeaderRoot,
   IconLink,
-  LocationChip,
   LoginButton,
   LoginLabel,
   MainBar,
@@ -86,11 +83,6 @@ export function StoreHeader() {
           <BrandWord>{t('common.appName')}</BrandWord>
         </Brand>
 
-        <LocationChip type="button">
-          <MapPin size={16} />
-          {t('storefront.setLocation')}
-        </LocationChip>
-
         <SearchForm onSubmit={header.submit} role="search">
           <SearchIcon>
             <Search size={18} />
@@ -103,9 +95,6 @@ export function StoreHeader() {
             })}
             aria-label={t('storefront.searchSubmit')}
           />
-          <SearchIcon aria-hidden>
-            <Mic size={18} />
-          </SearchIcon>
           <SearchSubmit type="submit" aria-label={t('storefront.searchSubmit')}>
             <Search size={18} />
           </SearchSubmit>

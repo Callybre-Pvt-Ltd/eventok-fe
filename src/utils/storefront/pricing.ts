@@ -1,7 +1,7 @@
 import type { CatalogService } from '@/types/catalog';
 
 export function formatPrice(value: number): string {
-  return `$${value.toLocaleString('en-US')}`;
+  return `₹${value.toLocaleString('en-IN')}`;
 }
 
 export function discountPercent(service: CatalogService): number {

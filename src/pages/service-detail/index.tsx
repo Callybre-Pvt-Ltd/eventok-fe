@@ -3,7 +3,6 @@ import { Link, useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   CalendarCheck,
-  MapPin,
   ShieldCheck,
   Sparkles,
   Star,
@@ -206,9 +205,9 @@ export default function ServiceDetailPage() {
 
             <InfoTiles>
               <InfoTile>
-                <strong>{t('servicesPage.tileLocation')}</strong>
+                <strong>{t('servicesPage.verified')}</strong>
                 <span>
-                  <MapPin size={12} aria-hidden /> India
+                  <ShieldCheck size={12} aria-hidden /> 100% Verified
                 </span>
               </InfoTile>
               <InfoTile>

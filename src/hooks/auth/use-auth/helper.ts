@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const getToken = clerk.getToken;
 
   useEffect(() => {
-    setAuthTokenProvider(async () => getToken());
+    setAuthTokenProvider(async opts => getToken(opts));
   }, [getToken]);
 
   const refreshSession = useCallback(async (): Promise<Session | null> => {
@@ -161,7 +161,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // server-side. Never surface a 401 to a signed-in Clerk user;
         // keep retrying (well under the AuthContinuePage timeout) instead.
         if (result.kind === 'unauthorized') {
-          const delays = [500, 1000, 1500, 2000, 2500, 3000, 3000, 3000];
+          const delays = [500, 1000, 1500];
           for (const delay of delays) {
             await new Promise(resolve => setTimeout(resolve, delay));
             result = await load(true);

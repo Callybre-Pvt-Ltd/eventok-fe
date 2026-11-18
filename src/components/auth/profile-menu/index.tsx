@@ -108,22 +108,19 @@ export function ProfileMenu({
           <MenuEmail>
             {email || (clerkUserLoaded ? 'No email on account' : 'Loading…')}
           </MenuEmail>
-          {role ? (
-            <MenuRole>{getRoleLabel(role, user?.vendorStatus)}</MenuRole>
-          ) : null}
+          {(() => {
+            const roleLabel = getRoleLabel(role, user?.vendorStatus);
+            return roleLabel ? <MenuRole>{roleLabel}</MenuRole> : null;
+          })()}
 
           {role === 'admin' || role === 'super_admin' ? (
             <MenuItem
               role="menuitem"
-              to={
-                role === 'super_admin'
-                  ? ROUTES.ADMIN_SUPER_ADMINS
-                  : ROUTES.ADMIN_DASHBOARD
-              }
+              to={ROUTES.ADMIN_DASHBOARD}
               onClick={() => setOpen(false)}
             >
               <Shield size={16} aria-hidden />
-              {role === 'super_admin' ? 'Super Admins' : 'Admin portal'}
+              {role === 'super_admin' ? 'Super Admin portal' : 'Admin portal'}
             </MenuItem>
           ) : null}
 
@@ -131,12 +128,10 @@ export function ProfileMenu({
             <MenuItem
               role="menuitem"
               to={vendorPath}
-              target="_blank"
-              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
             >
               <Store size={16} aria-hidden />
-              {isApprovedVendor ? 'Vendor profile' : 'Vendor profile (Pending)'}
+              {isApprovedVendor ? 'Vendor portal' : 'Vendor portal (Pending)'}
             </MenuItem>
           ) : onOpenBecomeVendor ? (
             <MenuItemButton

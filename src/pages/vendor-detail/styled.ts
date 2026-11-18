@@ -352,6 +352,14 @@ export const FaqItem = styled.details<{ $palette: ThemePalette }>`
     justify-content: space-between;
     align-items: center;
     color: ${({ $palette }) => $palette.text};
+
+    svg {
+      transition: transform 0.2s ease;
+    }
+  }
+
+  &[open] summary svg {
+    transform: rotate(180deg);
   }
 `;
 

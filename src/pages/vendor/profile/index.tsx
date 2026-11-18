@@ -1,7 +1,6 @@
 import { Button, Input, InputNumber, Upload } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LoadingState } from '@/components/global/loading-state';
-import { LocationPicker } from '@/components/vendor/location-picker';
 import { useVendorProfile } from './helper';
 import {
   Banner,
@@ -13,7 +12,6 @@ import {
   PageHeader,
   PageLead,
   PageTitle,
-  SectionSpacer,
 } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 
@@ -225,15 +223,6 @@ export default function VendorProfilePage() {
           </Button>
         </FormGrid>
       </Card>
-
-      {vendor?.id ? (
-        <SectionSpacer>
-          <Card $palette={palette}>
-            <FieldLabel>Service locations</FieldLabel>
-            <LocationPicker vendorId={vendor.id} />
-          </Card>
-        </SectionSpacer>
-      ) : null}
     </>
   );
 }

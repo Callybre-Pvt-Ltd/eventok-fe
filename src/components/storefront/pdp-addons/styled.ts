@@ -4,8 +4,8 @@ import { brandColors, fontFamily, fontSizes, fontWeight, radii } from '@/theme';
 export const Wrap = styled.section`
   margin-top: 1.5rem;
   padding: 1.25rem;
-  border: 1px solid ${brandColors.gray200};
-  border-radius: ${radii.md};
+  border: 1px solid ${brandColors.tan};
+  border-radius: ${radii.lg};
   background: ${brandColors.white};
 
   [data-theme='dark'] & {

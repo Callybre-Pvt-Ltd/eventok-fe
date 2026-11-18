@@ -3,7 +3,7 @@ import { LoadingState } from '@/components/global/loading-state';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import type { UserRole } from '@/types';
-import { getPostAuthPath } from '@/utils/auth/post-auth';
+import { checkRouteAccess } from './helper';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -25,20 +25,9 @@ export function ProtectedRoute({
     return <Navigate to={ROUTES.LOGIN} state={{ from: location }} replace />;
   }
 
-  const { user } = session;
-
-  if (roles && !roles.includes(user.role)) {
-    return (
-      <Navigate to={getPostAuthPath(user.role, user.vendorStatus)} replace />
-    );
-  }
-
-  if (
-    user.role === 'vendor' &&
-    user.vendorStatus !== 'approved' &&
-    !allowPendingVendor
-  ) {
-    return <Navigate to={ROUTES.VENDOR_PENDING} replace />;
+  const access = checkRouteAccess(session.user, roles, allowPendingVendor);
+  if (!access.allowed && access.redirectTo) {
+    return <Navigate to={access.redirectTo} replace />;
   }
 
   return <>{children}</>;

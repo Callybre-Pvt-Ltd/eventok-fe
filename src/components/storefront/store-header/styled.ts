@@ -227,8 +227,8 @@ export const MenuButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  min-width: 44px;
+  min-height: 44px;
   border: none;
   border-radius: ${radii.full};
   background: var(--color-bg-alt);
@@ -246,16 +246,11 @@ export const IconLink = styled(Link)`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: ${radii.full};
   color: var(--color-text);
   text-decoration: none;
-
-  ${media.belowSm} {
-    width: 2.125rem;
-    height: 2.125rem;
-  }
 
   &:hover {
     background: var(--color-bg-alt);

@@ -9,12 +9,16 @@ import { ROUTES } from '@/constants/routes';
 import { useTheme } from '@/theme';
 import type { UserRole } from '@/types';
 import { setAuthIntent } from '@/utils/auth/post-auth';
+import { vendorService } from '@/services/vendorService';
 
-interface FormDraft {
+export interface FormDraft {
   name: string;
   email: string;
   password: string;
   confirmPassword: string;
+  businessName: string;
+  phone: string;
+  city: string;
 }
 
 export type RegisterStage = 'form' | 'verify' | 'success';
@@ -38,7 +42,14 @@ const validateDraft = (
 export function useRegisterPage() {
   const { t } = useTranslation();
   const { palette } = useTheme();
-  const { register, resendRegistrationCode, verifyRegistration } = useAuth();
+  const {
+    register,
+    resendRegistrationCode,
+    verifyRegistration,
+    session,
+    isSignedIn,
+    refreshSession,
+  } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const nextPath = readNextPath(location.search);
@@ -46,25 +57,52 @@ export function useRegisterPage() {
     (location.state as { role?: UserRole } | null)?.role === 'vendor'
       ? 'vendor'
       : 'customer';
+
+  const isLoggedIn = Boolean(isSignedIn && session?.user);
+  const hasVendorProfile = Boolean(session?.user?.vendorId);
+  const existingVendorStatus = session?.user?.vendorStatus;
+
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState<UserRole>(initialRole);
   const [step, setStep] = useState(1);
   const [stage, setStage] = useState<RegisterStage>('form');
   const [draft, setDraft] = useState<FormDraft>({
-    name: '',
-    email: '',
+    name: session?.user?.name || '',
+    email: session?.user?.email || '',
     password: '',
     confirmPassword: '',
+    businessName: '',
+    phone: session?.user?.phone || '',
+    city: session?.user?.city || '',
   });
   const [verificationCode, setVerificationCode] = useState('');
+
+  // Keep draft in sync if session loads asynchronously
+  useEffect(() => {
+    if (session?.user) {
+      setDraft(prev => ({
+        ...prev,
+        name: prev.name || session.user.name || '',
+        email: prev.email || session.user.email || '',
+        phone: prev.phone || session.user.phone || '',
+        city: prev.city || session.user.city || '',
+      }));
+    }
+  }, [session?.user]);
 
   // Google sign-up reads this selection before redirecting to Clerk.
   useEffect(() => {
     setAuthIntent(role === 'vendor' ? 'vendor' : 'customer');
   }, [role]);
 
-  const totalSteps = role === 'vendor' ? 3 : 2;
+  const totalSteps = isLoggedIn
+    ? role === 'vendor'
+      ? 2
+      : 1
+    : role === 'vendor'
+    ? 3
+    : 2;
 
   const nextStep = () => {
     setError(null);
@@ -79,6 +117,37 @@ export function useRegisterPage() {
     setDraft(d => ({ ...d, ...partial }));
 
   const submitRegistration = useCallback(async () => {
+    if (isLoggedIn && role === 'vendor') {
+      if (hasVendorProfile) {
+        setError(
+          'You already have a vendor profile associated with this account.',
+        );
+        return;
+      }
+      const businessName = draft.businessName.trim();
+      if (!businessName) {
+        setError('Please enter your business name');
+        return;
+      }
+      setLoading(true);
+      setError(null);
+      const res = await vendorService.createProfile({
+        business_name: businessName,
+        owner_name: draft.name.trim() || session?.user?.name || undefined,
+        mobile_number: draft.phone.trim() || undefined,
+        city: draft.city.trim() || undefined,
+      });
+      if (res.error || !res.data) {
+        setLoading(false);
+        setError(res.error || 'Failed to create vendor profile');
+        return;
+      }
+      await refreshSession();
+      setLoading(false);
+      setStage('success');
+      return;
+    }
+
     const invalid = validateDraft(draft, t);
     if (invalid) {
       setError(invalid);
@@ -98,9 +167,22 @@ export function useRegisterPage() {
       return;
     }
     setStage('verify');
-  }, [register, draft, role, t]);
+  }, [
+    draft,
+    hasVendorProfile,
+    isLoggedIn,
+    refreshSession,
+    register,
+    role,
+    session?.user,
+    t,
+  ]);
 
   const continueFromDetails = () => {
+    if (isLoggedIn && role === 'vendor') {
+      void submitRegistration();
+      return;
+    }
     const invalid = validateDraft(draft, t);
     if (invalid) {
       setError(invalid);
@@ -135,8 +217,15 @@ export function useRegisterPage() {
     setStage('form');
   };
 
-  const finish = () =>
+  const finish = () => {
+    if (isLoggedIn && role === 'vendor') {
+      navigate(withNextPath(ROUTES.VENDOR_PENDING, nextPath), {
+        replace: true,
+      });
+      return;
+    }
     navigate(withNextPath(ROUTES.AUTH_CONTINUE, nextPath), { replace: true });
+  };
 
   return {
     palette,
@@ -159,5 +248,10 @@ export function useRegisterPage() {
     resendCode,
     changeEmail,
     finish,
+    isLoggedIn,
+    hasVendorProfile,
+    existingVendorStatus,
+    sessionUser: session?.user,
+    navigate,
   };
 }
