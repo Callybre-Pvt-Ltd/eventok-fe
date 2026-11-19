@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { fontSizes, radii } from '@/theme';
+import { fontSizes, media, radii } from '@/theme';
 
 export const AdminTableCard = styled.div`
   background: var(--color-surface);
@@ -63,6 +63,11 @@ export const AdminTableCard = styled.div`
     align-items: center;
     justify-content: flex-end;
     gap: 0.35rem;
+
+    ${media.belowSm} {
+      justify-content: center !important;
+      padding: 12px 8px !important;
+    }
   }
 
   .ant-pagination-item-active {
@@ -82,6 +87,12 @@ export const AdminToolbar = styled.div`
   gap: 0.75rem;
   flex-wrap: wrap;
   margin-bottom: 1.25rem;
+
+  ${media.belowSm} {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
 `;
 
 export const AdminToolbarLeft = styled.div`
@@ -91,6 +102,19 @@ export const AdminToolbarLeft = styled.div`
   flex: 1;
   min-width: 280px;
   flex-wrap: wrap;
+
+  ${media.belowSm} {
+    min-width: 0;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.6rem;
+
+    .ant-input-affix-wrapper,
+    .ant-select {
+      width: 100% !important;
+    }
+  }
 `;
 
 export const AdminToolbarRight = styled.div`
@@ -98,6 +122,11 @@ export const AdminToolbarRight = styled.div`
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+
+  ${media.belowSm} {
+    width: 100%;
+    justify-content: flex-start;
+  }
 `;
 
 export const FilterGroup = styled.div`
@@ -107,6 +136,20 @@ export const FilterGroup = styled.div`
   padding: 3px;
   border-radius: 8px;
   border: 1px solid #e2e8f0;
+  max-width: 100%;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  ${media.belowSm} {
+    width: 100%;
+    padding: 4px;
+    box-sizing: border-box;
+  }
 `;
 
 export const FilterButton = styled.button<{ $active: boolean }>`

@@ -107,8 +107,8 @@ export const LineFoot = styled.div`
 export const Stepper = styled.div`
   display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.25rem 0.5rem;
+  gap: 0.5rem;
+  padding: 0.25rem 0.35rem;
   border-radius: ${radii.full};
   border: 1px solid ${brandColors.tan};
 
@@ -119,25 +119,32 @@ export const Stepper = styled.div`
 `;
 
 export const StepButton = styled.button`
-  width: 1.5rem;
-  height: 1.5rem;
+  width: 2rem;
+  height: 2rem;
+  min-width: 32px;
+  min-height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border: none;
   border-radius: ${radii.full};
-  background: transparent;
+  background: var(--color-bg-alt);
   color: var(--color-text);
   cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
 
   &:hover {
     background: var(--color-primary-light);
     color: var(--color-primary);
   }
+
+  &:active {
+    transform: scale(0.92);
+  }
 `;
 
 export const Quantity = styled.span`
-  min-width: 1rem;
+  min-width: 1.25rem;
   text-align: center;
   font-size: ${fontSizes.sm};
   font-weight: 700;
@@ -152,12 +159,21 @@ export const LinePrice = styled.span`
 `;
 
 export const RemoveButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  min-height: 36px;
+  padding: 0.4rem;
   border: none;
+  border-radius: ${radii.full};
   background: transparent;
   color: ${brandColors.gray400};
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
 
   &:hover {
+    background: #fef2f2;
     color: ${brandColors.danger500};
   }
 `;
@@ -266,22 +282,29 @@ export const CouponButton = styled.button`
 `;
 
 export const CheckoutButton = styled(Link)`
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  padding: 0.875rem 1rem;
-  border-radius: ${radii.md};
+  width: 100%;
+  min-height: 48px;
+  padding: 0.875rem 1.5rem;
+  border-radius: ${radii.full};
   background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.sm};
   font-weight: 700;
   text-decoration: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: opacity 0.15s ease;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
+  transition: background 0.2s ease, transform 0.15s ease;
 
   &:hover {
-    opacity: 0.92;
+    background: var(--color-primary-hover);
+    color: #ffffff;
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 `;
 

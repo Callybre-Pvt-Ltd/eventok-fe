@@ -51,6 +51,11 @@ export const MetricsRow = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
+
+  @media (max-width: 600px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
 `;
 
 export const MetricTile = styled.div`
@@ -62,6 +67,10 @@ export const MetricTile = styled.div`
   border-radius: 10px;
   border: 1px solid #e2e8f0;
   transition: all 0.15s ease;
+
+  @media (max-width: 600px) {
+    padding: 0.75rem 0.85rem;
+  }
 
   &:hover {
     border-color: #cbd5e1;
@@ -96,6 +105,10 @@ export const MetricNumber = styled.span<{ $accent?: boolean }>`
   color: ${({ $accent }) =>
     $accent ? 'var(--color-primary)' : 'var(--color-text)'};
   font-family: ${fontFamily.display};
+
+  @media (max-width: 600px) {
+    font-size: 1.35rem;
+  }
 `;
 
 export const MetricSubtext = styled.span`

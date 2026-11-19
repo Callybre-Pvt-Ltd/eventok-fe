@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Heart, Menu, Search, ShoppingBag, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ProfileMenu } from '@/components/auth/profile-menu';
-import { BrandIcon } from '@/components/global/brand-icon';
+import { BrandLogo } from '@/components/global/brand-logo';
 import { BecomeVendorModal } from '@/components/vendor/become-vendor-modal';
 import { CategoryNav } from '@/components/storefront/category-nav';
 import { MobileMenu } from '@/components/storefront/mobile-menu';
@@ -13,9 +13,6 @@ import { useStoreHeader } from './helper';
 import {
   Actions,
   Badge,
-  Brand,
-  BrandMark,
-  BrandWord,
   DesktopOnly,
   HeaderRoot,
   IconLink,
@@ -70,12 +67,7 @@ export function StoreHeader() {
   return (
     <HeaderRoot>
       <MainBar>
-        <Brand to={ROUTES.HOME}>
-          <BrandMark>
-            <BrandIcon size={32} />
-          </BrandMark>
-          <BrandWord>{t('common.appName')}</BrandWord>
-        </Brand>
+        <BrandLogo size={28} to={ROUTES.HOME} />
 
         <SearchForm onSubmit={header.submit} role="search">
           <SearchIcon>

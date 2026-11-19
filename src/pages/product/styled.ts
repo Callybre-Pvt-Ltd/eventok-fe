@@ -8,6 +8,10 @@ export const Page = styled.div`
   margin: 0 auto;
   padding: 1.25rem 1rem 3rem;
 
+  ${media.belowLg} {
+    padding-bottom: 6rem;
+  }
+
   ${media.lg} {
     padding: 1.5rem clamp(1.25rem, 2vw, 2rem) 3rem;
   }
@@ -171,5 +175,81 @@ export const Loading = styled.div`
 
   [data-theme='dark'] & {
     color: var(--color-text-muted);
+  }
+`;
+
+export const MobileStickyBar = styled.div`
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.15rem max(0.75rem, env(safe-area-inset-bottom, 12px));
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+
+  ${media.lg} {
+    display: none;
+  }
+`;
+
+export const StickyPriceBlock = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+`;
+
+export const StickyPriceLabel = styled.span`
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+`;
+
+export const StickyPriceAmount = styled.span`
+  font-family: ${fontFamily.display};
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1.2;
+`;
+
+export const StickyDeposit = styled.span`
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+`;
+
+export const StickyBookButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 46px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: ${radii.full};
+  background: var(--color-primary);
+  color: #ffffff;
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.sm};
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.25);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+
+  &:hover {
+    background: var(--color-primary-hover);
+  }
+
+  &:active {
+    transform: scale(0.97);
   }
 `;

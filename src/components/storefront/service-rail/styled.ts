@@ -155,16 +155,21 @@ export const SpotlightBtn = styled(Link)`
   align-items: center;
   gap: 0.35rem;
   padding: 0.55rem 1.15rem;
+  min-height: 40px;
   border-radius: ${radii.full};
   background: var(--color-primary);
   color: #ffffff;
   font-size: ${fontSizes.xs};
   font-weight: 700;
   text-decoration: none;
-  transition: background 0.18s ease;
+  transition: background 0.18s ease, transform 0.15s ease;
 
   &:hover {
     background: var(--color-primary-dark, #c2410c);
+  }
+
+  &:active {
+    transform: scale(0.96);
   }
 `;
 
@@ -196,7 +201,7 @@ export const Rail = styled.div`
 `;
 
 export const CardSlot = styled.div`
-  width: 17.5rem;
+  width: clamp(15rem, 76vw, 17.5rem);
 
   ${media.md} {
     width: 18.5rem;

@@ -95,7 +95,7 @@ export const StepRail = styled.ol`
     background: var(--color-surface);
   }
 
-  ${media.belowSm} {
+  ${media.belowMd} {
     display: none;
   }
 `;
@@ -150,7 +150,7 @@ export const MobileStepHeader = styled.div`
   display: none;
   margin-bottom: 1.5rem;
 
-  ${media.belowSm} {
+  ${media.belowMd} {
     display: block;
   }
 `;
@@ -258,7 +258,7 @@ export const FooterBar = styled.div<{ $palette: ThemePalette }>`
   justify-content: space-between;
   gap: 1rem;
   margin: 1.5rem 0 0;
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.25rem max(1rem, env(safe-area-inset-bottom, 12px));
   border-radius: ${radii.md};
   background: ${({ $palette }) => $palette.surface};
   border: 1px solid ${brandColors.gray200};
@@ -268,11 +268,30 @@ export const FooterBar = styled.div<{ $palette: ThemePalette }>`
   [data-theme='dark'] & {
     border-color: var(--color-border);
   }
+
+  ${media.belowSm} {
+    padding: 0.85rem 1rem max(0.85rem, env(safe-area-inset-bottom, 8px));
+    flex-wrap: wrap;
+    gap: 0.75rem;
+
+    button {
+      min-height: 44px;
+    }
+  }
 `;
 
 export const FooterActions = styled.div`
   display: flex;
   gap: 0.6rem;
+
+  ${media.belowSm} {
+    width: 100%;
+    justify-content: flex-end;
+
+    button {
+      flex: 1;
+    }
+  }
 `;
 
 export const PriceRow = styled.div<{ $final?: boolean }>`

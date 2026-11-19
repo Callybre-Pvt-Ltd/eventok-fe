@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Check, Store } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { BrandLogo } from '@/components/global/brand-logo';
 import { ROUTES } from '@/constants/routes';
 import { useAuthShell } from './helper';
 import {
@@ -10,11 +11,13 @@ import {
   Blob,
   Grid,
   BenefitsPanel,
+  BenefitsLogoWrap,
   BenefitItem,
   SocialProof,
   Quote,
   QuoteAuthor,
   CardWrap,
+  CardLogoWrap,
   GlassCard,
   VendorCta,
 } from './styled';
@@ -99,6 +102,9 @@ export function AuthShell({ children, showVendorCta = false }: AuthShellProps) {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.55 }}
         >
+          <BenefitsLogoWrap>
+            <BrandLogo size={32} fontSize="1.35rem" to={ROUTES.HOME} />
+          </BenefitsLogoWrap>
           <Eyebrow>Welcome back</Eyebrow>
           <h2>Login to {t('common.appName')}</h2>
           <p>{t('auth.loginSubtitle')}</p>
@@ -128,6 +134,9 @@ export function AuthShell({ children, showVendorCta = false }: AuthShellProps) {
           transition={{ duration: 0.5, delay: 0.08 }}
         >
           <GlassCard $palette={palette}>
+            <CardLogoWrap>
+              <BrandLogo size={32} fontSize="1.35rem" to={ROUTES.HOME} />
+            </CardLogoWrap>
             {children}
             {showVendorCta ? (
               <VendorCta>

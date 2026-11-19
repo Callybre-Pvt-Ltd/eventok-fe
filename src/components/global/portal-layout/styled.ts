@@ -57,6 +57,10 @@ export const Content = styled.div`
       max-width: 100%;
     }
   }
+
+  ${media.belowSm} {
+    padding: 0.75rem;
+  }
 `;
 
 export const TopBar = styled.div<{ $palette: ThemePalette }>`
@@ -72,7 +76,8 @@ export const TopBar = styled.div<{ $palette: ThemePalette }>`
   transition: background 0.25s ease, border-color 0.25s ease;
 
   ${media.belowMd} {
-    padding: ${spacing.md};
+    padding: 0.75rem 1rem;
+    gap: 0.65rem;
   }
 `;
 
