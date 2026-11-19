@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { DEFAULT_CATEGORY_TILES } from '@/components/storefront/category-tiles/helper';
 import { ROUTES } from '@/constants/routes';
 import { catalogService } from '@/services';
 import type { CatalogEventType } from '@/types/catalog';
@@ -50,16 +51,23 @@ const GROUPS: Omit<NavGroup, 'children'>[] = [
 export function useCategoryNav() {
   const { data: categories } = useQuery({
     queryKey: ['storefront', 'categories'],
-    queryFn: async () => (await catalogService.getCategories()).data ?? [],
+    queryFn: async () => {
+      const res = await catalogService.getCategories();
+      if (res.data && res.data.length > 0) return res.data;
+      return DEFAULT_CATEGORY_TILES;
+    },
     staleTime: 5 * 60_000,
   });
+
+  const resolvedCategories =
+    categories && categories.length > 0 ? categories : DEFAULT_CATEGORY_TILES;
 
   const groups = useMemo(
     () =>
       GROUPS.map(group => ({
         ...group,
         children: group.eventType
-          ? (categories ?? [])
+          ? resolvedCategories
               .filter(category => category.eventType === group.eventType)
               .slice(0, 8)
               .map(c => ({
@@ -69,7 +77,7 @@ export function useCategoryNav() {
               }))
           : [],
       })),
-    [categories],
+    [resolvedCategories],
   );
 
   return { groups };
