@@ -183,7 +183,7 @@ export const StickyBar = styled.div`
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.875rem 1rem;
+  padding: 0.875rem 1rem calc(0.875rem + env(safe-area-inset-bottom, 0px));
   background: var(--color-surface);
   border-top: 1px solid var(--color-border);
   box-shadow: ${shadows.lg};
@@ -217,6 +217,7 @@ export const BarActions = styled.div`
 
 export const GhostButton = styled.button`
   padding: 0.75rem 1.25rem;
+  min-height: 44px;
   border-radius: ${radii.md};
   border: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -229,10 +230,15 @@ export const GhostButton = styled.button`
   &:hover {
     border-color: var(--color-primary);
   }
+
+  &:active {
+    transform: scale(0.98);
+  }
 `;
 
 export const PrimaryButton = styled.button`
   padding: 0.75rem 1.5rem;
+  min-height: 44px;
   border: none;
   border-radius: ${radii.md};
   background: var(--color-primary);
@@ -241,10 +247,14 @@ export const PrimaryButton = styled.button`
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-  transition: opacity 0.15s ease;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 
   &:hover {
     opacity: 0.92;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
   &:disabled {

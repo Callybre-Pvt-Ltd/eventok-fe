@@ -58,6 +58,20 @@ export const Grid = styled.div`
   }
 `;
 
+export const BenefitsLogoWrap = styled.div`
+  margin-bottom: 1.5rem;
+`;
+
+export const CardLogoWrap = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+
+  ${media.lg} {
+    display: none;
+  }
+`;
+
 export const BenefitsPanel = styled.div`
   padding: clamp(1.75rem, 4vw, 2.75rem);
   background: var(--color-bg-alt);

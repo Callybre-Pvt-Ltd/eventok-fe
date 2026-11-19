@@ -95,4 +95,25 @@ export const IdentityPill = styled.div`
   border-radius: ${radii.sm};
   font-size: ${fontSizes.sm};
   color: var(--color-text);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+export const SaveWrap = styled.div`
+  margin-top: 0.5rem;
+  align-self: flex-start;
+
+  .ant-btn {
+    min-height: 44px;
+    padding: 0 2rem;
+    font-weight: 700;
+
+    ${media.belowSm} {
+      width: 100%;
+    }
+  }
+
+  ${media.belowSm} {
+    width: 100%;
+  }
 `;

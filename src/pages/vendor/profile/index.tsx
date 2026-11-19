@@ -1,5 +1,6 @@
 import { Button, Input, InputNumber, Upload } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { CheckCircle2, UploadCloud } from 'lucide-react';
 import { LoadingState } from '@/components/global/loading-state';
 import { useVendorProfile } from './helper';
 import {
@@ -12,6 +13,14 @@ import {
   PageHeader,
   PageLead,
   PageTitle,
+  SaveButtonWrap,
+  UploadCard,
+  UploadGrid,
+  UploadLabel,
+  UploadSection,
+  UploadSectionDesc,
+  UploadSectionTitle,
+  UploadStatus,
 } from './styled';
 import { usePortalPalette } from '@/components/ui/portal-primitives/helper';
 
@@ -180,47 +189,112 @@ export default function VendorProfilePage() {
               size="large"
             />
           </FormField>
-          <Upload
-            accept="image/*,.pdf"
-            showUploadList={false}
-            beforeUpload={file => {
-              uploadDoc.mutate({ documentType: 'AADHAAR_FRONT', file });
-              return false;
-            }}
-          >
-            <Button loading={uploadDoc.isPending}>
-              Upload Aadhaar (front)
+          <UploadSection>
+            <div>
+              <UploadSectionTitle>Verification Documents</UploadSectionTitle>
+              <UploadSectionDesc>
+                Upload Aadhaar (front & back) and optional GST certificate for
+                partner verification.
+              </UploadSectionDesc>
+            </div>
+            <UploadGrid>
+              <UploadCard>
+                <UploadLabel>Aadhaar (front)</UploadLabel>
+                <UploadStatus $done={Boolean(vendor?.maskedAadhaar)}>
+                  {vendor?.maskedAadhaar ? (
+                    <>
+                      <CheckCircle2 size={13} /> Uploaded (
+                      {vendor.maskedAadhaar})
+                    </>
+                  ) : (
+                    'Not uploaded'
+                  )}
+                </UploadStatus>
+                <Upload
+                  accept="image/*,.pdf"
+                  showUploadList={false}
+                  beforeUpload={file => {
+                    uploadDoc.mutate({ documentType: 'AADHAAR_FRONT', file });
+                    return false;
+                  }}
+                >
+                  <Button
+                    icon={<UploadCloud size={15} />}
+                    loading={uploadDoc.isPending}
+                  >
+                    {vendor?.maskedAadhaar ? 'Replace front' : 'Upload front'}
+                  </Button>
+                </Upload>
+              </UploadCard>
+
+              <UploadCard>
+                <UploadLabel>Aadhaar (back)</UploadLabel>
+                <UploadStatus $done={Boolean(vendor?.maskedAadhaar)}>
+                  {vendor?.maskedAadhaar ? (
+                    <>
+                      <CheckCircle2 size={13} /> Uploaded
+                    </>
+                  ) : (
+                    'Not uploaded'
+                  )}
+                </UploadStatus>
+                <Upload
+                  accept="image/*,.pdf"
+                  showUploadList={false}
+                  beforeUpload={file => {
+                    uploadDoc.mutate({ documentType: 'AADHAAR_BACK', file });
+                    return false;
+                  }}
+                >
+                  <Button
+                    icon={<UploadCloud size={15} />}
+                    loading={uploadDoc.isPending}
+                  >
+                    {vendor?.maskedAadhaar ? 'Replace back' : 'Upload back'}
+                  </Button>
+                </Upload>
+              </UploadCard>
+
+              <UploadCard>
+                <UploadLabel>GST Certificate</UploadLabel>
+                <UploadStatus $done={Boolean(form.gstin)}>
+                  {form.gstin ? (
+                    <>
+                      <CheckCircle2 size={13} /> {form.gstin}
+                    </>
+                  ) : (
+                    'Optional'
+                  )}
+                </UploadStatus>
+                <Upload
+                  accept="image/*,.pdf"
+                  showUploadList={false}
+                  beforeUpload={file => {
+                    uploadDoc.mutate({ documentType: 'GST_CERTIFICATE', file });
+                    return false;
+                  }}
+                >
+                  <Button
+                    icon={<UploadCloud size={15} />}
+                    loading={uploadDoc.isPending}
+                  >
+                    {t('vendor.gstUpload')}
+                  </Button>
+                </Upload>
+              </UploadCard>
+            </UploadGrid>
+          </UploadSection>
+
+          <SaveButtonWrap>
+            <Button
+              type="primary"
+              size="large"
+              loading={saveMutation.isPending}
+              onClick={() => saveMutation.mutate()}
+            >
+              {t('common.save')}
             </Button>
-          </Upload>
-          <Upload
-            accept="image/*,.pdf"
-            showUploadList={false}
-            beforeUpload={file => {
-              uploadDoc.mutate({ documentType: 'AADHAAR_BACK', file });
-              return false;
-            }}
-          >
-            <Button loading={uploadDoc.isPending}>Upload Aadhaar (back)</Button>
-          </Upload>
-          <Upload
-            accept="image/*,.pdf"
-            showUploadList={false}
-            beforeUpload={file => {
-              uploadDoc.mutate({ documentType: 'GST_CERTIFICATE', file });
-              return false;
-            }}
-          >
-            <Button loading={uploadDoc.isPending}>
-              {t('vendor.gstUpload')}
-            </Button>
-          </Upload>
-          <Button
-            type="primary"
-            loading={saveMutation.isPending}
-            onClick={() => saveMutation.mutate()}
-          >
-            {t('common.save')}
-          </Button>
+          </SaveButtonWrap>
         </FormGrid>
       </Card>
     </>

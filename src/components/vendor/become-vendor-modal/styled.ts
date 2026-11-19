@@ -26,6 +26,16 @@ export const Actions = styled.div`
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: ${spacing.sm};
+
+  @media (max-width: 576px) {
+    flex-direction: column-reverse;
+    align-items: stretch;
+
+    .ant-btn {
+      width: 100% !important;
+      min-height: 44px;
+    }
+  }
 `;
 
 export const ScrollBody = styled.div`

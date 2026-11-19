@@ -446,6 +446,10 @@ export const Arrows = styled.div`
   gap: 0.625rem;
   z-index: 25;
   pointer-events: auto;
+
+  ${media.belowSm} {
+    display: none;
+  }
 `;
 
 export const Arrow = styled.button`

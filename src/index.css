@@ -254,8 +254,31 @@ button {
 }
 
 /* ==========================================================================
-   Mobile Responsiveness: Modal Fit, Scrolling & Responsive Tables
+   Mobile UI/UX Precision: Touch Ergonomics, Modal Fit & Responsive Tables
    ========================================================================== */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+/* Prevent unwanted iOS Safari auto-zoom on input focus */
+@media (max-width: 768px) {
+  input:not([type='checkbox']):not([type='radio']),
+  select,
+  textarea,
+  .ant-input,
+  .ant-select-selection-search-input {
+    font-size: 16px !important;
+  }
+}
+
 .ant-modal {
   max-width: calc(100vw - 1.5rem) !important;
   margin: 1rem auto !important;
@@ -265,6 +288,7 @@ button {
   border-radius: 16px !important;
   max-height: calc(100dvh - 2.5rem);
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 768px) {
@@ -273,5 +297,15 @@ button {
     max-width: 100%;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .ant-table-content,
+  .ant-table-body {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }

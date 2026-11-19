@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, ExternalLink, LogOut } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { BrandIcon } from '@/components/global/brand-icon';
+import { BrandLogo } from '@/components/global/brand-logo';
+import { brandColors } from '@/theme/brand';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import type { UserRole } from '@/types';
@@ -19,7 +20,6 @@ import {
   SidebarEyebrow,
   SidebarFooter,
   SidebarHeader,
-  SidebarLogo,
 } from './styled';
 
 interface PortalSidebarProps {
@@ -60,13 +60,13 @@ export function PortalSidebar({
             <SidebarEyebrow $collapsed={collapsed}>
               {portalEyebrow}
             </SidebarEyebrow>
-            <SidebarLogo $palette={palette} to={ROUTES.HOME}>
-              <BrandIcon
-                size={24}
-                style={{ marginRight: '0.4rem', flexShrink: 0 }}
-              />
-              Event<span>OK</span>
-            </SidebarLogo>
+            <BrandLogo
+              size={24}
+              color={brandColors.white}
+              accentColor="#ea580c"
+              collapsed={collapsed}
+              to={ROUTES.HOME}
+            />
           </BrandBlock>
           <CollapseBtn
             $palette={palette}

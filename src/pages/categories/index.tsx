@@ -6,11 +6,7 @@ import { EmptyState } from '@/components/global/empty-state';
 import { ErrorState } from '@/components/global/error-state';
 import { LoadingState } from '@/components/global/loading-state';
 import { StoreLayout } from '@/components/storefront/store-layout';
-import {
-  getCategoryCount,
-  getCategoryPhoto,
-  useCategoriesPage,
-} from './helper';
+import { getCategoryPhoto, useCategoriesPage } from './helper';
 import {
   CardBody,
   CardImg,
@@ -39,7 +35,6 @@ import {
   SearchRow,
   StateWrap,
   SubItem,
-  SubItemCount,
   SubItemLeft,
   SubItemThumb,
   SubItemTitle,
@@ -189,10 +184,6 @@ export default function CategoriesPage() {
                           />
                           <div>
                             <SubItemTitle>{item.name}</SubItemTitle>
-                            <SubItemCount>
-                              {getCategoryCount(item.slug)} decor setups
-                              available
-                            </SubItemCount>
                           </div>
                         </SubItemLeft>
                         <ChevronRight
@@ -235,7 +226,6 @@ export default function CategoriesPage() {
                       <CardBody>
                         <CardTitle>{cat.name}</CardTitle>
                         <CardMeta>
-                          <span>{getCategoryCount(cat.slug)} setups</span>
                           <span
                             style={{
                               color: 'var(--color-primary)',
@@ -279,7 +269,6 @@ export default function CategoriesPage() {
                         <CardBody>
                           <CardTitle>{cat.name}</CardTitle>
                           <CardMeta>
-                            <span>{getCategoryCount(cat.slug)} setups</span>
                             <span
                               style={{
                                 color: 'var(--color-primary)',

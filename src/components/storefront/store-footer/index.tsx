@@ -6,15 +6,13 @@ import {
   ThumbsUp,
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { BrandIcon } from '@/components/global/brand-icon';
+import { BrandLogo } from '@/components/global/brand-logo';
+import { fontSizes } from '@/theme';
 import { ROUTES } from '@/constants/routes';
 import { useStoreFooter } from './helper';
 import {
   BottomBar,
   BrandBlock,
-  BrandMark,
-  BrandRow,
-  BrandWord,
   Column,
   ColumnLink,
   ColumnTitle,
@@ -47,12 +45,7 @@ export function StoreFooter() {
     <FooterRoot>
       <Inner>
         <BrandBlock>
-          <BrandRow to={ROUTES.HOME}>
-            <BrandMark>
-              <BrandIcon size={32} />
-            </BrandMark>
-            <BrandWord>{t('common.appName')}</BrandWord>
-          </BrandRow>
+          <BrandLogo size={30} fontSize={fontSizes.lg} to={ROUTES.HOME} />
           <Tagline>{t('storefront.footerTagline')}</Tagline>
           <Socials>
             {socials.map(({ key, Icon }) => (

@@ -149,11 +149,15 @@ export const SearchSubmit = styled.button`
   background: var(--color-primary);
   color: #ffffff;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.2s ease, transform 0.2s ease, background 0.2s ease;
 
   &:hover {
     background: var(--color-primary-hover);
     transform: scale(1.04);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 `;
 
@@ -234,10 +238,15 @@ export const MenuButton = styled.button`
   background: var(--color-bg-alt);
   color: var(--color-text);
   cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
 
   &:hover {
     background: var(--color-primary);
     color: #ffffff;
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 `;
 
@@ -251,10 +260,15 @@ export const IconLink = styled(Link)`
   border-radius: ${radii.full};
   color: var(--color-text);
   text-decoration: none;
+  transition: background 0.15s ease, transform 0.15s ease, color 0.15s ease;
 
   &:hover {
     background: var(--color-bg-alt);
     color: var(--color-primary);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 `;
 

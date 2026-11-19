@@ -1,3 +1,4 @@
+import { CalendarDays } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { ROUTES } from '@/constants/routes';
 import { BookingCard } from '@/components/storefront/booking-card';
@@ -14,6 +15,7 @@ import {
   DescriptionTitle,
   Layout,
   Loading,
+  MobileStickyBar,
   NotFound,
   Page,
   RelatedCard,
@@ -23,12 +25,24 @@ import {
   RelatedRail,
   RelatedSection,
   RelatedTitle,
+  StickyBookButton,
+  StickyDeposit,
+  StickyPriceAmount,
+  StickyPriceBlock,
+  StickyPriceLabel,
   Title,
 } from './styled';
 
 export default function ProductPage() {
   const { t } = useTranslation();
   const { service, related, isLoading } = useProductPage();
+
+  const scrollToBooking = () => {
+    const el = document.getElementById('booking-section');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
 
   if (!service) {
     return (
@@ -82,8 +96,27 @@ export default function ProductPage() {
             </RelatedSection>
           </div>
 
-          <BookingCard service={service} />
+          <div id="booking-section">
+            <BookingCard service={service} />
+          </div>
         </Layout>
+
+        {/* Mobile-only sticky bottom booking action bar */}
+        <MobileStickyBar>
+          <StickyPriceBlock>
+            <StickyPriceLabel>{t('storefront.pdpTotalPrice')}</StickyPriceLabel>
+            <StickyPriceAmount>{formatPrice(service.price)}</StickyPriceAmount>
+            <StickyDeposit>
+              {t('storefront.pdpBookingAmountHint', {
+                amount: formatPrice(service.bookingAmount),
+              })}
+            </StickyDeposit>
+          </StickyPriceBlock>
+          <StickyBookButton type="button" onClick={scrollToBooking}>
+            <CalendarDays size={18} />
+            <span>{t('storefront.bookNow')}</span>
+          </StickyBookButton>
+        </MobileStickyBar>
       </Page>
     </StoreLayout>
   );

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import { fontFamily, fontSizes, radii } from '@/theme';
+import { fontFamily, fontSizes, media, radii } from '@/theme';
 
 export const BarSection = styled.section`
   position: relative;
@@ -36,6 +36,11 @@ export const ScrollTrack = styled.div`
   width: 100%;
   padding: 0.25rem 3rem;
 
+  ${media.belowSm} {
+    padding: 0.25rem 0.75rem;
+    scroll-padding: 0 0.75rem;
+  }
+
   &::-webkit-scrollbar {
     display: none;
   }
@@ -61,6 +66,10 @@ export const ArrowWrapper = styled.div<{
   opacity: ${({ $visible }) => ($visible ? 1 : 0)};
   pointer-events: ${({ $visible }) => ($visible ? 'auto' : 'none')};
   transition: opacity 0.2s ease;
+
+  ${media.belowSm} {
+    display: none;
+  }
 `;
 
 export const NavArrowButton = styled.button`

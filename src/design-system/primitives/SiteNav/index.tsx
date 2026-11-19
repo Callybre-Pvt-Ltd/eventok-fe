@@ -2,14 +2,13 @@ import { Link } from 'react-router-dom';
 import { Menu, Moon, Sun, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '../Button';
-import { Text } from '../Text';
+import { BrandLogo } from '@/components/global/brand-logo';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { useSiteNav } from './helper';
 import {
   Bar,
   Inner,
-  Logo,
   Links,
   NavLink,
   Actions,
@@ -37,9 +36,7 @@ export function SiteNav() {
     <>
       <Bar $colors={colors} $shrunk={shrunk}>
         <Inner>
-          <Logo to={ROUTES.HOME}>
-            <Text variant="subtitle">EventOK</Text>
-          </Logo>
+          <BrandLogo size={28} to={ROUTES.HOME} />
           <Links>
             {links.map(l => (
               <NavLink

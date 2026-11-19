@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, Store } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { AccountAvatar } from '@/components/auth/account-avatar';
+import { BrandLogo } from '@/components/global/brand-logo';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { ROUTES } from '@/constants/routes';
 import { brandColors } from '@/theme/brand';
@@ -73,30 +74,6 @@ const Left = styled.aside`
   }
 `;
 
-const LogoRow = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
-`;
-
-const LogoMark = styled.span`
-  display: inline-flex;
-  width: 2.25rem;
-  height: 2.25rem;
-  align-items: center;
-  justify-content: center;
-  border-radius: 0.65rem;
-  background: ${brandColors.pink500};
-  color: ${brandColors.white};
-`;
-
-const LogoWord = styled.span`
-  font-family: ${fontFamily.display};
-  font-weight: 800;
-  font-size: 1.15rem;
-`;
-
 const Eyebrow = styled.p`
   margin: 0 0 0.75rem;
   font-family: ${fontFamily.body};
@@ -156,6 +133,16 @@ const Right = styled.div`
 
   [data-theme='dark'] & {
     background: var(--color-surface);
+  }
+`;
+
+const MobileLogoWrap = styled.div`
+  display: none;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+
+  @media (max-width: 900px) {
+    display: flex;
   }
 `;
 
@@ -546,12 +533,9 @@ export default function VendorLoginPage() {
       ) : null}
       <Card>
         <Left>
-          <LogoRow>
-            <LogoMark>
-              <Store size={16} />
-            </LogoMark>
-            <LogoWord>EventOK</LogoWord>
-          </LogoRow>
+          <div style={{ marginBottom: '1.5rem' }}>
+            <BrandLogo size={32} fontSize="1.35rem" to={ROUTES.HOME} />
+          </div>
           <Eyebrow>Vendor portal</Eyebrow>
           <Headline>
             Your events, your <em>business</em>, your dashboard.
@@ -565,6 +549,9 @@ export default function VendorLoginPage() {
         </Left>
 
         <Right>
+          <MobileLogoWrap>
+            <BrandLogo size={32} fontSize="1.35rem" to={ROUTES.HOME} />
+          </MobileLogoWrap>
           <Title>Vendor Partner Portal</Title>
           <Sub>
             {signedInPanel

@@ -13,6 +13,7 @@ import {
   ProfileSub,
   ProfileTitle,
   ProfileWrap,
+  SaveWrap,
   SectionHeader,
   SectionTitle,
 } from './styled';
@@ -79,7 +80,7 @@ export default function CustomerProfilePage() {
           </InputGroup>
         </FormRow>
 
-        <div style={{ alignSelf: 'flex-start', marginTop: '0.5rem' }}>
+        <SaveWrap>
           <Button
             type="primary"
             size="large"
@@ -88,7 +89,7 @@ export default function CustomerProfilePage() {
           >
             {t('common.save')}
           </Button>
-        </div>
+        </SaveWrap>
       </ProfileSection>
 
       {/* Account Security & Identity */}

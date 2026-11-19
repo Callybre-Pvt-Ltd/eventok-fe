@@ -1,7 +1,7 @@
 import { createPortal } from 'react-dom';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { BrandIcon } from '@/components/global/brand-icon';
+import { BrandLogo } from '@/components/global/brand-logo';
 import { ProfileMenu } from '@/components/auth/profile-menu';
 import { ROUTES } from '@/constants/routes';
 import { useAuth } from '@/hooks/auth/use-auth';
@@ -9,8 +9,6 @@ import { getPostAuthPath } from '@/utils/auth/post-auth';
 import { usePublicHeader } from './helper';
 import {
   Actions,
-  Brand,
-  BrandMark,
   CenterNav,
   ConsultCta,
   MenuToggle,
@@ -61,12 +59,7 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
         hidden={!nav.menuOpen}
       >
         <MobileTop>
-          <Brand to={ROUTES.HOME} onClick={nav.closeMenu}>
-            <BrandMark>
-              <BrandIcon size={28} />
-            </BrandMark>
-            {t('common.appName')}
-          </Brand>
+          <BrandLogo size={28} to={ROUTES.HOME} onClick={nav.closeMenu} />
           <div
             style={{
               display: 'inline-flex',
@@ -131,12 +124,7 @@ export function PublicHeader({ overlay = false }: PublicHeaderProps) {
     <>
       <NavRoot ref={nav.shellRef} $scrolled={nav.scrolled} $overlay={overlay}>
         <NavInner $scrolled={nav.scrolled}>
-          <Brand to={ROUTES.HOME}>
-            <BrandMark $scrolled={nav.scrolled}>
-              <BrandIcon size={nav.scrolled ? 26 : 30} />
-            </BrandMark>
-            {t('common.appName')}
-          </Brand>
+          <BrandLogo size={nav.scrolled ? 26 : 28} to={ROUTES.HOME} />
 
           <CenterNav aria-label={t('nav.primary')}>
             {navLinks.map(link => (

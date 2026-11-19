@@ -155,11 +155,13 @@ export const TextArea = styled.textarea`
 export const TermsRow = styled.label`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.625rem;
+  min-height: 44px;
   font-size: ${fontSizes.sm};
   font-weight: 600;
   color: ${brandColors.gray600};
   cursor: pointer;
+  user-select: none;
 
   [data-theme='dark'] & {
     color: var(--color-text-secondary);
@@ -167,9 +169,12 @@ export const TermsRow = styled.label`
 `;
 
 export const Checkbox = styled.input`
-  width: 1rem;
-  height: 1rem;
-  accent-color: ${brandColors.pink500};
+  width: 1.2rem;
+  height: 1.2rem;
+  min-width: 1.2rem;
+  min-height: 1.2rem;
+  accent-color: var(--color-primary);
+  cursor: pointer;
 `;
 
 export const ErrorText = styled.p`
@@ -229,12 +234,14 @@ export const PayButton = styled.button`
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  width: 100%;
+  min-height: 48px;
   padding: 0.875rem 1.5rem;
   border: none;
   border-radius: ${radii.full};
   background: var(--color-primary);
   color: #ffffff;
-  font-size: ${fontSizes.sm};
+  font-size: ${fontSizes.md};
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 4px 14px var(--button-primary-shadow);
@@ -243,6 +250,10 @@ export const PayButton = styled.button`
   &:hover:not(:disabled) {
     background: var(--color-primary-hover);
     transform: translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
   }
 
   &:disabled {

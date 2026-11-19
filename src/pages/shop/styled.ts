@@ -282,13 +282,14 @@ export const SkeletonCard = styled.div`
 export const FilterFab = styled.button`
   position: fixed;
   left: 50%;
-  bottom: 1.1rem;
+  bottom: calc(1.1rem + env(safe-area-inset-bottom, 0px));
   z-index: 60;
   transform: translateX(-50%);
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.8rem 1.4rem;
+  min-height: 46px;
   border: 1px solid var(--color-border);
   border-radius: ${radii.full};
   background: var(--color-surface);
@@ -298,6 +299,11 @@ export const FilterFab = styled.button`
   font-weight: 700;
   box-shadow: ${shadows.xl};
   cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+
+  &:active {
+    transform: translateX(-50%) scale(0.96);
+  }
 
   ${media.lg} {
     display: none;
@@ -407,6 +413,7 @@ export const SheetFoot = styled.div`
 export const SheetReset = styled.button`
   flex: 0 0 auto;
   padding: 0.8rem 1.1rem;
+  min-height: 44px;
   border-radius: ${radii.full};
   border: 1px solid var(--color-border);
   background: var(--color-bg-alt);
@@ -415,11 +422,17 @@ export const SheetReset = styled.button`
   font-size: ${fontSizes.sm};
   font-weight: 700;
   cursor: pointer;
+  transition: all 0.15s ease;
+
+  &:active {
+    transform: scale(0.97);
+  }
 `;
 
 export const SheetApply = styled.button`
   flex: 1;
   padding: 0.8rem 1.1rem;
+  min-height: 44px;
   border: none;
   border-radius: ${radii.full};
   background: var(--color-primary);
@@ -428,9 +441,13 @@ export const SheetApply = styled.button`
   font-size: ${fontSizes.sm};
   font-weight: 800;
   cursor: pointer;
-  transition: background 0.18s ease;
+  transition: background 0.18s ease, transform 0.15s ease;
 
   &:hover {
     background: var(--color-primary-dark, #c2410c);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 `;

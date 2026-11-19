@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronUp } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { BrandIcon } from '@/components/global/brand-icon';
+import { BrandLogo } from '@/components/global/brand-logo';
 import { ROUTES } from '@/constants/routes';
 import {
   footerQuickLinks,
@@ -17,8 +17,6 @@ import {
   FooterGrid,
   FooterInner,
   FooterLink,
-  FooterLogo,
-  FooterLogoMark,
   FooterTitle,
   FooterWatermark,
   NewsletterForm,
@@ -53,12 +51,7 @@ export function PublicFooter() {
       <FooterInner>
         <FooterGrid>
           <FooterBrandCol>
-            <FooterLogo>
-              <FooterLogoMark>
-                <BrandIcon size={32} />
-              </FooterLogoMark>
-              {t('common.appName')}
-            </FooterLogo>
+            <BrandLogo size={32} fontSize="1.35rem" to={ROUTES.HOME} />
             <NewsletterSub>{t('nav.menuTagline')}</NewsletterSub>
             <SocialRow>
               {footerSocialLinks.map(social => (

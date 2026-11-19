@@ -114,8 +114,10 @@ export const WishButton = styled.button<{ $active: boolean }>`
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.125rem;
-  height: 2.125rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  min-width: 40px;
+  min-height: 40px;
   border: none;
   border-radius: ${radii.full};
   background: rgba(255, 255, 255, 0.88);
@@ -127,6 +129,10 @@ export const WishButton = styled.button<{ $active: boolean }>`
   &:hover {
     color: #e11d48;
     transform: scale(1.08);
+  }
+
+  &:active {
+    transform: scale(0.92);
   }
 
   [data-theme='dark'] & {
@@ -220,7 +226,8 @@ export const BookButton = styled(Link)`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.6rem 0.85rem;
+  padding: 0.65rem 0.85rem;
+  min-height: 42px;
   margin-top: 0.5rem;
   border-radius: ${radii.full};
   background: var(--color-primary);
@@ -235,5 +242,9 @@ export const BookButton = styled(Link)`
   &:hover {
     background: var(--color-primary-hover);
     transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: scale(0.98);
   }
 `;

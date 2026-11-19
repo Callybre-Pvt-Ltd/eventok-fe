@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { brandColors, fontSizes, fontWeight, radii } from '@/theme';
+import { brandColors, fontSizes, fontWeight, media, radii } from '@/theme';
 import type { BookingTone } from '@/utils/booking-status';
 
 export * from '@/components/ui/portal-primitives/styled';
@@ -90,10 +90,14 @@ export const VendorName = styled.span`
 `;
 
 export const VendorPhone = styled.a`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-size: ${fontSizes.sm};
-  font-weight: ${fontWeight.body};
+  font-weight: 600;
   color: var(--color-primary);
   text-decoration: none;
+  padding: 0.25rem 0;
 
   &:hover {
     text-decoration: underline;
@@ -102,4 +106,14 @@ export const VendorPhone = styled.a`
 
 export const PayRow = styled.div`
   margin-top: 0.75rem;
+
+  ${media.belowSm} {
+    width: 100%;
+    button {
+      width: 100%;
+      height: 40px;
+      font-size: ${fontSizes.sm};
+      font-weight: 700;
+    }
+  }
 `;

@@ -45,6 +45,11 @@ export const MetricsRow = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 1rem;
+
+  ${media.belowSm} {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.625rem;
+  }
 `;
 
 export const MetricTile = styled.div<{ $accent?: boolean }>`
@@ -58,6 +63,10 @@ export const MetricTile = styled.div<{ $accent?: boolean }>`
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
   position: relative;
   overflow: hidden;
+
+  ${media.belowSm} {
+    padding: 0.75rem 0.85rem;
+  }
 
   &::before {
     content: '';
