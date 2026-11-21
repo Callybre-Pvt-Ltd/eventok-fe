@@ -2,7 +2,6 @@ import { CategoryTiles } from '@/components/storefront/category-tiles';
 import { HeroCarousel } from '@/components/storefront/hero-carousel';
 import { ServiceRail } from '@/components/storefront/service-rail';
 import { StoreLayout } from '@/components/storefront/store-layout';
-import { WeddingServices } from '@/components/storefront/wedding-services';
 import { useHomePage } from './helper';
 import { PageWrap } from './styled';
 
@@ -18,10 +17,7 @@ export default function HomePage() {
         {/* 2. Trendiest Decorations */}
         <ServiceRail />
 
-        {/* 3. Everything for Your Perfect Wedding */}
-        <WeddingServices />
-
-        {/* 4. Select a Category to Build Your Package */}
+        {/* 3. Select a Category to Build Your Package */}
         <CategoryTiles limit={16} />
 
         <div id="faq" />
