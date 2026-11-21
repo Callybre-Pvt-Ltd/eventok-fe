@@ -1,3 +1,4 @@
+import { DEFAULT_CATEGORY_TILES } from '@/constants/catalog';
 import { photography } from '@/design-system/tokens/photography';
 import {
   DEFAULT_PAGE_SIZE,
@@ -204,7 +205,7 @@ export const catalogService = {
   },
 
   async getCategories(): Promise<ServiceResponse<CatalogCategory[]>> {
-    return wrap(async () => {
+    const wrapped = await wrap(async () => {
       const res = await marketplaceService.listCategories();
       if (res.error) throw new Error(res.error);
       return (res.data ?? [])
@@ -219,6 +220,10 @@ export const catalogService = {
           featuredOnHome: true,
         }));
     });
+    if (wrapped.data && wrapped.data.length > 0) {
+      return wrapped;
+    }
+    return { data: DEFAULT_CATEGORY_TILES, error: wrapped.error };
   },
 
   async getHeroSlides(): Promise<ServiceResponse<HeroSlide[]>> {

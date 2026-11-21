@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { DEFAULT_CATEGORY_TILES } from '@/components/storefront/category-tiles/helper';
+import { DEFAULT_CATEGORY_TILES } from '@/constants/catalog';
 import { ROUTES } from '@/constants/routes';
 import { catalogService } from '@/services';
 import type { CatalogEventType } from '@/types/catalog';
