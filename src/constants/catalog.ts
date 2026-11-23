@@ -156,12 +156,13 @@ export const EVENT_TYPE_FILTERS: {
   value: CatalogEventType | 'all';
   label: string;
 }[] = [
-  { value: 'all', label: 'All Services' },
+  { value: 'all', label: 'All Categories' },
+  { value: 'wedding', label: 'Wedding' },
   { value: 'birthday', label: 'Birthday' },
   { value: 'anniversary', label: 'Anniversary' },
   { value: 'baby-shower', label: 'Baby Shower' },
-  { value: 'wedding', label: 'Wedding' },
-  { value: 'home-decoration', label: 'Home Decoration' },
+  { value: 'corporate', label: 'Corporate' },
+  { value: 'home-decoration', label: 'Home Decor' },
 ];
 
 export const PDP_TABS = [
