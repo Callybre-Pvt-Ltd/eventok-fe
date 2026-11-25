@@ -1,23 +1,45 @@
-import { ChevronRight, SlidersHorizontal, X } from 'lucide-react';
+import {
+  ArrowUpDown,
+  ChevronRight,
+  Search,
+  SlidersHorizontal,
+  X,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { EVENT_TYPE_FILTERS } from '@/constants/catalog';
+import { EVENT_TYPE_FILTERS, SORT_OPTIONS } from '@/constants/catalog';
 import { ROUTES } from '@/constants/routes';
 import { FiltersPanel } from '@/components/storefront/filters-panel';
 import { ProductCard } from '@/components/storefront/product-card';
 import { StoreLayout } from '@/components/storefront/store-layout';
+import type { CatalogSortOption } from '@/types/catalog';
 import { useShopPage } from './helper';
 import {
+  ActiveFiltersWrap,
   Breadcrumbs,
-  FabCount,
-  FilterFab,
-  FiltersColumn,
+  ChipRemove,
+  ClearAllBtn,
   Crumb,
   CrumbCurrent,
   Empty,
   EmptyAction,
+  FabCount,
+  FilterChip,
   FilterPill,
+  FiltersColumn,
   Grid,
   Layout,
+  MobileBarGroup,
+  MobileFilterBar,
+  MobileFilterBtn,
+  MobileSortIcon,
+  MobileSortSelect,
+  MobileSortWrap,
+  Page,
+  PageTitle,
+  PillRow,
+  ResultCount,
+  Results,
+  ResultsHead,
   Sheet,
   SheetApply,
   SheetBody,
@@ -28,18 +50,25 @@ import {
   SheetOverlay,
   SheetReset,
   SheetTitle,
-  Page,
-  PageTitle,
-  PillRow,
-  ResultCount,
-  Results,
-  ResultsHead,
+  SheetTitleWrap,
+  ShopSearchBox,
+  ShopSearchClear,
+  ShopSearchIcon,
+  ShopSearchInput,
   SkeletonCard,
+  SortLabel,
+  SortRow,
+  SortSelect,
+  TitleBlock,
+  ToolbarRight,
+  UpdatingBar,
+  UpdatingTrack,
 } from './styled';
 
 export default function ShopPage() {
   const { t } = useTranslation();
   const shop = useShopPage();
+  const isUpdating = shop.isFetching && !shop.isLoading;
 
   return (
     <StoreLayout>
@@ -47,18 +76,73 @@ export default function ShopPage() {
         <Breadcrumbs aria-label="breadcrumb">
           <Crumb to={ROUTES.HOME}>{t('storefront.shopBreadcrumbHome')}</Crumb>
           <ChevronRight size={14} />
-          <CrumbCurrent>
-            {shop.category?.name ?? t('storefront.shopBreadcrumbShop')}
-          </CrumbCurrent>
+          {shop.category ? (
+            <>
+              <Crumb to={ROUTES.SHOP}>
+                {t('storefront.shopBreadcrumbShop')}
+              </Crumb>
+              <ChevronRight size={14} />
+              <CrumbCurrent>{shop.category.name}</CrumbCurrent>
+            </>
+          ) : (
+            <CrumbCurrent>{t('storefront.shopBreadcrumbShop')}</CrumbCurrent>
+          )}
         </Breadcrumbs>
+
+        <MobileFilterBar>
+          <MobileBarGroup>
+            <MobileFilterBtn
+              type="button"
+              $active={shop.activeFilterCount > 0}
+              onClick={shop.openFilters}
+            >
+              <SlidersHorizontal size={14} />
+              <span>{t('storefront.shopOpenFilters')}</span>
+              {shop.activeFilterCount > 0 && (
+                <FabCount>{shop.activeFilterCount}</FabCount>
+              )}
+            </MobileFilterBtn>
+
+            <MobileSortWrap>
+              <MobileSortIcon>
+                <ArrowUpDown size={13} />
+              </MobileSortIcon>
+              <MobileSortSelect
+                value={shop.sort}
+                onChange={e =>
+                  shop.setSort(e.target.value as CatalogSortOption)
+                }
+                aria-label={t('storefront.shopSortBy')}
+              >
+                {SORT_OPTIONS.map(opt => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </MobileSortSelect>
+            </MobileSortWrap>
+          </MobileBarGroup>
+
+          <ResultCount>
+            {t('storefront.shopResults', { count: shop.services.length })}
+          </ResultCount>
+        </MobileFilterBar>
 
         <Layout>
           <FiltersColumn>
             <FiltersPanel
+              minPrice={shop.minPrice}
               maxPrice={shop.maxPrice}
               selectedTags={shop.selectedTags}
-              onPriceChange={shop.setMaxPrice}
+              eventType={shop.eventType}
+              sort={shop.sort}
+              hasPhotosOnly={shop.hasPhotosOnly}
+              hasInclusionsOnly={shop.hasInclusionsOnly}
+              hasPolicyOnly={shop.hasPolicyOnly}
+              activeFilterCount={shop.activeFilterCount}
+              onPriceRangeChange={shop.setPriceRange}
               onTagToggle={shop.toggleTag}
+              onTogglePref={shop.togglePref}
               onReset={shop.reset}
             />
           </FiltersColumn>
@@ -78,13 +162,82 @@ export default function ShopPage() {
             </PillRow>
 
             <ResultsHead>
-              <PageTitle>
-                {shop.category?.name ?? t('storefront.shopBreadcrumbShop')}
-              </PageTitle>
-              <ResultCount>
-                {t('storefront.shopResults', { count: shop.services.length })}
-              </ResultCount>
+              <TitleBlock>
+                <PageTitle>
+                  {shop.category?.name ?? t('storefront.shopBreadcrumbShop')}
+                </PageTitle>
+                <ResultCount>
+                  {t('storefront.shopResults', { count: shop.services.length })}
+                </ResultCount>
+              </TitleBlock>
+
+              <ToolbarRight>
+                <ShopSearchBox>
+                  <ShopSearchIcon>
+                    <Search size={14} />
+                  </ShopSearchIcon>
+                  <ShopSearchInput
+                    type="search"
+                    value={shop.search}
+                    onChange={e => shop.setSearch(e.target.value)}
+                    placeholder={t('storefront.shopSearchPlaceholder')}
+                    aria-label={t('storefront.shopSearchPlaceholder')}
+                  />
+                  {shop.search && (
+                    <ShopSearchClear
+                      type="button"
+                      onClick={() => shop.setSearch('')}
+                      aria-label={t('common.clear', 'Clear search')}
+                    >
+                      <X size={12} />
+                    </ShopSearchClear>
+                  )}
+                </ShopSearchBox>
+
+                <SortRow>
+                  <SortLabel htmlFor="shop-sort-select">
+                    {t('storefront.shopSortBy')}
+                  </SortLabel>
+                  <SortSelect
+                    id="shop-sort-select"
+                    value={shop.sort}
+                    onChange={e =>
+                      shop.setSort(e.target.value as CatalogSortOption)
+                    }
+                  >
+                    {SORT_OPTIONS.map(opt => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </SortSelect>
+                </SortRow>
+              </ToolbarRight>
             </ResultsHead>
+
+            {shop.activeFilters.length > 0 && (
+              <ActiveFiltersWrap>
+                {shop.activeFilters.map(chip => (
+                  <FilterChip
+                    key={chip.key}
+                    type="button"
+                    onClick={chip.onRemove}
+                  >
+                    <span>{chip.label}</span>
+                    <ChipRemove aria-hidden>
+                      <X size={12} />
+                    </ChipRemove>
+                  </FilterChip>
+                ))}
+                <ClearAllBtn type="button" onClick={shop.reset}>
+                  {t('storefront.shopReset')}
+                </ClearAllBtn>
+              </ActiveFiltersWrap>
+            )}
+
+            <UpdatingTrack $active={isUpdating} aria-hidden>
+              <UpdatingBar $active={isUpdating} />
+            </UpdatingTrack>
 
             {shop.isLoading ? (
               <Grid>
@@ -100,7 +253,7 @@ export default function ShopPage() {
                 </EmptyAction>
               </Empty>
             ) : (
-              <Grid>
+              <Grid $updating={isUpdating}>
                 {shop.services.map(service => (
                   <ProductCard key={service.id} service={service} />
                 ))}
@@ -108,14 +261,6 @@ export default function ShopPage() {
             )}
           </Results>
         </Layout>
-
-        <FilterFab type="button" onClick={shop.openFilters}>
-          <SlidersHorizontal size={16} />
-          {t('storefront.shopFilters')}
-          {shop.activeFilterCount > 0 && (
-            <FabCount>{shop.activeFilterCount}</FabCount>
-          )}
-        </FilterFab>
 
         <SheetOverlay
           $open={shop.filtersOpen}
@@ -125,7 +270,12 @@ export default function ShopPage() {
         <Sheet $open={shop.filtersOpen} aria-hidden={!shop.filtersOpen}>
           <SheetGrip />
           <SheetHead>
-            <SheetTitle>{t('storefront.shopFilters')}</SheetTitle>
+            <SheetTitleWrap>
+              <SheetTitle>{t('storefront.shopFiltersAndSort')}</SheetTitle>
+              {shop.activeFilterCount > 0 && (
+                <FabCount>{shop.activeFilterCount}</FabCount>
+              )}
+            </SheetTitleWrap>
             <SheetClose
               type="button"
               onClick={shop.closeFilters}
@@ -136,10 +286,21 @@ export default function ShopPage() {
           </SheetHead>
           <SheetBody>
             <FiltersPanel
+              inSheet
+              minPrice={shop.minPrice}
               maxPrice={shop.maxPrice}
               selectedTags={shop.selectedTags}
-              onPriceChange={shop.setMaxPrice}
+              eventType={shop.eventType}
+              sort={shop.sort}
+              hasPhotosOnly={shop.hasPhotosOnly}
+              hasInclusionsOnly={shop.hasInclusionsOnly}
+              hasPolicyOnly={shop.hasPolicyOnly}
+              activeFilterCount={shop.activeFilterCount}
+              onPriceRangeChange={shop.setPriceRange}
               onTagToggle={shop.toggleTag}
+              onEventTypeChange={shop.setEventType}
+              onSortChange={shop.setSort}
+              onTogglePref={shop.togglePref}
               onReset={shop.reset}
             />
           </SheetBody>

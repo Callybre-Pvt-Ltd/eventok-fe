@@ -87,12 +87,23 @@ export interface PreviousWorkItem {
   image: string;
 }
 
+export type CatalogSortOption =
+  | 'recommended'
+  | 'price_asc'
+  | 'price_desc'
+  | 'newest';
+
 export interface CatalogFilters {
   search?: string;
   eventType?: CatalogEventType | 'all';
   categorySlug?: string;
   tags?: string[];
+  minPrice?: number;
   maxPrice?: number;
+  sort?: CatalogSortOption;
+  hasPhotosOnly?: boolean;
+  hasInclusionsOnly?: boolean;
+  hasPolicyOnly?: boolean;
 }
 
 export interface CartLine {

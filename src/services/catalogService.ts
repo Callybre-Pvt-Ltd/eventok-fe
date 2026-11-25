@@ -1,4 +1,4 @@
-import { DEFAULT_CATEGORY_TILES } from '@/constants/catalog';
+import { CATALOG_MAX_PRICE, DEFAULT_CATEGORY_TILES } from '@/constants/catalog';
 import { photography } from '@/design-system/tokens/photography';
 import {
   DEFAULT_PAGE_SIZE,
@@ -21,13 +21,36 @@ import type { ServiceResponse } from '@/types';
 const EVENT_FROM_SLUG: Record<string, CatalogEventType> = {
   'wedding-decorations': 'wedding',
   'birthday-decorations': 'birthday',
-  'engagement-decor': 'anniversary',
+  'balloon-decor': 'birthday',
+  'photo-booth-props': 'birthday',
+  'theme-parties': 'birthday',
+  'engagement-decor': 'wedding',
+  'engagement-ring-ceremony': 'wedding',
+  'entrance-welcome-gate': 'wedding',
+  'floral-decor': 'wedding',
   'haldi-mehendi': 'wedding',
+  'lighting-ambiance': 'wedding',
+  'stage-backdrop': 'wedding',
+  'tent-outdoor-setup': 'wedding',
   'baby-shower': 'baby-shower',
+  'baby-shower-naming': 'baby-shower',
   'anniversary-decor': 'anniversary',
   'corporate-events': 'corporate',
+  'corporate-office-events': 'corporate',
   'home-decoration': 'home-decoration',
-  'theme-parties': 'birthday',
+};
+
+const resolveEventType = (slug: string): CatalogEventType => {
+  if (EVENT_FROM_SLUG[slug]) return EVENT_FROM_SLUG[slug];
+  const s = slug.toLowerCase();
+  if (s.includes('birthday') || s.includes('balloon') || s.includes('theme')) {
+    return 'birthday';
+  }
+  if (s.includes('anniversary')) return 'anniversary';
+  if (s.includes('baby') || s.includes('naming')) return 'baby-shower';
+  if (s.includes('corporate') || s.includes('office')) return 'corporate';
+  if (s.includes('home')) return 'home-decoration';
+  return 'wedding';
 };
 
 const wrap = async <T>(fn: () => Promise<T>): Promise<ServiceResponse<T>> => {
@@ -46,7 +69,7 @@ const toCatalog = (
 ): CatalogService => {
   const price = Number(service.starting_price) || 0;
   const slug = category?.slug ?? '';
-  const eventType = EVENT_FROM_SLUG[slug] ?? 'wedding';
+  const eventType = resolveEventType(slug);
   const included = service.whats_included ?? [];
   const goodToKnow = service.good_to_know ?? [];
   const cancellation = service.cancellation_policy ?? [];
@@ -112,7 +135,18 @@ export const catalogService = {
       const page = await marketplaceService.listServices({
         q: filters.search,
         category_id: categoryId,
-        max_price: filters.maxPrice,
+        min_price:
+          filters.minPrice && filters.minPrice > 0
+            ? filters.minPrice
+            : undefined,
+        max_price:
+          filters.maxPrice && filters.maxPrice < CATALOG_MAX_PRICE
+            ? filters.maxPrice
+            : undefined,
+        sort:
+          filters.sort && filters.sort !== 'recommended'
+            ? filters.sort
+            : undefined,
         page: 1,
         page_size: DEFAULT_PAGE_SIZE,
       });
@@ -131,7 +165,7 @@ export const catalogService = {
           slug: d.id,
           title: d.displayName,
           categorySlug: cat?.slug ?? d.categorySlug,
-          eventType: EVENT_FROM_SLUG[cat?.slug ?? ''] ?? 'wedding',
+          eventType: resolveEventType(cat?.slug ?? ''),
           description: d.description,
           price: d.budgetFrom,
           originalPrice: d.budgetFrom,
@@ -158,6 +192,11 @@ export const catalogService = {
         items = items.filter(item =>
           filters.tags!.some(tag => item.tags.includes(tag)),
         );
+      }
+      if (filters.sort === 'price_asc') {
+        items = [...items].sort((a, b) => a.price - b.price);
+      } else if (filters.sort === 'price_desc') {
+        items = [...items].sort((a, b) => b.price - a.price);
       }
       return items;
     });
@@ -214,7 +253,7 @@ export const catalogService = {
           id: c.id,
           name: c.name,
           slug: c.slug,
-          eventType: EVENT_FROM_SLUG[c.slug] ?? 'wedding',
+          eventType: resolveEventType(c.slug),
           icon: c.icon ?? 'Sparkles',
           serviceCount: c.service_count ?? 0,
           featuredOnHome: true,

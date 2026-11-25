@@ -1,4 +1,8 @@
-import type { CatalogCategory, CatalogEventType } from '@/types/catalog';
+import type {
+  CatalogCategory,
+  CatalogEventType,
+  CatalogSortOption,
+} from '@/types/catalog';
 
 export const DEFAULT_CATEGORY_TILES: CatalogCategory[] = [
   {
@@ -148,6 +152,29 @@ export const DEFAULT_CATEGORY_TILES: CatalogCategory[] = [
 ];
 
 export const CATALOG_MAX_PRICE = 150000;
+
+export const BUDGET_PRESETS: {
+  id: string;
+  label: string;
+  min: number;
+  max: number;
+}[] = [
+  { id: 'any', label: 'Any budget', min: 0, max: CATALOG_MAX_PRICE },
+  { id: 'under-5k', label: 'Under ₹5,000', min: 0, max: 5000 },
+  { id: '5k-15k', label: '₹5,000 – ₹15,000', min: 5000, max: 15000 },
+  { id: '15k-35k', label: '₹15,000 – ₹35,000', min: 15000, max: 35000 },
+  { id: '35k-plus', label: '₹35,000+', min: 35000, max: CATALOG_MAX_PRICE },
+];
+
+export const SORT_OPTIONS: {
+  value: CatalogSortOption;
+  label: string;
+}[] = [
+  { value: 'recommended', label: 'Recommended' },
+  { value: 'price_asc', label: 'Price: Low to High' },
+  { value: 'price_desc', label: 'Price: High to Low' },
+  { value: 'newest', label: 'Newest First' },
+];
 
 export const CART_STORAGE_KEY = 'eventok.cart.v1';
 export const WISHLIST_STORAGE_KEY = 'eventok.wishlist.v1';
