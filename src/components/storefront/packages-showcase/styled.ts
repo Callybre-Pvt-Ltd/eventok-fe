@@ -181,6 +181,164 @@ export const GoButton = styled.span`
   }
 `;
 
+export const FilterPanel = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.75rem;
+  padding: 1rem 1.15rem;
+  border-radius: ${radii.xl};
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 14px -4px rgba(0, 0, 0, 0.05);
+`;
+
+export const FilterTopRow = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  ${media.md} {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+`;
+
+export const SearchWrap = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 28rem;
+`;
+
+export const SearchIcon = styled.span`
+  position: absolute;
+  left: 0.85rem;
+  display: inline-flex;
+  color: var(--color-text-muted);
+  pointer-events: none;
+`;
+
+export const SearchInput = styled.input`
+  width: 100%;
+  padding: 0.55rem 2.2rem 0.55rem 2.35rem;
+  border-radius: ${radii.full};
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.sm};
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+
+  &:focus {
+    border-color: var(--color-primary);
+    background: var(--color-surface);
+  }
+`;
+
+export const ClearIconBtn = styled.button`
+  position: absolute;
+  right: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border: none;
+  border-radius: 50%;
+  background: var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+`;
+
+export const ControlsGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+`;
+
+export const SelectControl = styled.select`
+  padding: 0.5rem 0.9rem;
+  border-radius: ${radii.full};
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  cursor: pointer;
+  outline: none;
+
+  &:focus {
+    border-color: var(--color-primary);
+  }
+`;
+
+export const FilterPillsRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+
+export const BudgetPill = styled.button<{ $active?: boolean }>`
+  padding: 0.4rem 0.85rem;
+  border-radius: ${radii.full};
+  border: 1px solid
+    ${({ $active }) =>
+      $active ? 'var(--color-primary)' : 'var(--color-border)'};
+  background: ${({ $active }) =>
+    $active ? 'var(--color-primary)' : 'var(--color-bg-alt)'};
+  color: ${({ $active }) =>
+    $active ? '#ffffff' : 'var(--color-text-secondary)'};
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.18s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    ${({ $active }) => !$active && 'color: var(--color-primary);'}
+  }
+`;
+
+export const ResetLink = styled.button`
+  border: none;
+  background: transparent;
+  color: var(--color-primary);
+  font-family: ${fontFamily.body};
+  font-size: ${fontSizes.xs};
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: underline;
+`;
+
+export const EmptyFilterBox = styled.div`
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  padding: 3rem 1rem;
+  border-radius: ${radii.xl};
+  border: 1px dashed var(--color-border);
+  text-align: center;
+  color: var(--color-text-secondary);
+  font-size: ${fontSizes.sm};
+  font-weight: 600;
+`;
+
 export const ViewAllRow = styled.div`
   display: flex;
   justify-content: center;
